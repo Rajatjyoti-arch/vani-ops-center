@@ -45,3 +45,9 @@ export function generateReportId(): string {
   const random = Math.random().toString(36).substring(2, 5).toUpperCase();
   return `RPT-${timestamp.slice(-3)}${random}`;
 }
+
+// Generate certificate hash for cryptographic proof
+export async function generateCertificateHash(input: string): Promise<string> {
+  const hash = await generateHash(input + Date.now().toString());
+  return hash.slice(0, 64);
+}
