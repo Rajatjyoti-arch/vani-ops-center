@@ -2,6 +2,7 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { SentimentMap } from "@/components/dashboard/SentimentMap";
 import { QuickStats } from "@/components/dashboard/QuickStats";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
+import { CampusImpactScore } from "@/components/dashboard/CampusImpactScore";
 
 const Index = () => {
   return (
@@ -23,8 +24,15 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Quick Stats */}
-        <QuickStats />
+        {/* Quick Stats + Impact Score */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+          <div className="lg:col-span-4">
+            <QuickStats />
+          </div>
+          <div className="lg:col-span-1">
+            <CampusImpactScore />
+          </div>
+        </div>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

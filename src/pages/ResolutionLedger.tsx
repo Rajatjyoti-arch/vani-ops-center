@@ -6,6 +6,7 @@ import { BookOpen, Filter, Clock, CheckCircle, AlertCircle, Search as SearchIcon
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { formatRelativeTime } from "@/lib/crypto";
+import { NegotiationContracts } from "@/components/ledger/NegotiationContracts";
 
 interface Report {
   id: string;
@@ -92,6 +93,9 @@ const ResolutionLedger = () => {
             </p>
           </div>
         </div>
+
+        {/* Signed Digital Contracts */}
+        <NegotiationContracts />
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

@@ -11,6 +11,8 @@ import {
   SidebarHeader,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { DeadManSwitch } from "@/components/sidebar/DeadManSwitch";
+import { LegacyThreads } from "@/components/sidebar/LegacyThreads";
 
 const navItems = [
   {
@@ -126,6 +128,12 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      {/* Dead Man's Switch */}
+      <DeadManSwitch collapsed={collapsed} />
+
+      {/* Legacy Threads */}
+      <LegacyThreads collapsed={collapsed} />
 
       {/* System status footer */}
       {!collapsed && (

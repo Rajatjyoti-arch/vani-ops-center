@@ -9,6 +9,8 @@ import { Progress } from "@/components/ui/progress";
 import { Swords, Play, Shield, Building2, Scale, Zap, MessageSquare, TrendingUp, TrendingDown, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { MatrixRain } from "@/components/effects/MatrixRain";
+import { TypewriterText } from "@/components/effects/TypewriterText";
 
 interface VaultFile {
   id: string;
@@ -269,7 +271,12 @@ const TheArena = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6 animate-fade-in">
+      <div className="space-y-6 animate-fade-in relative">
+        {/* Matrix Rain Background */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
+          <MatrixRain />
+        </div>
+
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -456,7 +463,11 @@ const TheArena = () => {
                             </div>
                           </div>
                           <p className="text-sm text-foreground leading-relaxed">
-                            {entry.message}
+                            <TypewriterText 
+                              text={entry.message} 
+                              speed={15} 
+                              enableSound={index === negotiation.negotiation_log.length - 1}
+                            />
                           </p>
                         </div>
                       </div>
