@@ -1,5 +1,7 @@
-import { FileText, Users, MessageSquare, CheckCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { FileText, Users, MessageSquare, CheckCircle, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
 
 interface StatCardProps {
   title: string;
@@ -7,9 +9,10 @@ interface StatCardProps {
   change?: string;
   icon: React.ElementType;
   trend?: "up" | "down" | "neutral";
+  isLoading?: boolean;
 }
 
-function StatCard({ title, value, change, icon: Icon, trend }: StatCardProps) {
+function StatCard({ title, value, change, icon: Icon, trend, isLoading }: StatCardProps) {
   const trendColors = {
     up: "text-status-safe",
     down: "text-status-critical",
@@ -24,13 +27,19 @@ function StatCard({ title, value, change, icon: Icon, trend }: StatCardProps) {
             <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
               {title}
             </p>
-            <p className="text-2xl font-bold font-mono text-foreground group-hover:text-primary transition-colors">
-              {value}
-            </p>
-            {change && (
-              <p className={`text-xs mt-1 ${trendColors[trend || "neutral"]}`}>
-                {change}
-              </p>
+            {isLoading ? (
+              <Loader2 className="w-6 h-6 animate-spin text-primary mt-2" />
+            ) : (
+              <>
+                <p className="text-2xl font-bold font-mono text-foreground group-hover:text-primary transition-colors">
+                  {value}
+                </p>
+                {change && (
+                  <p className={`text-xs mt-1 ${trendColors[trend || "neutral"]}`}>
+                    {change}
+                  </p>
+                )}
+              </>
             )}
           </div>
           <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 group-hover:cyber-glow transition-all">
@@ -43,42 +52,73 @@ function StatCard({ title, value, change, icon: Icon, trend }: StatCardProps) {
 }
 
 export function QuickStats() {
-  const stats = [
-    {
-      title: "Active Reports",
-      value: 42,
-      change: "+12% this week",
-      icon: FileText,
-      trend: "up" as const,
-    },
-    {
-      title: "Ghost Identities",
-      value: 156,
-      change: "+23 new today",
-      icon: Users,
-      trend: "up" as const,
-    },
-    {
-      title: "Arena Discussions",
-      value: 89,
-      change: "15 active now",
-      icon: MessageSquare,
-      trend: "neutral" as const,
-    },
-    {
-      title: "Resolved Issues",
-      value: "87%",
-      change: "+5% improvement",
-      icon: CheckCircle,
-      trend: "up" as const,
-    },
-  ];
+  const [stats, setStats] = useState({
+    reports: 0,
+    identities: 0,
+    vaultFiles: 0,
+    resolutionRate: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      // Fetch counts from all tables
+      const [reportsRes, identitiesRes, vaultRes] = await Promise.all([
+        supabase.from("reports").select("id, status", { count: "exact" }),
+        supabase.from("ghost_identities").select("id", { count: "exact" }),
+        supabase.from("stealth_vault").select("id", { count: "exact" }),
+      ]);
+
+      const totalReports = reportsRes.count || 0;
+      const resolvedReports = reportsRes.data?.filter((r) => r.status === "resolved").length || 0;
+      const resolutionRate = totalReports > 0 ? Math.round((resolvedReports / totalReports) * 100) : 0;
+
+      setStats({
+        reports: totalReports,
+        identities: identitiesRes.count || 0,
+        vaultFiles: vaultRes.count || 0,
+        resolutionRate,
+      });
+      setIsLoading(false);
+    };
+
+    fetchStats();
+  }, []);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {stats.map((stat) => (
-        <StatCard key={stat.title} {...stat} />
-      ))}
+      <StatCard
+        title="Active Reports"
+        value={stats.reports}
+        change="Real-time tracking"
+        icon={FileText}
+        trend="neutral"
+        isLoading={isLoading}
+      />
+      <StatCard
+        title="Ghost Identities"
+        value={stats.identities}
+        change="Anonymous users"
+        icon={Users}
+        trend="neutral"
+        isLoading={isLoading}
+      />
+      <StatCard
+        title="Vault Files"
+        value={stats.vaultFiles}
+        change="Encrypted evidence"
+        icon={MessageSquare}
+        trend="neutral"
+        isLoading={isLoading}
+      />
+      <StatCard
+        title="Resolution Rate"
+        value={`${stats.resolutionRate}%`}
+        change="Issues resolved"
+        icon={CheckCircle}
+        trend={stats.resolutionRate > 70 ? "up" : "neutral"}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

@@ -1,29 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Filter, Clock, CheckCircle, AlertCircle, Search as SearchIcon, Eye } from "lucide-react";
+import { BookOpen, Filter, Clock, CheckCircle, AlertCircle, Search as SearchIcon, Eye, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
+import { formatRelativeTime } from "@/lib/crypto";
 
 interface Report {
   id: string;
+  report_id: string;
   title: string;
   zone: string;
   status: "submitted" | "under_review" | "investigating" | "resolved";
   severity: "low" | "medium" | "high" | "critical";
-  submittedAt: string;
-  updatedAt: string;
-  author: string;
+  created_at: string;
+  updated_at: string;
+  ghost_identity_id: string | null;
 }
-
-const mockReports: Report[] = [
-  { id: "RPT-251", title: "Suspicious activity near main gate at night", zone: "Main Gate", status: "investigating", severity: "high", submittedAt: "2024-01-22", updatedAt: "2024-01-23", author: "ShadowWolf" },
-  { id: "RPT-250", title: "Broken lock on Hostel 2 emergency exit", zone: "Hostel 2", status: "under_review", severity: "critical", submittedAt: "2024-01-22", updatedAt: "2024-01-22", author: "NightOwl" },
-  { id: "RPT-249", title: "Inadequate lighting in parking area", zone: "Parking Area", status: "resolved", severity: "medium", submittedAt: "2024-01-20", updatedAt: "2024-01-23", author: "PhantomEcho" },
-  { id: "RPT-248", title: "Harassment incident in library", zone: "Library", status: "investigating", severity: "high", submittedAt: "2024-01-19", updatedAt: "2024-01-22", author: "CyberRaven" },
-  { id: "RPT-247", title: "Food quality concerns in cafeteria", zone: "Cafeteria", status: "resolved", severity: "low", submittedAt: "2024-01-18", updatedAt: "2024-01-21", author: "MysticBlade" },
-  { id: "RPT-246", title: "Noise complaints in academic block", zone: "Academic Block", status: "submitted", severity: "low", submittedAt: "2024-01-17", updatedAt: "2024-01-17", author: "VoidStalker" },
-];
 
 const statusConfig = {
   submitted: { label: "Submitted", color: "bg-muted text-muted-foreground", icon: Clock },
@@ -40,13 +34,38 @@ const severityConfig = {
 };
 
 const ResolutionLedger = () => {
-  const [reports] = useState(mockReports);
+  const [reports, setReports] = useState<Report[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const fetchReports = useCallback(async () => {
+    setIsLoading(true);
+    const { data, error } = await supabase
+      .from("reports")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching reports:", error);
+    } else {
+      setReports((data as Report[]) || []);
+    }
+    setIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    fetchReports();
+  }, [fetchReports]);
+
   const filteredReports = reports.filter((report) => {
     if (statusFilter && report.status !== statusFilter) return false;
-    if (searchQuery && !report.title.toLowerCase().includes(searchQuery.toLowerCase()) && !report.id.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    if (
+      searchQuery &&
+      !report.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      !report.report_id.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+      return false;
     return true;
   });
 
@@ -54,7 +73,9 @@ const ResolutionLedger = () => {
     total: reports.length,
     resolved: reports.filter((r) => r.status === "resolved").length,
     pending: reports.filter((r) => r.status !== "resolved").length,
-    resolutionRate: Math.round((reports.filter((r) => r.status === "resolved").length / reports.length) * 100),
+    resolutionRate: reports.length > 0 
+      ? Math.round((reports.filter((r) => r.status === "resolved").length / reports.length) * 100)
+      : 0,
   };
 
   return (
@@ -143,55 +164,69 @@ const ResolutionLedger = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {filteredReports.map((report, index) => {
-                const statusInfo = statusConfig[report.status];
-                const StatusIcon = statusInfo.icon;
+            {isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              </div>
+            ) : filteredReports.length === 0 ? (
+              <div className="text-center py-12 text-muted-foreground">
+                <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>No reports found</p>
+                <p className="text-sm">Submit a report via Identity Ghost or Stealth Vault</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {filteredReports.map((report, index) => {
+                  const statusInfo = statusConfig[report.status];
+                  const StatusIcon = statusInfo.icon;
 
-                return (
-                  <div
-                    key={report.id}
-                    className="relative flex gap-4 pb-4 border-b border-border/30 last:border-0 last:pb-0 animate-fade-in"
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  >
-                    {/* Timeline dot */}
-                    <div className="flex flex-col items-center">
-                      <div className={`p-2 rounded-full ${statusInfo.color}`}>
-                        <StatusIcon className="w-4 h-4" />
+                  return (
+                    <div
+                      key={report.id}
+                      className="relative flex gap-4 pb-4 border-b border-border/30 last:border-0 last:pb-0 animate-fade-in"
+                      style={{ animationDelay: `${index * 50}ms` }}
+                    >
+                      {/* Timeline dot */}
+                      <div className="flex flex-col items-center">
+                        <div className={`p-2 rounded-full ${statusInfo.color}`}>
+                          <StatusIcon className="w-4 h-4" />
+                        </div>
+                        {index < filteredReports.length - 1 && (
+                          <div className="w-px h-full bg-border/50 mt-2" />
+                        )}
                       </div>
-                      {index < filteredReports.length - 1 && (
-                        <div className="w-px h-full bg-border/50 mt-2" />
-                      )}
-                    </div>
 
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-mono text-xs text-primary">{report.id}</span>
-                            <span className={`text-[10px] px-2 py-0.5 rounded-full border ${statusInfo.color}`}>
-                              {statusInfo.label}
-                            </span>
-                            <span className={`text-[10px] uppercase tracking-wider ${severityConfig[report.severity]}`}>
-                              {report.severity}
-                            </span>
-                          </div>
-                          <h4 className="font-medium text-foreground">{report.title}</h4>
-                          <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-                            <span>{report.zone}</span>
-                            <span>•</span>
-                            <span>by {report.author}</span>
-                            <span>•</span>
-                            <span>Updated {report.updatedAt}</span>
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-mono text-xs text-primary">{report.report_id}</span>
+                              <span
+                                className={`text-[10px] px-2 py-0.5 rounded-full border ${statusInfo.color}`}
+                              >
+                                {statusInfo.label}
+                              </span>
+                              <span
+                                className={`text-[10px] uppercase tracking-wider ${severityConfig[report.severity]}`}
+                              >
+                                {report.severity}
+                              </span>
+                            </div>
+                            <h4 className="font-medium text-foreground">{report.title}</h4>
+                            <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                              <span>{report.zone}</span>
+                              <span>•</span>
+                              <span>Updated {formatRelativeTime(report.updated_at)}</span>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
