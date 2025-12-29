@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { Settings, Volume2, VolumeX, Eye, EyeOff, ChevronDown, ChevronUp } from "lucide-react";
+import { Settings, Volume2, VolumeX, Eye, EyeOff, ChevronDown, ChevronUp, HelpCircle, Keyboard } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import { useSettings } from "@/contexts/SettingsContext";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 import { playClickSound } from "@/lib/audio";
 
 export function SettingsPanel({ collapsed }: { collapsed: boolean }) {
   const { demoMode, setDemoMode, soundEnabled, setSoundEnabled } = useSettings();
+  const { startTour, hasCompletedTour } = useOnboarding();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleToggleDemoMode = (value: boolean) => {
@@ -16,6 +19,11 @@ export function SettingsPanel({ collapsed }: { collapsed: boolean }) {
   const handleToggleSound = (value: boolean) => {
     setSoundEnabled(value);
     if (value) playClickSound();
+  };
+
+  const handleStartTour = () => {
+    if (soundEnabled) playClickSound();
+    startTour();
   };
 
   if (collapsed) {
@@ -91,6 +99,23 @@ export function SettingsPanel({ collapsed }: { collapsed: boolean }) {
               onCheckedChange={handleToggleSound}
               className="data-[state=checked]:bg-primary"
             />
+          </div>
+
+          {/* Tour Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleStartTour}
+            className="w-full cyber-button text-xs gap-2"
+          >
+            <HelpCircle className="w-3 h-3" />
+            {hasCompletedTour ? "Restart Tour" : "Start Tour"}
+          </Button>
+
+          {/* Keyboard Shortcuts Hint */}
+          <div className="flex items-center gap-2 p-2 bg-primary/5 rounded border border-primary/20 text-[10px] text-muted-foreground">
+            <Keyboard className="w-3 h-3 text-primary" />
+            <span>Press <kbd className="font-mono bg-secondary px-1 rounded">Ctrl+K</kbd> for commands</span>
           </div>
         </div>
       )}
