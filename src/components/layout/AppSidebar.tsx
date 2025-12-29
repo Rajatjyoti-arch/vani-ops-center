@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import { DeadManSwitch } from "@/components/sidebar/DeadManSwitch";
 import { LegacyThreads } from "@/components/sidebar/LegacyThreads";
+import { SettingsPanel } from "@/components/sidebar/SettingsPanel";
 
 const navItems = [
   {
@@ -132,8 +133,10 @@ export function AppSidebar() {
       {/* Dead Man's Switch */}
       <DeadManSwitch collapsed={collapsed} />
 
-      {/* Legacy Threads */}
       <LegacyThreads collapsed={collapsed} />
+
+      {/* Settings Panel */}
+      <SettingsPanel collapsed={collapsed} />
 
       {/* System status footer */}
       {!collapsed && (
