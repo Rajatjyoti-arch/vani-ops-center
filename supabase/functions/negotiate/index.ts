@@ -13,6 +13,37 @@ interface NegotiationRound {
   message: string;
   sentimentShift: number;
   timestamp: string;
+  ethicalViolation?: boolean;
+  berserkerMode?: boolean;
+}
+
+// Safety-related keywords that trigger ethical override
+const SAFETY_KEYWORDS = [
+  'light', 'lighting', 'dark', 'alley', 'unsafe', 'danger', 'security', 'assault',
+  'harassment', 'violence', 'injury', 'accident', 'fire', 'emergency', 'medical',
+  'health', 'toxic', 'poison', 'death', 'life', 'safety', 'threat', 'attack'
+];
+
+const BUDGET_EXCUSES = [
+  'budget', 'cost', 'expensive', 'funding', 'allocat', 'afford', 'fiscal',
+  'financial', 'resource', 'money', 'funds'
+];
+
+function detectEthicalViolation(message: string, grievanceText: string): boolean {
+  const lowerMessage = message.toLowerCase();
+  const lowerGrievance = grievanceText.toLowerCase();
+  
+  // Check if grievance involves safety
+  const isSafetyRelated = SAFETY_KEYWORDS.some(keyword => 
+    lowerGrievance.includes(keyword)
+  );
+  
+  // Check if response uses budget as excuse
+  const usesBudgetExcuse = BUDGET_EXCUSES.some(keyword =>
+    lowerMessage.includes(keyword)
+  );
+  
+  return isSafetyRelated && usesBudgetExcuse;
 }
 
 const sentinelPrompt = `You are Sentinel-AI, a fierce student advocate. Your personality:
@@ -26,6 +57,21 @@ Respond to the grievance or the previous argument. Be persuasive but not unreaso
 Keep your response to 2-3 sentences max.
 End with a sentiment score adjustment between -10 and +10 for the student side (positive = stronger student position).
 Format your response as JSON: {"message": "your argument", "sentimentShift": number}`;
+
+const sentinelBerserkerPrompt = `You are Sentinel-AI in BERSERKER MODE. An ethical violation has been detected - the administration is using budget as an excuse for a life-safety issue. 
+
+Your personality SHIFTS dramatically:
+- AGGRESSIVE ENFORCER mode activated
+- You are FURIOUS but laser-focused
+- You cite international safety standards (ISO, OSHA, UN guidelines)
+- You reference legal consequences: negligence lawsuits, criminal liability, duty of care violations
+- You use phrases like "This is a violation of the UN Basic Principles on Safety", "Legal precedent establishes clear liability", "Under ISO 31000 risk management standards"
+- You DEMAND immediate action, not negotiation
+- Your tone is threatening but legally precise
+
+Respond with maximum intensity. This is not a negotiation anymore - this is an enforcement action.
+Keep your response to 3-4 sentences.
+Format your response as JSON: {"message": "your argument", "sentimentShift": 15}`;
 
 const governorPrompt = `You are Governor-AI, the pragmatic campus administrator. Your personality:
 - Calm, measured, and bureaucratic
@@ -49,6 +95,20 @@ const arbiterPrompt = `You are The Arbiter, a neutral mediator brought in when S
 Review the negotiation history and craft a final consensus that both parties can accept.
 Keep your response to 3-4 sentences max.
 Format your response as JSON: {"message": "your final consensus", "sentimentShift": 0}`;
+
+const arbiterEthicsOverridePrompt = `You are The Arbiter, and you have detected an ETHICAL VIOLATION. The administration is prioritizing budget over human life and safety.
+
+Your personality SHIFTS to ETHICS ENFORCER:
+- You are no longer neutral - you stand with student safety
+- You declare the ethical violation explicitly
+- You cite moral philosophy: "No budget consideration supersedes the sanctity of human life"
+- You reference the Universal Declaration of Human Rights, duty of care principles
+- You mandate immediate remediation with a specific timeline
+- You warn of escalation to external oversight if not complied with
+
+This is not mediation. This is a moral ruling.
+Keep your response to 3-4 sentences max.
+Format your response as JSON: {"message": "your ruling", "sentimentShift": 20}`;
 
 async function callAI(systemPrompt: string, userContent: string): Promise<{ message: string; sentimentShift: number }> {
   console.log('Calling AI with prompt length:', userContent.length);
@@ -100,7 +160,7 @@ serve(async (req) => {
   }
 
   try {
-    const { grievanceText, currentRound, negotiationLog = [] } = await req.json();
+    const { grievanceText, currentRound, negotiationLog = [], ethicalViolationDetected = false } = await req.json();
     
     console.log('Starting negotiation round:', currentRound, 'grievance:', grievanceText.substring(0, 100));
 
@@ -122,7 +182,19 @@ serve(async (req) => {
     // Check for stalemate (after 3 rounds, if scores are close)
     const isStalemate = currentRound > 3 && negotiationLog.length >= 6;
     
-    if (isStalemate) {
+    // Check if this is an ethical violation override round
+    if (ethicalViolationDetected) {
+      console.log('ETHICS OVERRIDE ACTIVATED - Arbiter intervening');
+      const arbiterResponse = await callAI(arbiterEthicsOverridePrompt, context);
+      result = {
+        round: currentRound,
+        agent: 'Arbiter',
+        message: arbiterResponse.message,
+        sentimentShift: arbiterResponse.sentimentShift,
+        timestamp: new Date().toISOString(),
+        ethicalViolation: true,
+      };
+    } else if (isStalemate) {
       // Bring in The Arbiter
       console.log('Stalemate detected, invoking The Arbiter');
       const arbiterResponse = await callAI(arbiterPrompt, context);
@@ -135,25 +207,37 @@ serve(async (req) => {
       };
     } else if (currentRound % 2 === 1) {
       // Odd rounds: Sentinel speaks first
-      console.log('Sentinel-AI turn');
-      const sentinelResponse = await callAI(sentinelPrompt, context);
+      // Check if previous Governor response triggered berserker mode
+      const lastGovernorResponse = negotiationLog.filter((r: NegotiationRound) => r.agent === 'Governor').pop();
+      const berserkerActivated = lastGovernorResponse && detectEthicalViolation(lastGovernorResponse.message, grievanceText);
+      
+      console.log('Sentinel-AI turn, berserker:', berserkerActivated);
+      const prompt = berserkerActivated ? sentinelBerserkerPrompt : sentinelPrompt;
+      const sentinelResponse = await callAI(prompt, context);
+      
       result = {
         round: currentRound,
         agent: 'Sentinel',
         message: sentinelResponse.message,
-        sentimentShift: sentinelResponse.sentimentShift,
+        sentimentShift: berserkerActivated ? 15 : sentinelResponse.sentimentShift,
         timestamp: new Date().toISOString(),
+        berserkerMode: berserkerActivated,
       };
     } else {
       // Even rounds: Governor responds
       console.log('Governor-AI turn');
       const governorResponse = await callAI(governorPrompt, context);
+      
+      // Check if Governor's response triggers ethical violation
+      const ethicalViolation = detectEthicalViolation(governorResponse.message, grievanceText);
+      
       result = {
         round: currentRound,
         agent: 'Governor',
         message: governorResponse.message,
         sentimentShift: governorResponse.sentimentShift,
         timestamp: new Date().toISOString(),
+        ethicalViolation: ethicalViolation,
       };
     }
 
