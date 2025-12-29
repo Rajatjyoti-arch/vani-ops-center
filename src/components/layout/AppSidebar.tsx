@@ -21,30 +21,35 @@ const navItems = [
     url: "/",
     icon: Shield,
     description: "System Overview",
+    tourId: "nav-command",
   },
   {
     title: "Identity Ghost",
     url: "/identity",
     icon: Ghost,
     description: "Anonymous Personas",
+    tourId: "nav-identity",
   },
   {
     title: "Stealth Vault",
     url: "/vault",
     icon: Shield,
     description: "Secure Files",
+    tourId: "nav-vault",
   },
   {
     title: "The Arena",
     url: "/arena",
     icon: Swords,
     description: "Discussions",
+    tourId: "nav-arena",
   },
   {
     title: "Resolution Ledger",
     url: "/ledger",
     icon: BookOpen,
     description: "Issue Tracking",
+    tourId: "nav-ledger",
   },
 ];
 
@@ -55,7 +60,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="border-r border-border/50 bg-sidebar">
-      <SidebarHeader className="p-4 border-b border-border/50">
+      <SidebarHeader className="p-4 border-b border-border/50" data-tour="logo">
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center cyber-glow">
@@ -90,7 +95,7 @@ export function AppSidebar() {
                         ${isActive ? "bg-primary/10 border border-primary/30" : ""}
                       `}
                     >
-                      <NavLink to={item.url} className="flex items-center gap-3 px-3 py-3">
+                      <NavLink to={item.url} className="flex items-center gap-3 px-3 py-3" data-tour={item.tourId}>
                         <div
                           className={`
                             p-2 rounded-md transition-all duration-200
@@ -136,7 +141,9 @@ export function AppSidebar() {
       <LegacyThreads collapsed={collapsed} />
 
       {/* Settings Panel */}
-      <SettingsPanel collapsed={collapsed} />
+      <div data-tour="settings">
+        <SettingsPanel collapsed={collapsed} />
+      </div>
 
       {/* System status footer */}
       {!collapsed && (
