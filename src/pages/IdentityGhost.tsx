@@ -1,14 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Ghost, Plus, RefreshCw, Star, Shield, Hash, Loader2 } from "lucide-react";
+import { Ghost, Plus, RefreshCw, Star, Shield, Hash, Loader2, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { generateHash, generateGhostName, generateAvatar } from "@/lib/crypto";
 import { toast } from "@/hooks/use-toast";
+import { useGhostSession } from "@/contexts/GhostSessionContext";
 
 interface GhostIdentity {
   id: string;
@@ -22,12 +23,18 @@ interface GhostIdentity {
 
 const IdentityGhost = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { ghostIdentity: sessionIdentity, isAuthenticated, login, logout } = useGhostSession();
+  
   const [identities, setIdentities] = useState<GhostIdentity[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [rollNumber, setRollNumber] = useState("");
   const [hashPreview, setHashPreview] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Get return URL from navigation state
+  const returnUrl = (location.state as { from?: string })?.from;
 
   // Fetch all ghost identities
   const fetchIdentities = useCallback(async () => {
@@ -88,12 +95,28 @@ const IdentityGhost = () => {
         .maybeSingle();
 
       if (existing) {
-        setActiveId(existing.id);
-        toast({
-          title: "Identity Found",
-          description: `Welcome back, ${existing.ghost_name}! Your ghost identity has been activated.`,
-        });
-        setRollNumber("");
+        // Fetch full identity data for session
+        const { data: fullIdentity } = await supabase
+          .from("ghost_identities")
+          .select("*")
+          .eq("id", existing.id)
+          .single();
+        
+        if (fullIdentity) {
+          login(fullIdentity);
+          setActiveId(existing.id);
+          toast({
+            title: "⚡ Identity Verified",
+            description: `Welcome back, ${existing.ghost_name}! Session activated.`,
+            className: "bg-primary/20 border-primary text-foreground",
+          });
+          setRollNumber("");
+          
+          // Redirect to return URL or vault
+          setTimeout(() => {
+            navigate(returnUrl || "/vault");
+          }, 1500);
+        }
         return;
       }
 
@@ -114,6 +137,8 @@ const IdentityGhost = () => {
 
       if (error) throw error;
 
+      // Log in with new identity
+      login(data);
       setIdentities([data, ...identities]);
       setActiveId(data.id);
       setRollNumber("");
@@ -121,14 +146,14 @@ const IdentityGhost = () => {
       // Show success notification
       toast({
         title: "⚡ Data Siphon Complete",
-        description: `Ghost identity "${data.ghost_name}" has been forged. Your anonymity is secured.`,
+        description: `Ghost identity "${data.ghost_name}" has been forged. Session activated.`,
         className: "bg-primary/20 border-primary text-foreground",
       });
 
-      // Redirect to Resolution Ledger after short delay
+      // Redirect to vault after short delay
       setTimeout(() => {
-        navigate("/ledger");
-      }, 2000);
+        navigate(returnUrl || "/vault");
+      }, 1500);
     } catch (error) {
       console.error("Error creating identity:", error);
       toast({
@@ -147,11 +172,23 @@ const IdentityGhost = () => {
       const newActiveId = availableIds[Math.floor(Math.random() * availableIds.length)];
       setActiveId(newActiveId);
       const identity = identities.find((i) => i.id === newActiveId);
-      toast({
-        title: "Identity Rotated",
-        description: `Now operating as ${identity?.ghost_name}`,
-      });
+      if (identity) {
+        login(identity);
+        toast({
+          title: "Identity Rotated",
+          description: `Now operating as ${identity.ghost_name}`,
+        });
+      }
     }
+  };
+
+  const handleLogout = () => {
+    logout();
+    setActiveId(null);
+    toast({
+      title: "Session Terminated",
+      description: "Ghost identity deactivated. Access revoked.",
+    });
   };
 
   const activeIdentity = identities.find((i) => i.id === activeId);
@@ -169,15 +206,27 @@ const IdentityGhost = () => {
               Generate anonymous personas using SHA-256 hashing
             </p>
           </div>
-          <Button
-            onClick={rotateIdentity}
-            variant="outline"
-            className="cyber-button gap-2"
-            disabled={identities.length < 2}
-          >
-            <RefreshCw className="w-4 h-4" />
-            Rotate Identity
-          </Button>
+          <div className="flex gap-2">
+            {isAuthenticated && (
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                className="gap-2 border-destructive/50 text-destructive hover:bg-destructive/10"
+              >
+                <LogOut className="w-4 h-4" />
+                End Session
+              </Button>
+            )}
+            <Button
+              onClick={rotateIdentity}
+              variant="outline"
+              className="cyber-button gap-2"
+              disabled={identities.length < 2}
+            >
+              <RefreshCw className="w-4 h-4" />
+              Rotate Identity
+            </Button>
+          </div>
         </div>
 
         {/* Roll Number Input - Hash Generator */}

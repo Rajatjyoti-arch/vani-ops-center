@@ -1,4 +1,4 @@
-import { Ghost, Shield, Swords, BookOpen } from "lucide-react";
+import { Ghost, Shield, Swords, BookOpen, Lock } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -14,6 +14,7 @@ import {
 import { DeadManSwitch } from "@/components/sidebar/DeadManSwitch";
 import { LegacyThreads } from "@/components/sidebar/LegacyThreads";
 import { SettingsPanel } from "@/components/sidebar/SettingsPanel";
+import { useGhostSession } from "@/contexts/GhostSessionContext";
 
 const navItems = [
   {
@@ -36,6 +37,7 @@ const navItems = [
     icon: Shield,
     description: "Secure Files",
     tourId: "nav-vault",
+    protected: true,
   },
   {
     title: "The Arena",
@@ -43,6 +45,7 @@ const navItems = [
     icon: Swords,
     description: "Discussions",
     tourId: "nav-arena",
+    protected: true,
   },
   {
     title: "Resolution Ledger",
@@ -56,6 +59,7 @@ const navItems = [
 export function AppSidebar() {
   const location = useLocation();
   const { state } = useSidebar();
+  const { ghostIdentity, isAuthenticated } = useGhostSession();
   const collapsed = state === "collapsed";
 
   return (
@@ -85,6 +89,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {navItems.map((item) => {
                 const isActive = location.pathname === item.url;
+                const isLocked = item.protected && !isAuthenticated;
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
@@ -93,6 +98,7 @@ export function AppSidebar() {
                         group relative overflow-hidden transition-all duration-200
                         hover:bg-secondary/80 hover:scale-[1.02]
                         ${isActive ? "bg-primary/10 border border-primary/30" : ""}
+                        ${isLocked ? "opacity-60" : ""}
                       `}
                     >
                       <NavLink to={item.url} className="flex items-center gap-3 px-3 py-3" data-tour={item.tourId}>
@@ -108,22 +114,25 @@ export function AppSidebar() {
                           <item.icon className="w-4 h-4" />
                         </div>
                         {!collapsed && (
-                          <div className="flex flex-col animate-fade-in">
-                            <span
-                              className={`
-                                text-sm font-medium transition-colors
-                                ${isActive ? "text-primary text-glow" : "text-foreground group-hover:text-primary"}
-                              `}
-                            >
-                              {item.title}
-                            </span>
+                          <div className="flex flex-col flex-1 animate-fade-in">
+                            <div className="flex items-center gap-2">
+                              <span
+                                className={`
+                                  text-sm font-medium transition-colors
+                                  ${isActive ? "text-primary text-glow" : "text-foreground group-hover:text-primary"}
+                                `}
+                              >
+                                {item.title}
+                              </span>
+                              {isLocked && <Lock className="w-3 h-3 text-muted-foreground" />}
+                            </div>
                             <span className="text-[10px] text-muted-foreground">
-                              {item.description}
+                              {isLocked ? "Requires ghost identity" : item.description}
                             </span>
                           </div>
                         )}
                         {isActive && (
-                          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-l-full" />
+                          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-full" />
                         )}
                       </NavLink>
                     </SidebarMenuButton>
@@ -148,10 +157,20 @@ export function AppSidebar() {
       {/* System status footer */}
       {!collapsed && (
         <div className="mt-auto p-4 border-t border-border/50">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <div className="w-2 h-2 bg-status-safe rounded-full pulse-cyan" />
-            <span className="font-mono">SYSTEM ONLINE</span>
-          </div>
+          {isAuthenticated && ghostIdentity ? (
+            <div className="flex items-center gap-2 text-xs">
+              <span className="text-lg">{ghostIdentity.avatar}</span>
+              <div className="flex flex-col">
+                <span className="font-mono text-primary">{ghostIdentity.ghost_name}</span>
+                <span className="text-muted-foreground">Session Active</span>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="w-2 h-2 bg-status-warning rounded-full" />
+              <span className="font-mono">NO IDENTITY</span>
+            </div>
+          )}
         </div>
       )}
     </Sidebar>
