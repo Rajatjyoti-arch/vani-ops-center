@@ -14,6 +14,53 @@ export type Database = {
   }
   public: {
     Tables: {
+      arena_negotiations: {
+        Row: {
+          created_at: string
+          final_consensus: string | null
+          governor_score: number | null
+          grievance_text: string
+          id: string
+          negotiation_log: Json
+          sentinel_score: number | null
+          status: string
+          updated_at: string
+          vault_file_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          final_consensus?: string | null
+          governor_score?: number | null
+          grievance_text: string
+          id?: string
+          negotiation_log?: Json
+          sentinel_score?: number | null
+          status?: string
+          updated_at?: string
+          vault_file_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          final_consensus?: string | null
+          governor_score?: number | null
+          grievance_text?: string
+          id?: string
+          negotiation_log?: Json
+          sentinel_score?: number | null
+          status?: string
+          updated_at?: string
+          vault_file_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "arena_negotiations_vault_file_id_fkey"
+            columns: ["vault_file_id"]
+            isOneToOne: false
+            referencedRelation: "stealth_vault"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ghost_identities: {
         Row: {
           avatar: string

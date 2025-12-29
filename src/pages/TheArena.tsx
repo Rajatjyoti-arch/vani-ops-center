@@ -1,60 +1,276 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Swords, Plus, MessageSquare, ThumbsUp, ThumbsDown, Clock, Filter } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
+import { Swords, Play, Shield, Building2, Scale, Zap, MessageSquare, TrendingUp, TrendingDown, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
-interface Thread {
+interface VaultFile {
   id: string;
-  title: string;
-  category: "safety" | "academic" | "facilities" | "general";
-  author: string;
-  authorAvatar: string;
-  replies: number;
-  upvotes: number;
-  downvotes: number;
-  createdAt: string;
-  lastActivity: string;
-  isPinned?: boolean;
+  file_name: string;
+  secret_metadata: string | null;
+  created_at: string;
 }
 
-const mockThreads: Thread[] = [
-  { id: "1", title: "Night patrol schedule concerns at Main Gate", category: "safety", author: "NightOwl", authorAvatar: "🦉", replies: 24, upvotes: 45, downvotes: 3, createdAt: "2h ago", lastActivity: "5m ago", isPinned: true },
-  { id: "2", title: "Library closing time during exam week", category: "academic", author: "ShadowWolf", authorAvatar: "🐺", replies: 18, upvotes: 32, downvotes: 2, createdAt: "4h ago", lastActivity: "15m ago" },
-  { id: "3", title: "Water supply issues in Hostel 2", category: "facilities", author: "PhantomEcho", authorAvatar: "👻", replies: 31, upvotes: 67, downvotes: 1, createdAt: "1d ago", lastActivity: "1h ago" },
-  { id: "4", title: "Suggestion: Anonymous feedback for professors", category: "general", author: "CyberRaven", authorAvatar: "🦅", replies: 42, upvotes: 89, downvotes: 12, createdAt: "2d ago", lastActivity: "30m ago" },
-  { id: "5", title: "Parking area lighting improvements needed", category: "safety", author: "MysticBlade", authorAvatar: "⚔️", replies: 15, upvotes: 28, downvotes: 0, createdAt: "3d ago", lastActivity: "2h ago" },
-];
+interface NegotiationRound {
+  round: number;
+  agent: string;
+  message: string;
+  sentimentShift: number;
+  timestamp: string;
+}
 
-const categoryColors = {
-  safety: "bg-status-critical/20 text-status-critical border-status-critical/30",
-  academic: "bg-primary/20 text-primary border-primary/30",
-  facilities: "bg-status-warning/20 text-status-warning border-status-warning/30",
-  general: "bg-muted text-muted-foreground border-border",
+interface Negotiation {
+  id: string;
+  grievance_text: string;
+  negotiation_log: NegotiationRound[];
+  final_consensus: string | null;
+  sentinel_score: number;
+  governor_score: number;
+  status: string;
+}
+
+const agentStyles = {
+  Sentinel: {
+    icon: Shield,
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "border-primary/30",
+    label: "Sentinel-AI",
+    subtitle: "Student Proxy",
+  },
+  Governor: {
+    icon: Building2,
+    color: "text-status-warning",
+    bg: "bg-status-warning/10",
+    border: "border-status-warning/30",
+    label: "Governor-AI",
+    subtitle: "Campus Admin",
+  },
+  Arbiter: {
+    icon: Scale,
+    color: "text-status-safe",
+    bg: "bg-status-safe/10",
+    border: "border-status-safe/30",
+    label: "The Arbiter",
+    subtitle: "Neutral Mediator",
+  },
 };
 
 const TheArena = () => {
-  const [threads] = useState(mockThreads);
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+  const [vaultFiles, setVaultFiles] = useState<VaultFile[]>([]);
+  const [selectedFileId, setSelectedFileId] = useState<string>("");
+  const [negotiation, setNegotiation] = useState<Negotiation | null>(null);
+  const [isNegotiating, setIsNegotiating] = useState(false);
+  const [currentRound, setCurrentRound] = useState(1);
+  const [sentinelScore, setSentinelScore] = useState(50);
+  const [governorScore, setGovernorScore] = useState(50);
 
-  const filteredThreads = threads.filter((thread) => {
-    if (activeCategory && thread.category !== activeCategory) return false;
-    if (searchQuery && !thread.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    return true;
-  });
+  // Fetch vault files with grievances
+  useEffect(() => {
+    const fetchVaultFiles = async () => {
+      const { data, error } = await supabase
+        .from('stealth_vault')
+        .select('id, file_name, secret_metadata, created_at')
+        .not('secret_metadata', 'is', null)
+        .order('created_at', { ascending: false });
 
-  const categories = [
-    { id: "safety", label: "Campus Safety", count: threads.filter((t) => t.category === "safety").length },
-    { id: "academic", label: "Academic Issues", count: threads.filter((t) => t.category === "academic").length },
-    { id: "facilities", label: "Facilities", count: threads.filter((t) => t.category === "facilities").length },
-    { id: "general", label: "General", count: threads.filter((t) => t.category === "general").length },
-  ];
+      if (error) {
+        console.error('Error fetching vault files:', error);
+        return;
+      }
+
+      setVaultFiles(data || []);
+    };
+
+    fetchVaultFiles();
+  }, []);
+
+  const startNegotiation = async () => {
+    if (!selectedFileId) {
+      toast.error("Select a grievance file to begin negotiation");
+      return;
+    }
+
+    const selectedFile = vaultFiles.find(f => f.id === selectedFileId);
+    if (!selectedFile?.secret_metadata) {
+      toast.error("No grievance data found in selected file");
+      return;
+    }
+
+    setIsNegotiating(true);
+    setSentinelScore(50);
+    setGovernorScore(50);
+    setCurrentRound(1);
+
+    // Create negotiation record
+    const { data: newNegotiation, error } = await supabase
+      .from('arena_negotiations')
+      .insert({
+        vault_file_id: selectedFileId,
+        grievance_text: selectedFile.secret_metadata,
+        negotiation_log: [],
+        sentinel_score: 50,
+        governor_score: 50,
+        status: 'in_progress',
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating negotiation:', error);
+      toast.error("Failed to start negotiation");
+      setIsNegotiating(false);
+      return;
+    }
+
+    setNegotiation({
+      ...newNegotiation,
+      negotiation_log: (newNegotiation.negotiation_log as unknown) as NegotiationRound[],
+    });
+
+    // Start the negotiation rounds
+    await runNegotiationRounds(newNegotiation.id, selectedFile.secret_metadata, []);
+  };
+
+  const runNegotiationRounds = async (negotiationId: string, grievanceText: string, existingLog: NegotiationRound[]) => {
+    let log = [...existingLog];
+    let round = 1;
+    let sentScore = 50;
+    let govScore = 50;
+    const maxRounds = 4;
+
+    for (let i = 0; i < maxRounds * 2; i++) {
+      const isArbiterNeeded = round > 3 && log.length >= 6;
+      
+      if (isArbiterNeeded) {
+        // Arbiter intervention
+        round = 4;
+        setCurrentRound(4);
+      }
+
+      try {
+        const response = await supabase.functions.invoke('negotiate', {
+          body: {
+            grievanceText,
+            currentRound: round,
+            negotiationLog: log,
+          },
+        });
+
+        if (response.error) {
+          console.error('Negotiation error:', response.error);
+          toast.error("Negotiation round failed");
+          break;
+        }
+
+        const roundResult: NegotiationRound = response.data;
+        log = [...log, roundResult];
+
+        // Update scores based on agent
+        if (roundResult.agent === 'Sentinel') {
+          sentScore = Math.max(0, Math.min(100, sentScore + roundResult.sentimentShift));
+        } else if (roundResult.agent === 'Governor') {
+          govScore = Math.max(0, Math.min(100, govScore + roundResult.sentimentShift));
+        }
+
+        setSentinelScore(sentScore);
+        setGovernorScore(govScore);
+        setNegotiation(prev => prev ? { ...prev, negotiation_log: log } : null);
+
+        // Update database
+        await supabase
+          .from('arena_negotiations')
+          .update({
+            negotiation_log: log as unknown as string,
+            sentinel_score: sentScore,
+            governor_score: govScore,
+          })
+          .eq('id', negotiationId);
+
+        // Check if we've reached the arbiter's final say
+        if (roundResult.agent === 'Arbiter') {
+          // Save final consensus
+          await supabase
+            .from('arena_negotiations')
+            .update({
+              final_consensus: roundResult.message,
+              status: 'completed',
+            })
+            .eq('id', negotiationId);
+
+          setNegotiation(prev => prev ? { 
+            ...prev, 
+            final_consensus: roundResult.message,
+            status: 'completed' 
+          } : null);
+
+          toast.success("Data Siphon Complete", {
+            description: "Negotiation concluded. Consensus reached.",
+            className: "cyber-glow",
+          });
+
+          setTimeout(() => {
+            navigate('/resolution-ledger');
+          }, 2000);
+          break;
+        }
+
+        // Increment round after both agents speak
+        if (roundResult.agent === 'Governor') {
+          round++;
+          setCurrentRound(round);
+        }
+
+        // Small delay between rounds for visual effect
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+      } catch (error) {
+        console.error('Round error:', error);
+        toast.error("Negotiation interrupted");
+        break;
+      }
+    }
+
+    // If no arbiter was triggered, complete normally after 4 rounds
+    if (log.length >= 8 && !log.some(l => l.agent === 'Arbiter')) {
+      await supabase
+        .from('arena_negotiations')
+        .update({
+          final_consensus: "Negotiation concluded after 4 rounds. Review the arguments above.",
+          status: 'completed',
+        })
+        .eq('id', negotiationId);
+
+      toast.success("Data Siphon Complete", {
+        description: "Negotiation completed. Redirecting to ledger...",
+        className: "cyber-glow",
+      });
+
+      setTimeout(() => {
+        navigate('/resolution-ledger');
+      }, 2000);
+    }
+
+    setIsNegotiating(false);
+  };
+
+  const victoryProbability = () => {
+    const total = sentinelScore + governorScore;
+    if (total === 0) return 50;
+    return Math.round((sentinelScore / total) * 100);
+  };
 
   return (
     <DashboardLayout>
       <div className="space-y-6 animate-fade-in">
+        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
@@ -62,108 +278,220 @@ const TheArena = () => {
               The Arena
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Anonymous discussion forums for campus issues
+              Multi-Agent Negotiation Matrix
             </p>
           </div>
-          <Button className="cyber-button gap-2 bg-primary text-primary-foreground">
-            <Plus className="w-4 h-4" />
-            New Thread
-          </Button>
         </div>
 
-        {/* Search and Filter */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <Input
-              placeholder="Search discussions..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-secondary/50 border-border/50 pl-10"
-            />
-            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            {categories.map((cat) => (
-              <Button
-                key={cat.id}
-                variant={activeCategory === cat.id ? "default" : "outline"}
-                size="sm"
-                onClick={() => setActiveCategory(activeCategory === cat.id ? null : cat.id)}
-                className={`
-                  cyber-button text-xs
-                  ${activeCategory === cat.id ? "bg-primary text-primary-foreground" : ""}
-                `}
-              >
-                {cat.label}
-                <span className="ml-1.5 px-1.5 py-0.5 rounded bg-background/20 font-mono text-[10px]">
-                  {cat.count}
-                </span>
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        {/* Threads List */}
-        <div className="space-y-3">
-          {filteredThreads.map((thread) => (
-            <Card
-              key={thread.id}
-              className={`
-                bg-card/80 backdrop-blur-sm border-border/50 
-                hover:border-primary/30 transition-all duration-300 cursor-pointer
-                ${thread.isPinned ? "ring-1 ring-primary/20" : ""}
-              `}
-            >
-              <CardContent className="p-4">
-                <div className="flex items-start gap-4">
-                  {/* Vote Section */}
-                  <div className="flex flex-col items-center gap-1 text-center">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-status-safe">
-                      <ThumbsUp className="w-4 h-4" />
-                    </Button>
-                    <span className="font-mono text-sm font-bold text-foreground">
-                      {thread.upvotes - thread.downvotes}
-                    </span>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-status-critical">
-                      <ThumbsDown className="w-4 h-4" />
-                    </Button>
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-2">
-                      {thread.isPinned && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/20 text-primary uppercase tracking-wider">
-                          Pinned
+        {/* File Selection & Start */}
+        <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+          <CardHeader>
+            <CardTitle className="text-sm font-mono uppercase tracking-wider text-muted-foreground">
+              Select Grievance File
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex gap-4">
+              <Select value={selectedFileId} onValueChange={setSelectedFileId} disabled={isNegotiating}>
+                <SelectTrigger className="flex-1 bg-secondary/50 border-border/50">
+                  <SelectValue placeholder="Choose from Stealth Vault..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {vaultFiles.map((file) => (
+                    <SelectItem key={file.id} value={file.id}>
+                      <div className="flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-primary" />
+                        <span>{file.file_name}</span>
+                        <span className="text-xs text-muted-foreground">
+                          ({new Date(file.created_at).toLocaleDateString()})
                         </span>
-                      )}
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full border ${categoryColors[thread.category]}`}>
-                        {thread.category}
-                      </span>
-                    </div>
-                    <h3 className="font-medium text-foreground hover:text-primary transition-colors">
-                      {thread.title}
-                    </h3>
-                    <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                      <div className="flex items-center gap-1.5">
-                        <span>{thread.authorAvatar}</span>
-                        <span className="text-primary">{thread.author}</span>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <MessageSquare className="w-3 h-3" />
-                        <span>{thread.replies} replies</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        <span>Active {thread.lastActivity}</span>
-                      </div>
-                    </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button 
+                onClick={startNegotiation} 
+                disabled={!selectedFileId || isNegotiating}
+                className="cyber-button gap-2 bg-primary text-primary-foreground"
+              >
+                {isNegotiating ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Play className="w-4 h-4" />
+                )}
+                {isNegotiating ? "Negotiating..." : "Initiate Matrix"}
+              </Button>
+            </div>
+
+            {selectedFileId && vaultFiles.find(f => f.id === selectedFileId) && (
+              <div className="p-3 bg-secondary/30 rounded border border-border/30">
+                <p className="text-xs text-muted-foreground mb-1 font-mono">GRIEVANCE PAYLOAD:</p>
+                <p className="text-sm text-foreground">
+                  {vaultFiles.find(f => f.id === selectedFileId)?.secret_metadata}
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Negotiation Metrics */}
+        {negotiation && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Sentinel Score */}
+            <Card className={`bg-card/80 backdrop-blur-sm border-primary/30`}>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <Shield className="w-5 h-5 text-primary" />
+                  <span className="font-mono text-sm text-primary">SENTINEL STRENGTH</span>
+                </div>
+                <div className="space-y-2">
+                  <Progress value={sentinelScore} className="h-3" />
+                  <div className="flex justify-between text-xs font-mono">
+                    <span className="text-muted-foreground">Power Level</span>
+                    <span className="text-primary">{sentinelScore}%</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
+
+            {/* Victory Probability */}
+            <Card className="bg-card/80 backdrop-blur-sm border-status-safe/30">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <TrendingUp className="w-5 h-5 text-status-safe" />
+                  <span className="font-mono text-sm text-status-safe">VICTORY PROBABILITY</span>
+                </div>
+                <div className="text-center">
+                  <span className="text-4xl font-bold font-mono text-foreground">{victoryProbability()}%</span>
+                  <p className="text-xs text-muted-foreground mt-1">Student Advantage</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Governor Score */}
+            <Card className={`bg-card/80 backdrop-blur-sm border-status-warning/30`}>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <Building2 className="w-5 h-5 text-status-warning" />
+                  <span className="font-mono text-sm text-status-warning">GOVERNOR STRENGTH</span>
+                </div>
+                <div className="space-y-2">
+                  <Progress value={governorScore} className="h-3" />
+                  <div className="flex justify-between text-xs font-mono">
+                    <span className="text-muted-foreground">Power Level</span>
+                    <span className="text-status-warning">{governorScore}%</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Round Indicator */}
+        {negotiation && (
+          <div className="flex items-center justify-center gap-4 py-2">
+            {[1, 2, 3, 4].map((round) => (
+              <div 
+                key={round}
+                className={`
+                  w-12 h-12 rounded-full border-2 flex items-center justify-center font-mono font-bold
+                  transition-all duration-300
+                  ${currentRound === round 
+                    ? 'border-primary bg-primary/20 text-primary scale-110 cyber-glow' 
+                    : currentRound > round 
+                      ? 'border-status-safe/50 bg-status-safe/10 text-status-safe' 
+                      : 'border-border/50 bg-secondary/30 text-muted-foreground'
+                  }
+                `}
+              >
+                {round}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Negotiation Log */}
+        {negotiation && negotiation.negotiation_log.length > 0 && (
+          <div className="space-y-4">
+            <h2 className="font-mono text-sm uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+              <MessageSquare className="w-4 h-4" />
+              Negotiation Transcript
+            </h2>
+            
+            <div className="space-y-3">
+              {negotiation.negotiation_log.map((entry, index) => {
+                const style = agentStyles[entry.agent as keyof typeof agentStyles];
+                const Icon = style.icon;
+                
+                return (
+                  <Card 
+                    key={index}
+                    className={`
+                      ${style.bg} border ${style.border}
+                      animate-fade-in transition-all duration-300
+                    `}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-4">
+                        <div className={`p-2 rounded-lg ${style.bg} ${style.border} border`}>
+                          <Icon className={`w-5 h-5 ${style.color}`} />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <div>
+                              <span className={`font-bold ${style.color}`}>{style.label}</span>
+                              <span className="text-xs text-muted-foreground ml-2">({style.subtitle})</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {entry.sentimentShift !== 0 && (
+                                <span className={`text-xs font-mono flex items-center gap-1 ${entry.sentimentShift > 0 ? 'text-status-safe' : 'text-status-critical'}`}>
+                                  {entry.sentimentShift > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                                  {entry.sentimentShift > 0 ? '+' : ''}{entry.sentimentShift}
+                                </span>
+                              )}
+                              <span className="text-xs text-muted-foreground font-mono">
+                                R{entry.round}
+                              </span>
+                            </div>
+                          </div>
+                          <p className="text-sm text-foreground leading-relaxed">
+                            {entry.message}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Final Consensus */}
+        {negotiation?.final_consensus && (
+          <Card className="bg-status-safe/10 border-status-safe/30 cyber-glow">
+            <CardHeader>
+              <CardTitle className="text-status-safe flex items-center gap-2">
+                <Scale className="w-5 h-5" />
+                Final Consensus
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-foreground">{negotiation.final_consensus}</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Loading State */}
+        {isNegotiating && (
+          <div className="flex items-center justify-center py-8">
+            <div className="flex items-center gap-3 text-primary">
+              <Loader2 className="w-6 h-6 animate-spin" />
+              <span className="font-mono text-sm animate-pulse">Processing negotiation matrix...</span>
+            </div>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );
