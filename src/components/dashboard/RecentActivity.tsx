@@ -1,31 +1,41 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, Ghost, FileUp, MessageSquare, CheckCircle, Loader2 } from "lucide-react";
+import { Activity, Ghost, FileUp, MessageSquare, CheckCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatRelativeTime } from "@/lib/crypto";
+import { useSettings } from "@/contexts/SettingsContext";
+import { mockRecentActivity } from "@/lib/mockData";
+import { CyberSpinner } from "@/components/ui/skeleton-card";
 
 interface ActivityItem {
   id: string;
-  type: "report" | "identity" | "upload" | "discussion" | "resolution";
+  type: "report" | "identity" | "upload" | "discussion" | "resolution" | "negotiation" | "vault";
   message: string;
   time: string;
   zone?: string;
+  title?: string;
+  description?: string;
 }
 
 const typeConfig = {
   report: { icon: Activity, color: "text-status-critical bg-status-critical/10" },
   identity: { icon: Ghost, color: "text-primary bg-primary/10" },
   upload: { icon: FileUp, color: "text-status-info bg-status-info/10" },
+  vault: { icon: FileUp, color: "text-status-info bg-status-info/10" },
   discussion: { icon: MessageSquare, color: "text-status-warning bg-status-warning/10" },
+  negotiation: { icon: MessageSquare, color: "text-status-warning bg-status-warning/10" },
   resolution: { icon: CheckCircle, color: "text-status-safe bg-status-safe/10" },
 };
 
 export function RecentActivity() {
+  const { demoMode } = useSettings();
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchActivity = async () => {
+      setIsLoading(true);
+      
       // Fetch recent ghost identities
       const { data: identities } = await supabase
         .from("ghost_identities")
@@ -80,13 +90,23 @@ export function RecentActivity() {
         });
       });
 
-      // Sort by most recent (just simple sort by time string for demo)
-      setActivities(activityItems.slice(0, 6));
+      // Use mock data if demo mode is enabled and no real data exists
+      if (demoMode && activityItems.length === 0) {
+        setActivities(mockRecentActivity.map(item => ({
+          id: item.id,
+          type: item.type as ActivityItem["type"],
+          message: item.description || item.title,
+          time: item.time,
+        })));
+      } else {
+        // Sort by most recent
+        setActivities(activityItems.slice(0, 6));
+      }
       setIsLoading(false);
     };
 
     fetchActivity();
-  }, []);
+  }, [demoMode]);
 
   return (
     <Card className="bg-card/80 backdrop-blur-sm border-border/50">
@@ -106,7 +126,7 @@ export function RecentActivity() {
       <CardContent>
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-6 h-6 animate-spin text-primary" />
+            <CyberSpinner size="md" />
           </div>
         ) : activities.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">

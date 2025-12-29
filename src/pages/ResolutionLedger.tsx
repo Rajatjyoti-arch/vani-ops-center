@@ -2,11 +2,14 @@ import { useState, useEffect, useCallback } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Filter, Clock, CheckCircle, AlertCircle, Search as SearchIcon, Eye, Loader2 } from "lucide-react";
+import { BookOpen, Filter, Clock, CheckCircle, AlertCircle, Search as SearchIcon, Eye } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { formatRelativeTime } from "@/lib/crypto";
 import { NegotiationContracts } from "@/components/ledger/NegotiationContracts";
+import { useSettings } from "@/contexts/SettingsContext";
+import { mockReports } from "@/lib/mockData";
+import { CyberSpinner } from "@/components/ui/skeleton-card";
 
 interface Report {
   id: string;
@@ -35,6 +38,7 @@ const severityConfig = {
 };
 
 const ResolutionLedger = () => {
+  const { demoMode } = useSettings();
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
@@ -49,11 +53,16 @@ const ResolutionLedger = () => {
 
     if (error) {
       console.error("Error fetching reports:", error);
+    }
+    
+    const realData = (data as Report[]) || [];
+    if (demoMode && realData.length === 0) {
+      setReports(mockReports as Report[]);
     } else {
-      setReports((data as Report[]) || []);
+      setReports(realData);
     }
     setIsLoading(false);
-  }, []);
+  }, [demoMode]);
 
   useEffect(() => {
     fetchReports();
@@ -170,7 +179,7 @@ const ResolutionLedger = () => {
           <CardContent>
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                <CyberSpinner size="lg" />
               </div>
             ) : filteredReports.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">

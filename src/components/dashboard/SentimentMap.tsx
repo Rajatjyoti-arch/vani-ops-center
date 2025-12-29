@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, AlertTriangle, CheckCircle, Info, Loader2 } from "lucide-react";
+import { MapPin, AlertTriangle, CheckCircle, Info } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatRelativeTime } from "@/lib/crypto";
+import { useSettings } from "@/contexts/SettingsContext";
+import { mockSentimentLogs } from "@/lib/mockData";
+import { CyberSpinner } from "@/components/ui/skeleton-card";
 
 interface Zone {
   id: string;
@@ -35,6 +38,7 @@ const levelConfig = {
 };
 
 export function SentimentMap() {
+  const { demoMode } = useSettings();
   const [zones, setZones] = useState<Zone[]>([]);
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -42,6 +46,7 @@ export function SentimentMap() {
   // Fetch zones from database
   useEffect(() => {
     const fetchZones = async () => {
+      setIsLoading(true);
       const { data, error } = await supabase
         .from("sentiment_logs")
         .select("*")
@@ -49,8 +54,14 @@ export function SentimentMap() {
 
       if (error) {
         console.error("Error fetching zones:", error);
+      }
+      
+      // Use mock data if demo mode is enabled and no real data exists
+      const realData = (data as Zone[]) || [];
+      if (demoMode && realData.length === 0) {
+        setZones(mockSentimentLogs as Zone[]);
       } else {
-        setZones((data as Zone[]) || []);
+        setZones(realData);
       }
       setIsLoading(false);
     };
@@ -85,7 +96,7 @@ export function SentimentMap() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [demoMode]);
 
   return (
     <Card className="bg-card/80 backdrop-blur-sm border-border/50">
@@ -121,12 +132,18 @@ export function SentimentMap() {
       <CardContent>
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <CyberSpinner size="lg" />
+          </div>
+        ) : zones.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground">
+            <MapPin className="w-8 h-8 mx-auto mb-2 opacity-50" />
+            <p className="text-sm">No zone data available</p>
+            <p className="text-xs mt-1">Enable Demo Mode in Settings to see sample data</p>
           </div>
         ) : (
           <>
-            {/* Grid Layout */}
-            <div className="grid grid-cols-3 gap-3 mb-4">
+            {/* Grid Layout - Responsive */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 mb-4">
               {zones.map((zone) => {
                 const config = levelConfig[zone.concern_level];
                 const Icon = config.icon;
