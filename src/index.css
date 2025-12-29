@@ -208,6 +208,100 @@
       opacity: 1;
     }
   }
+  
+  /* Spark animation for heat bar */
+  .animate-spark {
+    animation: spark 0.6s ease-out forwards;
+  }
+  
+  @keyframes spark {
+    0% {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(-20px) scale(1.2);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(-40px) scale(0.5);
+      opacity: 0;
+    }
+  }
+  
+  /* Glitch text effect for berserker mode */
+  .glitch-text {
+    animation: glitch 0.3s infinite;
+    position: relative;
+  }
+  
+  @keyframes glitch {
+    0% {
+      transform: translate(0);
+    }
+    20% {
+      transform: translate(-2px, 1px);
+    }
+    40% {
+      transform: translate(2px, -1px);
+    }
+    60% {
+      transform: translate(-1px, 2px);
+    }
+    80% {
+      transform: translate(1px, -2px);
+    }
+    100% {
+      transform: translate(0);
+    }
+  }
+  
+  .glitch-text::before,
+  .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .glitch-text::before {
+    animation: glitch-color 0.2s infinite;
+    color: hsl(var(--status-critical));
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    transform: translate(-2px);
+  }
+  
+  .glitch-text::after {
+    animation: glitch-color 0.2s infinite reverse;
+    color: hsl(var(--neon-cyan));
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+    transform: translate(2px);
+  }
+  
+  @keyframes glitch-color {
+    0% {
+      transform: translate(-2px);
+    }
+    100% {
+      transform: translate(2px);
+    }
+  }
+  
+  /* Slow pulse for ethical violation */
+  .animate-pulse-slow {
+    animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes pulse-slow {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
 }
 
 @layer utilities {

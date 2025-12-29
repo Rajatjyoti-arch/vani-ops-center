@@ -3,14 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
-import { Swords, Play, Shield, Building2, Scale, Zap, MessageSquare, TrendingUp, TrendingDown, Loader2 } from "lucide-react";
+import { Swords, Play, Shield, Building2, Scale, Zap, MessageSquare, TrendingUp, TrendingDown, Loader2, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MatrixRain } from "@/components/effects/MatrixRain";
 import { TypewriterText } from "@/components/effects/TypewriterText";
+import { HeatBar } from "@/components/arena/HeatBar";
+import { EthicalViolationAlert } from "@/components/arena/EthicalViolationAlert";
 
 interface VaultFile {
   id: string;
@@ -25,6 +26,8 @@ interface NegotiationRound {
   message: string;
   sentimentShift: number;
   timestamp: string;
+  ethicalViolation?: boolean;
+  berserkerMode?: boolean;
 }
 
 interface Negotiation {
@@ -45,6 +48,10 @@ const agentStyles = {
     border: "border-primary/30",
     label: "Sentinel-AI",
     subtitle: "Student Proxy",
+    berserkerColor: "text-status-critical",
+    berserkerBg: "bg-status-critical/20",
+    berserkerBorder: "border-status-critical/50",
+    berserkerLabel: "SENTINEL-AI [BERSERKER]",
   },
   Governor: {
     icon: Building2,
@@ -61,6 +68,10 @@ const agentStyles = {
     border: "border-status-safe/30",
     label: "The Arbiter",
     subtitle: "Neutral Mediator",
+    ethicsColor: "text-status-critical",
+    ethicsBg: "bg-status-critical/20",
+    ethicsBorder: "border-status-critical/50",
+    ethicsLabel: "THE ARBITER [ETHICS OVERRIDE]",
   },
 };
 
@@ -73,6 +84,8 @@ const TheArena = () => {
   const [currentRound, setCurrentRound] = useState(1);
   const [sentinelScore, setSentinelScore] = useState(50);
   const [governorScore, setGovernorScore] = useState(50);
+  const [ethicalViolationDetected, setEthicalViolationDetected] = useState(false);
+  const [showViolationAlert, setShowViolationAlert] = useState(false);
 
   // Fetch vault files with grievances
   useEffect(() => {
@@ -110,6 +123,8 @@ const TheArena = () => {
     setSentinelScore(50);
     setGovernorScore(50);
     setCurrentRound(1);
+    setEthicalViolationDetected(false);
+    setShowViolationAlert(false);
 
     // Create negotiation record
     const { data: newNegotiation, error } = await supabase
@@ -158,11 +173,23 @@ const TheArena = () => {
       }
 
       try {
+        // Check if we need ethics override
+        const lastEntry = log[log.length - 1];
+        const needsEthicsOverride = lastEntry?.ethicalViolation && lastEntry.agent === 'Governor';
+        
+        if (needsEthicsOverride) {
+          setEthicalViolationDetected(true);
+          setShowViolationAlert(true);
+          // Wait for user to acknowledge the alert
+          await new Promise(resolve => setTimeout(resolve, 3000));
+        }
+        
         const response = await supabase.functions.invoke('negotiate', {
           body: {
             grievanceText,
             currentRound: round,
             negotiationLog: log,
+            ethicalViolationDetected: needsEthicsOverride,
           },
         });
 
@@ -271,6 +298,12 @@ const TheArena = () => {
 
   return (
     <DashboardLayout>
+      {/* Ethical Violation Alert */}
+      <EthicalViolationAlert 
+        isVisible={showViolationAlert} 
+        onDismiss={() => setShowViolationAlert(false)} 
+      />
+      
       <div className="space-y-6 animate-fade-in relative">
         {/* Matrix Rain Background */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
@@ -397,25 +430,39 @@ const TheArena = () => {
 
         {/* Round Indicator */}
         {negotiation && (
-          <div className="flex items-center justify-center gap-4 py-2">
-            {[1, 2, 3, 4].map((round) => (
-              <div 
-                key={round}
-                className={`
-                  w-12 h-12 rounded-full border-2 flex items-center justify-center font-mono font-bold
-                  transition-all duration-300
-                  ${currentRound === round 
-                    ? 'border-primary bg-primary/20 text-primary scale-110 cyber-glow' 
-                    : currentRound > round 
-                      ? 'border-status-safe/50 bg-status-safe/10 text-status-safe' 
-                      : 'border-border/50 bg-secondary/30 text-muted-foreground'
-                  }
-                `}
-              >
-                {round}
-              </div>
-            ))}
-          </div>
+          <>
+            <div className="flex items-center justify-center gap-4 py-2">
+              {[1, 2, 3, 4].map((round) => (
+                <div 
+                  key={round}
+                  className={`
+                    w-12 h-12 rounded-full border-2 flex items-center justify-center font-mono font-bold
+                    transition-all duration-300
+                    ${ethicalViolationDetected && currentRound === round
+                      ? 'border-status-critical bg-status-critical/20 text-status-critical scale-110 animate-pulse'
+                      : currentRound === round 
+                        ? 'border-primary bg-primary/20 text-primary scale-110 cyber-glow' 
+                        : currentRound > round 
+                          ? 'border-status-safe/50 bg-status-safe/10 text-status-safe' 
+                          : 'border-border/50 bg-secondary/30 text-muted-foreground'
+                    }
+                  `}
+                >
+                  {ethicalViolationDetected && currentRound === round ? (
+                    <AlertTriangle className="w-5 h-5" />
+                  ) : round}
+                </div>
+              ))}
+            </div>
+            
+            {/* Heat Bar */}
+            <HeatBar 
+              sentinelScore={sentinelScore} 
+              governorScore={governorScore} 
+              isActive={isNegotiating}
+              ethicalViolation={ethicalViolationDetected}
+            />
+          </>
         )}
 
         {/* Negotiation Log */}
@@ -428,8 +475,30 @@ const TheArena = () => {
             
             <div className="space-y-3">
               {negotiation.negotiation_log.map((entry, index) => {
-                const style = agentStyles[entry.agent as keyof typeof agentStyles];
-                const Icon = style.icon;
+                const baseStyle = agentStyles[entry.agent as keyof typeof agentStyles];
+                const Icon = baseStyle.icon;
+                
+                // Determine if this entry is in special mode
+                const isBerserker = entry.berserkerMode && entry.agent === 'Sentinel';
+                const isEthicsOverride = entry.ethicalViolation && entry.agent === 'Arbiter';
+                
+                // Get appropriate styles with safe fallbacks
+                const berserkerColor = 'berserkerColor' in baseStyle ? baseStyle.berserkerColor : baseStyle.color;
+                const berserkerBg = 'berserkerBg' in baseStyle ? baseStyle.berserkerBg : baseStyle.bg;
+                const berserkerBorder = 'berserkerBorder' in baseStyle ? baseStyle.berserkerBorder : baseStyle.border;
+                const berserkerLabel = 'berserkerLabel' in baseStyle ? baseStyle.berserkerLabel : baseStyle.label;
+                
+                const ethicsColor = 'ethicsColor' in baseStyle ? baseStyle.ethicsColor : baseStyle.color;
+                const ethicsBg = 'ethicsBg' in baseStyle ? baseStyle.ethicsBg : baseStyle.bg;
+                const ethicsBorder = 'ethicsBorder' in baseStyle ? baseStyle.ethicsBorder : baseStyle.border;
+                const ethicsLabel = 'ethicsLabel' in baseStyle ? baseStyle.ethicsLabel : baseStyle.label;
+                
+                const style = {
+                  color: isBerserker ? berserkerColor : isEthicsOverride ? ethicsColor : baseStyle.color,
+                  bg: isBerserker ? berserkerBg : isEthicsOverride ? ethicsBg : baseStyle.bg,
+                  border: isBerserker ? berserkerBorder : isEthicsOverride ? ethicsBorder : baseStyle.border,
+                  label: isBerserker ? berserkerLabel : isEthicsOverride ? ethicsLabel : baseStyle.label,
+                };
                 
                 return (
                   <Card 
@@ -437,18 +506,26 @@ const TheArena = () => {
                     className={`
                       ${style.bg} border ${style.border}
                       animate-fade-in transition-all duration-300
+                      ${isBerserker || isEthicsOverride ? 'ring-2 ring-status-critical/50' : ''}
                     `}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start gap-4">
-                        <div className={`p-2 rounded-lg ${style.bg} ${style.border} border`}>
+                        <div className={`p-2 rounded-lg ${style.bg} ${style.border} border ${isBerserker ? 'animate-pulse' : ''}`}>
                           <Icon className={`w-5 h-5 ${style.color}`} />
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
-                            <div>
-                              <span className={`font-bold ${style.color}`}>{style.label}</span>
-                              <span className="text-xs text-muted-foreground ml-2">({style.subtitle})</span>
+                            <div className="flex items-center gap-2">
+                              <span className={`font-bold ${style.color} ${isBerserker ? 'glitch-text' : ''}`}>
+                                {style.label || baseStyle.label}
+                              </span>
+                              {(isBerserker || isEthicsOverride) && (
+                                <AlertTriangle className="w-4 h-4 text-status-critical animate-pulse" />
+                              )}
+                              {!isBerserker && !isEthicsOverride && (
+                                <span className="text-xs text-muted-foreground">({baseStyle.subtitle})</span>
+                              )}
                             </div>
                             <div className="flex items-center gap-2">
                               {entry.sentimentShift !== 0 && (
@@ -462,10 +539,16 @@ const TheArena = () => {
                               </span>
                             </div>
                           </div>
-                          <p className="text-sm text-foreground leading-relaxed">
+                          <p className={`text-sm leading-relaxed ${
+                            isBerserker 
+                              ? 'font-bold text-status-critical glitch-text' 
+                              : isEthicsOverride 
+                                ? 'font-semibold text-status-critical' 
+                                : 'text-foreground'
+                          }`}>
                             <TypewriterText 
                               text={entry.message} 
-                              speed={15} 
+                              speed={isBerserker ? 8 : 15} 
                               enableSound={index === negotiation.negotiation_log.length - 1}
                             />
                           </p>
@@ -481,11 +564,11 @@ const TheArena = () => {
 
         {/* Final Consensus */}
         {negotiation?.final_consensus && (
-          <Card className="bg-status-safe/10 border-status-safe/30 cyber-glow">
+          <Card className={`cyber-glow ${ethicalViolationDetected ? 'bg-status-critical/10 border-status-critical/30' : 'bg-status-safe/10 border-status-safe/30'}`}>
             <CardHeader>
-              <CardTitle className="text-status-safe flex items-center gap-2">
+              <CardTitle className={`flex items-center gap-2 ${ethicalViolationDetected ? 'text-status-critical' : 'text-status-safe'}`}>
                 <Scale className="w-5 h-5" />
-                Final Consensus
+                {ethicalViolationDetected ? 'Ethics Override Ruling' : 'Final Consensus'}
               </CardTitle>
             </CardHeader>
             <CardContent>
