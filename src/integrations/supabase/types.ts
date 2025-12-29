@@ -14,7 +14,170 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ghost_identities: {
+        Row: {
+          avatar: string
+          created_at: string
+          ghost_name: string
+          id: string
+          reports_submitted: number
+          reputation: number
+          roll_number_hash: string
+          updated_at: string
+        }
+        Insert: {
+          avatar?: string
+          created_at?: string
+          ghost_name: string
+          id?: string
+          reports_submitted?: number
+          reputation?: number
+          roll_number_hash: string
+          updated_at?: string
+        }
+        Update: {
+          avatar?: string
+          created_at?: string
+          ghost_name?: string
+          id?: string
+          reports_submitted?: number
+          reputation?: number
+          roll_number_hash?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reports: {
+        Row: {
+          created_at: string
+          ghost_identity_id: string | null
+          id: string
+          report_id: string
+          severity: string
+          status: string
+          title: string
+          updated_at: string
+          vault_file_id: string | null
+          zone: string
+        }
+        Insert: {
+          created_at?: string
+          ghost_identity_id?: string | null
+          id?: string
+          report_id: string
+          severity?: string
+          status?: string
+          title: string
+          updated_at?: string
+          vault_file_id?: string | null
+          zone: string
+        }
+        Update: {
+          created_at?: string
+          ghost_identity_id?: string | null
+          id?: string
+          report_id?: string
+          severity?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          vault_file_id?: string | null
+          zone?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_ghost_identity_id_fkey"
+            columns: ["ghost_identity_id"]
+            isOneToOne: false
+            referencedRelation: "ghost_identities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_vault_file_id_fkey"
+            columns: ["vault_file_id"]
+            isOneToOne: false
+            referencedRelation: "stealth_vault"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sentiment_logs: {
+        Row: {
+          concern_level: string
+          created_at: string
+          id: string
+          last_report_at: string | null
+          reports_count: number
+          updated_at: string
+          zone_id: string
+          zone_name: string
+        }
+        Insert: {
+          concern_level: string
+          created_at?: string
+          id?: string
+          last_report_at?: string | null
+          reports_count?: number
+          updated_at?: string
+          zone_id: string
+          zone_name: string
+        }
+        Update: {
+          concern_level?: string
+          created_at?: string
+          id?: string
+          last_report_at?: string | null
+          reports_count?: number
+          updated_at?: string
+          zone_id?: string
+          zone_name?: string
+        }
+        Relationships: []
+      }
+      stealth_vault: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          file_name: string
+          file_path: string
+          file_size: string | null
+          file_type: string
+          ghost_identity_id: string | null
+          id: string
+          secret_metadata: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          file_name: string
+          file_path: string
+          file_size?: string | null
+          file_type: string
+          ghost_identity_id?: string | null
+          id?: string
+          secret_metadata?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          file_name?: string
+          file_path?: string
+          file_size?: string | null
+          file_type?: string
+          ghost_identity_id?: string | null
+          id?: string
+          secret_metadata?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stealth_vault_ghost_identity_id_fkey"
+            columns: ["ghost_identity_id"]
+            isOneToOne: false
+            referencedRelation: "ghost_identities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

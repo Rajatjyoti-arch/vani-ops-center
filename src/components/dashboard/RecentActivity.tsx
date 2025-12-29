@@ -1,5 +1,8 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, Ghost, FileUp, MessageSquare, CheckCircle } from "lucide-react";
+import { Activity, Ghost, FileUp, MessageSquare, CheckCircle, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { formatRelativeTime } from "@/lib/crypto";
 
 interface ActivityItem {
   id: string;
@@ -8,15 +11,6 @@ interface ActivityItem {
   time: string;
   zone?: string;
 }
-
-const mockActivity: ActivityItem[] = [
-  { id: "1", type: "report", message: "New anonymous report submitted", time: "2m ago", zone: "Hostel 1" },
-  { id: "2", type: "identity", message: "Ghost identity 'ShadowWolf' created", time: "5m ago" },
-  { id: "3", type: "discussion", message: "New thread: 'Night patrol concerns'", time: "12m ago", zone: "Main Gate" },
-  { id: "4", type: "resolution", message: "Issue #247 marked as resolved", time: "18m ago", zone: "Library" },
-  { id: "5", type: "upload", message: "Evidence file uploaded to vault", time: "25m ago" },
-  { id: "6", type: "report", message: "Critical report flagged for review", time: "32m ago", zone: "Cafeteria" },
-];
 
 const typeConfig = {
   report: { icon: Activity, color: "text-status-critical bg-status-critical/10" },
@@ -27,6 +21,73 @@ const typeConfig = {
 };
 
 export function RecentActivity() {
+  const [activities, setActivities] = useState<ActivityItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchActivity = async () => {
+      // Fetch recent ghost identities
+      const { data: identities } = await supabase
+        .from("ghost_identities")
+        .select("id, ghost_name, created_at")
+        .order("created_at", { ascending: false })
+        .limit(3);
+
+      // Fetch recent vault uploads
+      const { data: uploads } = await supabase
+        .from("stealth_vault")
+        .select("id, file_name, created_at")
+        .order("created_at", { ascending: false })
+        .limit(3);
+
+      // Fetch recent reports
+      const { data: reports } = await supabase
+        .from("reports")
+        .select("id, title, zone, status, created_at")
+        .order("created_at", { ascending: false })
+        .limit(3);
+
+      const activityItems: ActivityItem[] = [];
+
+      identities?.forEach((i) => {
+        activityItems.push({
+          id: `identity-${i.id}`,
+          type: "identity",
+          message: `Ghost identity '${i.ghost_name}' created`,
+          time: formatRelativeTime(i.created_at),
+        });
+      });
+
+      uploads?.forEach((u) => {
+        activityItems.push({
+          id: `upload-${u.id}`,
+          type: "upload",
+          message: `Evidence file '${u.file_name}' uploaded`,
+          time: formatRelativeTime(u.created_at),
+        });
+      });
+
+      reports?.forEach((r) => {
+        const type = r.status === "resolved" ? "resolution" : "report";
+        activityItems.push({
+          id: `report-${r.id}`,
+          type,
+          message: r.status === "resolved" 
+            ? `Issue "${r.title}" marked as resolved`
+            : `New report: "${r.title}"`,
+          time: formatRelativeTime(r.created_at),
+          zone: r.zone,
+        });
+      });
+
+      // Sort by most recent (just simple sort by time string for demo)
+      setActivities(activityItems.slice(0, 6));
+      setIsLoading(false);
+    };
+
+    fetchActivity();
+  }, []);
+
   return (
     <Card className="bg-card/80 backdrop-blur-sm border-border/50">
       <CardHeader className="pb-2">
@@ -43,36 +104,47 @@ export function RecentActivity() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
-          {mockActivity.map((item, index) => {
-            const config = typeConfig[item.type];
-            const Icon = config.icon;
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="w-6 h-6 animate-spin text-primary" />
+          </div>
+        ) : activities.length === 0 ? (
+          <div className="text-center py-8 text-muted-foreground">
+            <Activity className="w-8 h-8 mx-auto mb-2 opacity-50" />
+            <p className="text-sm">No recent activity</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {activities.map((item, index) => {
+              const config = typeConfig[item.type];
+              const Icon = config.icon;
 
-            return (
-              <div
-                key={item.id}
-                className="flex items-start gap-3 p-3 rounded-lg bg-secondary/20 hover:bg-secondary/40 transition-colors animate-fade-in"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <div className={`p-1.5 rounded-md ${config.color}`}>
-                  <Icon className="w-3.5 h-3.5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-foreground">{item.message}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-muted-foreground font-mono">{item.time}</span>
-                    {item.zone && (
-                      <>
-                        <span className="text-muted-foreground">•</span>
-                        <span className="text-xs text-primary">{item.zone}</span>
-                      </>
-                    )}
+              return (
+                <div
+                  key={item.id}
+                  className="flex items-start gap-3 p-3 rounded-lg bg-secondary/20 hover:bg-secondary/40 transition-colors animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <div className={`p-1.5 rounded-md ${config.color}`}>
+                    <Icon className="w-3.5 h-3.5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-foreground">{item.message}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-xs text-muted-foreground font-mono">{item.time}</span>
+                      {item.zone && (
+                        <>
+                          <span className="text-muted-foreground">•</span>
+                          <span className="text-xs text-primary">{item.zone}</span>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
