@@ -116,29 +116,7 @@
                 0 10px 30px rgba(0, 0, 0, 0.08);
   }
 
-  /* Legacy: cyber-glow maps to professional shadow */
-  .cyber-glow {
-    box-shadow: 0 2px 8px rgba(0, 31, 63, 0.12);
-  }
-
-  .cyber-glow-intense {
-    box-shadow: 0 4px 16px rgba(0, 31, 63, 0.15);
-  }
-  
-  /* Success accent */
-  .cyber-glow-critical {
-    box-shadow: 0 2px 8px hsl(var(--destructive) / 0.2);
-  }
-
-  .text-glow {
-    /* Removed glow for professional look */
-  }
-  
-  .text-glow-critical {
-    /* Removed glow for professional look */
-  }
-  
-  /* Removed doomsday mode - professional alert styling */
+  /* Professional alert styling */
   .doomsday-mode {
     border-color: hsl(var(--destructive) / 0.5) !important;
     background: linear-gradient(135deg, hsl(var(--destructive) / 0.05), transparent);
@@ -149,26 +127,21 @@
   }
 
   /* Professional button interactions */
-  .cyber-button {
+  .professional-button {
     @apply relative overflow-hidden transition-all duration-200;
   }
 
-  .cyber-button:hover {
+  .professional-button:hover {
     @apply scale-[1.01];
     box-shadow: 0 2px 8px rgba(0, 31, 63, 0.15);
   }
 
-  .cyber-button:active {
+  .professional-button:active {
     @apply scale-[0.99];
   }
 
-  /* Removed scan lines for professional look */
-  .scan-lines::before {
-    display: none;
-  }
-
   /* Clean grid pattern */
-  .cyber-grid {
+  .institutional-grid {
     background-image: 
       linear-gradient(hsl(var(--border) / 0.3) 1px, transparent 1px),
       linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
@@ -188,23 +161,18 @@
     @apply text-[hsl(var(--status-critical))];
   }
 
-  /* Professional pulse animation */
-  .pulse-cyan {
-    animation: pulse-professional 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* Smooth professional animations */
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
-  @keyframes pulse-professional {
+  @keyframes pulse-subtle {
     0%, 100% {
       opacity: 1;
     }
     50% {
       opacity: 0.7;
     }
-  }
-
-  /* Removed flicker for professional look */
-  .flicker {
-    /* No flicker in professional mode */
   }
   
   /* Smooth spark animation */
@@ -225,16 +193,6 @@
       transform: translateY(-20px) scale(0.8);
       opacity: 0;
     }
-  }
-  
-  /* Removed glitch effect for professional look */
-  .glitch-text {
-    /* Clean text, no glitch */
-  }
-  
-  .glitch-text::before,
-  .glitch-text::after {
-    display: none;
   }
   
   /* Smooth pulse */

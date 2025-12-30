@@ -21,7 +21,7 @@ const QUICK_ACTIONS = [
   { label: "Compliance Protocol", query: "What are the institutional transparency and compliance requirements?" },
 ];
 
-export function SentinelChatbot() {
+export function ComplianceAssistant() {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);

@@ -149,7 +149,7 @@ export function DeepScanReveal({ vaultFileId, filePath, fileName }: DeepScanReve
             className="absolute inset-0 w-full h-full"
           />
 
-          <Card className="relative z-10 w-full max-w-2xl mx-4 bg-card/95 border-primary/50 cyber-glow">
+          <Card className="relative z-10 w-full max-w-2xl mx-4 bg-card/95 border-primary/50 shadow-2xl">
             <CardContent className="p-6 space-y-6">
               {/* Header */}
               <div className="flex items-center justify-between">

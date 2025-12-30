@@ -1,4 +1,4 @@
-import { UserCheck, Shield, Scale, BookOpen, Lock, Radio, Building } from "lucide-react";
+import { UserCheck, Shield, Scale, BookOpen, Lock, Radio, Building, HelpCircle } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { CUJLogo } from "@/components/ui/CUJLogo";
 import {
@@ -62,6 +62,13 @@ const navItems = [
     icon: Radio,
     description: "Transparency Archive",
     tourId: "nav-public-ledger",
+  },
+  {
+    title: "Help & Documentation",
+    url: "/help",
+    icon: HelpCircle,
+    description: "Platform Guidelines",
+    tourId: "nav-help",
   },
 ];
 

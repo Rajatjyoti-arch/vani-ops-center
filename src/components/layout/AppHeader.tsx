@@ -55,7 +55,7 @@ export function AppHeader() {
         </SidebarTrigger>
         
         <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
-          <Activity className="w-3 h-3 text-primary pulse-cyan" />
+          <Activity className="w-3 h-3 text-primary animate-pulse" />
           <span className="font-mono">VANI://SECURE_CHANNEL</span>
         </div>
       </div>

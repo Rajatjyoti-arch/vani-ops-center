@@ -119,7 +119,7 @@ export function TourOverlay() {
 
       {/* Highlight border */}
       <div
-        className="absolute border-2 border-primary rounded-lg cyber-glow-intense pointer-events-none animate-pulse"
+        className="absolute border-2 border-primary rounded-lg shadow-lg pointer-events-none animate-pulse"
         style={{
           top: position.top,
           left: position.left,
@@ -130,7 +130,7 @@ export function TourOverlay() {
 
       {/* Tooltip */}
       <div
-        className="absolute bg-card border border-primary/50 rounded-lg shadow-2xl cyber-glow p-4 w-80 animate-fade-in"
+        className="absolute bg-card border border-primary/50 rounded-lg shadow-2xl p-4 w-80 animate-fade-in"
         style={{
           top: tooltipPosition.top,
           left: tooltipPosition.left,

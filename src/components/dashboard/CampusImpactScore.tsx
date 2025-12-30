@@ -50,7 +50,7 @@ export function CampusImpactScore() {
               <Loader2 className="w-6 h-6 animate-spin text-primary mt-2" />
             ) : (
               <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold font-mono text-primary text-glow">
+                <span className="text-3xl font-bold font-mono text-primary">
                   {score}%
                 </span>
                 <span className="text-xs text-muted-foreground">impact</span>

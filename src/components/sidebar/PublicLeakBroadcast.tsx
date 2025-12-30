@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { AlertTriangle, Radio, Skull, X } from "lucide-react";
+import { AlertTriangle, Radio, ShieldAlert, X } from "lucide-react";
 import { useDeadManSwitch } from "@/contexts/DeadManSwitchContext";
 import { supabase } from "@/integrations/supabase/client";
-import { MatrixRain } from "@/components/effects/MatrixRain";
 
 export function PublicLeakBroadcast() {
   const { hasTriggered, resetTrigger } = useDeadManSwitch();
@@ -19,7 +18,7 @@ export function PublicLeakBroadcast() {
   const triggerLeak = async () => {
     setIsLeaking(true);
     
-    // Fetch grievances from vault
+    // Fetch grievances from repository
     const { data: vaultFiles } = await supabase
       .from("stealth_vault")
       .select("secret_metadata, file_name, created_at")
@@ -31,7 +30,7 @@ export function PublicLeakBroadcast() {
       return (metadata?.grievance_text as string) || `Encrypted evidence: ${file.file_name}`;
     }) || ["No evidence found - system integrity maintained"];
 
-    // Simulate delay for dramatic effect
+    // Simulate delay for processing
     await new Promise((resolve) => setTimeout(resolve, 2000));
     
     setLeakedData(leakPayload);
@@ -39,10 +38,10 @@ export function PublicLeakBroadcast() {
     // Store in localStorage as "Public Ledger" (simulated)
     const existingLedger = JSON.parse(localStorage.getItem("public_ledger") || "[]");
     const newEntries = leakPayload.map((text, i) => ({
-      id: `leak-${Date.now()}-${i}`,
+      id: `disclosure-${Date.now()}-${i}`,
       text,
       timestamp: new Date().toISOString(),
-      type: "DEAD_MAN_SWITCH_TRIGGER",
+      type: "EMERGENCY_DISCLOSURE_TRIGGER",
     }));
     localStorage.setItem("public_ledger", JSON.stringify([...newEntries, ...existingLedger]));
     
@@ -61,19 +60,11 @@ export function PublicLeakBroadcast() {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
       {/* Background lock overlay */}
-      <div className="absolute inset-0 bg-black/95 backdrop-blur-sm" />
-      
-      {/* Matrix rain effect */}
-      <div className="absolute inset-0 opacity-30">
-        <MatrixRain />
-      </div>
-
-      {/* Scanlines */}
-      <div className="absolute inset-0 scan-lines pointer-events-none" />
+      <div className="absolute inset-0 bg-background/95 backdrop-blur-sm" />
 
       {/* Main broadcast window */}
       <div className="relative z-10 max-w-2xl w-full mx-4 animate-scale-in">
-        {/* Flashing warning border */}
+        {/* Warning border */}
         <div className="absolute -inset-1 bg-gradient-to-r from-status-critical via-destructive to-status-critical rounded-lg opacity-75 animate-pulse" />
         
         <div className="relative bg-background border-2 border-status-critical rounded-lg overflow-hidden">
@@ -81,13 +72,13 @@ export function PublicLeakBroadcast() {
           <div className="bg-status-critical/20 border-b border-status-critical p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Skull className="w-8 h-8 text-status-critical animate-pulse" />
+                <ShieldAlert className="w-8 h-8 text-status-critical animate-pulse" />
                 <div>
-                  <h2 className="font-mono text-xl font-bold text-status-critical glitch-text">
-                    SYSTEM LOCKDOWN
+                  <h2 className="font-mono text-xl font-bold text-status-critical">
+                    EMERGENCY DISCLOSURE
                   </h2>
                   <p className="text-xs text-status-critical/80 font-mono">
-                    DEAD MAN'S SWITCH ACTIVATED
+                    EMERGENCY PROTOCOL ACTIVATED
                   </p>
                 </div>
               </div>
@@ -102,10 +93,10 @@ export function PublicLeakBroadcast() {
               <AlertTriangle className="w-6 h-6 text-status-critical shrink-0" />
               <div className="font-mono text-sm">
                 <p className="text-status-critical font-bold">
-                  NEGOTIATION FAILED
+                  RESOLUTION PROCESS FAILED
                 </p>
                 <p className="text-foreground/80 mt-1">
-                  RELEASING ENCRYPTED EVIDENCE TO PUBLIC TRANSPARENCY NODE
+                  RELEASING ENCRYPTED EVIDENCE TO PUBLIC TRANSPARENCY ARCHIVE
                 </p>
               </div>
             </div>
@@ -114,17 +105,17 @@ export function PublicLeakBroadcast() {
             <div className="flex items-center gap-2 text-sm font-mono">
               <div className={`w-3 h-3 rounded-full ${isLeaking ? "bg-status-warning animate-pulse" : "bg-status-critical"}`} />
               <span className="text-muted-foreground">
-                {isLeaking ? "TRANSMITTING..." : leakComplete ? "BROADCAST COMPLETE" : "INITIALIZING..."}
+                {isLeaking ? "TRANSMITTING..." : leakComplete ? "DISCLOSURE COMPLETE" : "INITIALIZING..."}
               </span>
             </div>
 
-            {/* Leaked data preview */}
+            {/* Disclosed data preview */}
             {leakedData.length > 0 && (
               <div className="space-y-2">
                 <p className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
-                  Evidence Released to Public Ledger:
+                  Evidence Released to Public Archive:
                 </p>
-                <div className="bg-slate-dark/50 border border-border/50 rounded p-3 max-h-48 overflow-y-auto">
+                <div className="bg-secondary/50 border border-border/50 rounded p-3 max-h-48 overflow-y-auto">
                   {leakedData.map((text, i) => (
                     <div key={i} className="flex items-start gap-2 py-1 text-sm font-mono">
                       <span className="text-status-critical">▸</span>
@@ -137,9 +128,9 @@ export function PublicLeakBroadcast() {
 
             {/* Independence note */}
             <p className="text-[10px] text-center text-muted-foreground font-mono">
-              This broadcast is now permanent and cannot be recalled.
+              This disclosure is now permanent and cannot be recalled.
               <br />
-              The truth has been set free.
+              Institutional transparency has been achieved.
             </p>
           </div>
 

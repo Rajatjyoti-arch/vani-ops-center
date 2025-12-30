@@ -199,8 +199,7 @@ export function NeuralScanner({ isScanning, onScanComplete }: NeuralScannerProps
         className="absolute inset-0 w-full h-full pointer-events-none"
       />
 
-      {/* Scanlines effect */}
-      <div className="absolute inset-0 scan-lines pointer-events-none opacity-50" />
+      {/* Corner brackets */}
 
       {/* Corner brackets */}
       <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-primary" />

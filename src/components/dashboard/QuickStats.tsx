@@ -42,7 +42,7 @@ function StatCard({ title, value, change, icon: Icon, trend, isLoading }: StatCa
               </>
             )}
           </div>
-          <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 group-hover:cyber-glow transition-all">
+          <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-all">
             <Icon className="w-5 h-5 text-primary" />
           </div>
         </div>

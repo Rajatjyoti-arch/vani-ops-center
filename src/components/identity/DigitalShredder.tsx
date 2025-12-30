@@ -178,15 +178,12 @@ export function DigitalShredder({ isActive, inputData, outputHash, onComplete }:
       {displayHash && (
         <div className="absolute bottom-4 left-4 right-4">
           <p className="text-xs text-muted-foreground mb-1">SHA-256 Output:</p>
-          <p className="font-mono text-sm text-primary break-all text-glow">
+          <p className="font-mono text-sm text-primary break-all">
             {displayHash}
             {phase === "forming" && <span className="animate-pulse">█</span>}
           </p>
         </div>
       )}
-
-      {/* Scanlines */}
-      <div className="absolute inset-0 scan-lines pointer-events-none opacity-30" />
     </div>
   );
 }
