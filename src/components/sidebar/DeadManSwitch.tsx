@@ -39,35 +39,35 @@ export function DeadManSwitch({ collapsed }: { collapsed: boolean }) {
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <AlertTriangle
-            className={`w-4 h-4 ${isActive ? "text-status-critical animate-pulse" : "text-muted-foreground"}`}
+            className={`w-4 h-4 ${isActive ? "text-destructive" : "text-muted-foreground"}`}
           />
-          <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
-            Dead Man's Switch
+          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Emergency Disclosure
           </span>
         </div>
         <Switch
           checked={isActive}
           onCheckedChange={setIsActive}
-          className="data-[state=checked]:bg-status-critical"
+          className="data-[state=checked]:bg-destructive"
         />
       </div>
 
       {isActive && (
         <div className="animate-fade-in space-y-2">
-          <div className="flex items-center gap-2 p-2 bg-status-critical/10 border border-status-critical/30 rounded">
-            <Clock className="w-4 h-4 text-status-critical" />
-            <span className="font-mono text-lg text-status-critical font-bold">
+          <div className="flex items-center gap-2 p-2 bg-destructive/10 border border-destructive/30 rounded">
+            <Clock className="w-4 h-4 text-destructive" />
+            <span className="font-mono text-lg text-destructive font-bold">
               {formatTime(timeRemaining)}
             </span>
           </div>
-          <p className="text-[10px] text-status-critical/80 leading-tight">
-            If no check-in occurs, encrypted evidence will be broadcast to the Public Transparency Node.
+          <p className="text-[10px] text-muted-foreground leading-tight">
+            If no check-in occurs within the timeframe, evidence will be released to the Public Disclosure archive.
           </p>
           <button
             onClick={handleCheckIn}
-            className="w-full py-1.5 text-xs font-mono bg-status-critical/20 text-status-critical border border-status-critical/30 rounded hover:bg-status-critical/30 transition-colors"
+            className="w-full py-2 text-xs font-medium bg-destructive/10 text-destructive border border-destructive/30 rounded hover:bg-destructive/20 transition-colors"
           >
-            CHECK IN
+            Confirm Check-In
           </button>
         </div>
       )}

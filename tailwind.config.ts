@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
+        sans: ["Inter", "Roboto", "system-ui", "sans-serif"],
+        mono: ["Roboto", "Inter", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -61,10 +61,11 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // VANI custom colors
-        neon: {
-          cyan: "hsl(var(--neon-cyan))",
-          "cyan-glow": "hsl(var(--neon-cyan-glow))",
+        // Institutional colors
+        navy: {
+          dark: "hsl(var(--navy-dark))",
+          medium: "hsl(var(--navy-medium))",
+          light: "hsl(var(--navy-light))",
         },
         slate: {
           dark: "hsl(var(--slate-dark))",
@@ -102,10 +103,10 @@ export default {
         },
         "glow-pulse": {
           "0%, 100%": { 
-            boxShadow: "0 0 20px hsl(187 100% 50% / 0.3), 0 0 40px hsl(187 100% 50% / 0.1)" 
+            boxShadow: "0 2px 8px rgba(0, 31, 63, 0.1)" 
           },
           "50%": { 
-            boxShadow: "0 0 30px hsl(187 100% 50% / 0.5), 0 0 60px hsl(187 100% 50% / 0.2)" 
+            boxShadow: "0 4px 16px rgba(0, 31, 63, 0.15)" 
           },
         },
         "slide-in-left": {

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Ghost, RefreshCw, Star, Shield, Loader2, LogOut, Scan, Fingerprint } from "lucide-react";
+import { UserCheck, RefreshCw, Star, Shield, Loader2, LogOut, CheckCircle, Fingerprint } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { generateHash, generateGhostName, generateAvatar } from "@/lib/crypto";
 import { toast } from "@/hooks/use-toast";
@@ -76,7 +76,7 @@ const IdentityGhost = () => {
     if (!rollNumber.trim()) {
       toast({
         title: "Error",
-        description: "Please enter your ID for neural scan",
+        description: "Please enter your institutional ID to authenticate",
         variant: "destructive",
       });
       return;
@@ -157,7 +157,7 @@ const IdentityGhost = () => {
       console.error("Error creating identity:", error);
       toast({
         title: "Error",
-        description: "Failed to create ghost identity. Please try again.",
+        description: "Failed to create anonymous credential. Please try again.",
         variant: "destructive",
       });
       setScanPhase("idle");
@@ -190,8 +190,8 @@ const IdentityGhost = () => {
       if (identity) {
         login(identity);
         toast({
-          title: "Identity Rotated",
-          description: `Now operating as ${identity.ghost_name}`,
+          title: "Identity Changed",
+          description: `Now authenticated as ${identity.ghost_name}`,
         });
       }
     }
@@ -201,8 +201,8 @@ const IdentityGhost = () => {
     logout();
     setActiveId(null);
     toast({
-      title: "Session Terminated",
-      description: "Ghost identity deactivated. Access revoked.",
+      title: "Session Ended",
+      description: "Anonymous credential deactivated.",
     });
   };
 
@@ -213,12 +213,12 @@ const IdentityGhost = () => {
       <div className="space-y-6 animate-fade-in">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
+            <h1 className="text-2xl font-semibold text-foreground flex items-center gap-3">
               <Fingerprint className="w-7 h-7 text-primary" />
-              Neural Identity Scanner
+              Anonymous Credentialing
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Bio-data purged • Identity obfuscated • SHA-256 encrypted
+              Secure identity verification with SHA-256 encryption
             </p>
           </div>
           <div className="flex gap-2">
@@ -226,7 +226,7 @@ const IdentityGhost = () => {
               <Button
                 onClick={handleLogout}
                 variant="outline"
-                className="gap-2 border-destructive/50 text-destructive hover:bg-destructive/10"
+                className="gap-2"
               >
                 <LogOut className="w-4 h-4" />
                 End Session
@@ -235,24 +235,24 @@ const IdentityGhost = () => {
             <Button
               onClick={rotateIdentity}
               variant="outline"
-              className="cyber-button gap-2"
+              className="gap-2"
               disabled={identities.length < 2}
             >
               <RefreshCw className="w-4 h-4" />
-              Rotate Identity
+              Switch Identity
             </Button>
           </div>
         </div>
 
-        {/* Neural Scan Interface */}
-        <Card className="bg-card/80 backdrop-blur-sm border-primary/30 overflow-hidden">
+        {/* Authentication Interface */}
+        <Card className="border-border/50 shadow-sm">
           <CardHeader className="pb-2 border-b border-border/50">
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Scan className="w-5 h-5 text-primary animate-pulse" />
-              {scanPhase === "idle" && "Initiate Neural Scan"}
-              {scanPhase === "neural-scan" && "Face Geometry Scan in Progress"}
-              {scanPhase === "shredding" && "Digital Shredder Active"}
-              {scanPhase === "result" && "Identity Forged"}
+            <CardTitle className="text-base flex items-center gap-2">
+              <UserCheck className="w-5 h-5 text-primary" />
+              {scanPhase === "idle" && "Authenticate Identity"}
+              {scanPhase === "neural-scan" && "Biometric Verification in Progress"}
+              {scanPhase === "shredding" && "Processing Credentials"}
+              {scanPhase === "result" && "Authentication Complete"}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 pt-4">
@@ -261,28 +261,27 @@ const IdentityGhost = () => {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="rollNumber" className="flex items-center gap-2">
-                    <Ghost className="w-4 h-4 text-primary" />
-                    Enter ID for Neural Scan
+                    Enter Institutional ID
                   </Label>
                   <Input
                     id="rollNumber"
-                    placeholder="Enter your roll number or ID..."
+                    placeholder="Enter your student/staff ID..."
                     value={rollNumber}
                     onChange={(e) => setRollNumber(e.target.value)}
-                    className="bg-secondary/50 border-border/50 font-mono text-lg h-12"
+                    className="text-base h-12"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Your ID will be combined with a neural scan and shredded into an anonymous hash.
+                    Your ID will be cryptographically hashed to create an anonymous credential.
                   </p>
                 </div>
 
                 <Button
                   onClick={handleStartScan}
                   disabled={!rollNumber.trim()}
-                  className="w-full cyber-button bg-primary text-primary-foreground h-12 text-lg"
+                  className="w-full h-12"
                 >
-                  <Scan className="w-5 h-5 mr-2" />
-                  Begin Neural Scan
+                  <CheckCircle className="w-5 h-5 mr-2" />
+                  Authenticate
                 </Button>
               </div>
             )}
@@ -317,9 +316,9 @@ const IdentityGhost = () => {
               <Button
                 onClick={resetScan}
                 variant="outline"
-                className="w-full border-destructive/50 text-destructive hover:bg-destructive/10"
+                className="w-full"
               >
-                Cancel Scan
+                Cancel
               </Button>
             )}
           </CardContent>
@@ -327,28 +326,30 @@ const IdentityGhost = () => {
 
         {/* Active Identity */}
         {activeIdentity && scanPhase === "idle" && (
-          <Card className="bg-primary/5 border-primary/30 cyber-glow">
+          <Card className="border-accent/30 bg-accent/5">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-primary flex items-center gap-2">
+              <CardTitle className="text-sm text-accent flex items-center gap-2">
                 <Shield className="w-4 h-4" />
-                ACTIVE IDENTITY
+                ACTIVE CREDENTIAL
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-4">
-                <div className="text-5xl">{activeIdentity.avatar}</div>
+                <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
+                  <UserCheck className="w-6 h-6 text-accent" />
+                </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-foreground text-glow">
+                  <h3 className="text-lg font-semibold text-foreground">
                     {activeIdentity.ghost_name}
                   </h3>
-                  <div className="flex items-center gap-4 mt-2 text-sm">
+                  <div className="flex items-center gap-4 mt-1 text-sm">
                     <div className="flex items-center gap-1">
                       <Star className="w-4 h-4 text-status-warning" />
-                      <span className="font-mono">{activeIdentity.reputation}%</span>
-                      <span className="text-muted-foreground">reputation</span>
+                      <span>{activeIdentity.reputation}%</span>
+                      <span className="text-muted-foreground">trust score</span>
                     </div>
                     <div className="text-muted-foreground">
-                      {activeIdentity.reports_submitted} reports submitted
+                      {activeIdentity.reports_submitted} submissions
                     </div>
                   </div>
                 </div>
@@ -360,8 +361,8 @@ const IdentityGhost = () => {
         {/* All Identities Grid */}
         {scanPhase === "idle" && (
           <div>
-            <h2 className="text-lg font-semibold mb-4">
-              Ghost Registry ({identities.length})
+            <h2 className="text-base font-medium mb-4">
+              Credential Registry ({identities.length})
             </h2>
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
@@ -373,29 +374,31 @@ const IdentityGhost = () => {
                   <Card
                     key={identity.id}
                     className={`
-                      bg-card/80 backdrop-blur-sm cursor-pointer transition-all duration-300
-                      hover:border-primary/50 hover:scale-[1.02]
-                      ${identity.id === activeId ? "border-primary/50 ring-1 ring-primary/30" : "border-border/50"}
+                      cursor-pointer transition-all duration-200
+                      hover:shadow-md
+                      ${identity.id === activeId ? "border-accent ring-1 ring-accent/30" : "border-border/50"}
                     `}
                     onClick={() => setActiveId(identity.id)}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="text-3xl">{identity.avatar}</div>
+                        <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+                          <UserCheck className="w-5 h-5 text-muted-foreground" />
+                        </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <h4 className="font-medium text-foreground">{identity.ghost_name}</h4>
                             {identity.id === activeId && (
-                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/20 text-primary">
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-accent/20 text-accent">
                                 ACTIVE
                               </span>
                             )}
                           </div>
                           <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
                             <Star className="w-3 h-3 text-status-warning" />
-                            <span className="font-mono">{identity.reputation}%</span>
+                            <span>{identity.reputation}%</span>
                             <span>•</span>
-                            <span>{identity.reports_submitted} reports</span>
+                            <span>{identity.reports_submitted} submissions</span>
                           </div>
                         </div>
                       </div>

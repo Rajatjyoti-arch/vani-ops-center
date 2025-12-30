@@ -1,95 +1,96 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* VANI - Tactical Cyber-Noir Design System */
+/* VANI - Institutional Professional Design System */
 
 @layer base {
   :root {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
+    --background: 220 20% 97%;
+    --foreground: 220 25% 15%;
 
-    --card: 222 47% 8%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 15%;
 
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 15%;
 
-    --primary: 187 100% 50%;
-    --primary-foreground: 222 47% 6%;
+    --primary: 210 100% 25%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 220 15% 92%;
+    --secondary-foreground: 220 25% 15%;
 
-    --muted: 215 28% 14%;
-    --muted-foreground: 215 20% 55%;
+    --muted: 220 15% 95%;
+    --muted-foreground: 220 15% 45%;
 
-    --accent: 187 100% 50%;
-    --accent-foreground: 222 47% 6%;
+    --accent: 160 84% 35%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 215 28% 20%;
-    --input: 215 28% 20%;
-    --ring: 187 100% 50%;
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 210 100% 25%;
 
     --radius: 0.5rem;
 
-    /* Custom VANI colors */
-    --neon-cyan: 187 100% 50%;
-    --neon-cyan-glow: 187 100% 60%;
-    --slate-dark: 222 47% 6%;
-    --slate-medium: 215 28% 17%;
-    --slate-light: 215 28% 25%;
+    /* Institutional colors */
+    --navy-dark: 210 100% 12%;
+    --navy-medium: 210 100% 25%;
+    --navy-light: 210 50% 40%;
+    --slate-dark: 220 15% 25%;
+    --slate-medium: 220 15% 45%;
+    --slate-light: 220 15% 75%;
     
     /* Status colors */
-    --status-safe: 142 76% 45%;
-    --status-warning: 45 93% 55%;
+    --status-safe: 160 84% 35%;
+    --status-warning: 45 93% 47%;
     --status-critical: 0 84% 60%;
-    --status-info: 187 100% 50%;
+    --status-info: 210 100% 50%;
 
-    /* Sidebar */
-    --sidebar-background: 222 47% 5%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 187 100% 50%;
-    --sidebar-primary-foreground: 222 47% 6%;
-    --sidebar-accent: 215 28% 14%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 215 28% 15%;
-    --sidebar-ring: 187 100% 50%;
+    /* Sidebar - Professional */
+    --sidebar-background: 210 100% 12%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 160 84% 45%;
+    --sidebar-primary-foreground: 210 100% 12%;
+    --sidebar-accent: 210 50% 20%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 210 50% 20%;
+    --sidebar-ring: 160 84% 45%;
   }
 
   .dark {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 8%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 187 100% 50%;
-    --primary-foreground: 222 47% 6%;
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 215 28% 14%;
-    --muted-foreground: 215 20% 55%;
-    --accent: 187 100% 50%;
-    --accent-foreground: 222 47% 6%;
+    --background: 210 100% 8%;
+    --foreground: 0 0% 98%;
+    --card: 210 100% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 210 100% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 160 84% 45%;
+    --primary-foreground: 210 100% 8%;
+    --secondary: 210 50% 18%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 210 50% 15%;
+    --muted-foreground: 220 15% 60%;
+    --accent: 160 84% 45%;
+    --accent-foreground: 210 100% 8%;
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 215 28% 20%;
-    --input: 215 28% 20%;
-    --ring: 187 100% 50%;
-    --sidebar-background: 222 47% 5%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 187 100% 50%;
-    --sidebar-primary-foreground: 222 47% 6%;
-    --sidebar-accent: 215 28% 14%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 215 28% 15%;
-    --sidebar-ring: 187 100% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 210 50% 20%;
+    --input: 210 50% 20%;
+    --ring: 160 84% 45%;
+    --sidebar-background: 210 100% 6%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 160 84% 45%;
+    --sidebar-primary-foreground: 210 100% 8%;
+    --sidebar-accent: 210 50% 15%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 210 50% 15%;
+    --sidebar-ring: 160 84% 45%;
   }
 }
 
@@ -104,113 +105,73 @@
 }
 
 @layer components {
-  /* Cyber glow effects */
+  /* Professional subtle effects */
+  .professional-shadow {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08),
+                0 4px 12px rgba(0, 0, 0, 0.04);
+  }
+
+  .professional-shadow-lg {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05),
+                0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Legacy: cyber-glow maps to professional shadow */
   .cyber-glow {
-    box-shadow: 0 0 20px hsl(var(--neon-cyan) / 0.3),
-                0 0 40px hsl(var(--neon-cyan) / 0.1);
+    box-shadow: 0 2px 8px rgba(0, 31, 63, 0.12);
   }
 
   .cyber-glow-intense {
-    box-shadow: 0 0 20px hsl(var(--neon-cyan) / 0.5),
-                0 0 40px hsl(var(--neon-cyan) / 0.3),
-                0 0 60px hsl(var(--neon-cyan) / 0.1);
+    box-shadow: 0 4px 16px rgba(0, 31, 63, 0.15);
   }
   
-  /* Critical/Doomsday glow effect */
+  /* Success accent */
   .cyber-glow-critical {
-    box-shadow: 0 0 20px hsl(var(--status-critical) / 0.5),
-                0 0 40px hsl(var(--status-critical) / 0.3),
-                0 0 60px hsl(var(--status-critical) / 0.1);
+    box-shadow: 0 2px 8px hsl(var(--destructive) / 0.2);
   }
 
   .text-glow {
-    text-shadow: 0 0 10px hsl(var(--neon-cyan) / 0.5),
-                 0 0 20px hsl(var(--neon-cyan) / 0.3);
+    /* Removed glow for professional look */
   }
   
   .text-glow-critical {
-    text-shadow: 0 0 10px hsl(var(--status-critical) / 0.5),
-                 0 0 20px hsl(var(--status-critical) / 0.3);
+    /* Removed glow for professional look */
   }
   
-  /* Doomsday mode for sidebar */
+  /* Removed doomsday mode - professional alert styling */
   .doomsday-mode {
-    border-color: hsl(var(--status-critical) / 0.5) !important;
-    box-shadow: inset 0 0 30px hsl(var(--status-critical) / 0.1),
-                0 0 20px hsl(var(--status-critical) / 0.2);
+    border-color: hsl(var(--destructive) / 0.5) !important;
+    background: linear-gradient(135deg, hsl(var(--destructive) / 0.05), transparent);
   }
   
   .doomsday-mode::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      hsl(var(--status-critical) / 0.05) 0%,
-      transparent 50%,
-      hsl(var(--status-critical) / 0.05) 100%
-    );
-    pointer-events: none;
-    animation: doomsday-pulse 2s ease-in-out infinite;
-  }
-  
-  @keyframes doomsday-pulse {
-    0%, 100% {
-      opacity: 0.5;
-    }
-    50% {
-      opacity: 1;
-    }
-  }
-  
-  /* Pulse glow animation for chatbot button */
-  .animate-pulse-glow {
-    animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-  
-  @keyframes pulse-glow {
-    0%, 100% {
-      box-shadow: 0 0 20px hsl(var(--primary) / 0.4),
-                  0 0 40px hsl(var(--primary) / 0.2);
-    }
-    50% {
-      box-shadow: 0 0 30px hsl(var(--primary) / 0.6),
-                  0 0 60px hsl(var(--primary) / 0.3);
-    }
+    display: none;
   }
 
-  /* Cyber button interactions */
+  /* Professional button interactions */
   .cyber-button {
     @apply relative overflow-hidden transition-all duration-200;
   }
 
   .cyber-button:hover {
-    @apply scale-[1.02];
-    box-shadow: 0 0 20px hsl(var(--neon-cyan) / 0.4);
+    @apply scale-[1.01];
+    box-shadow: 0 2px 8px rgba(0, 31, 63, 0.15);
   }
 
   .cyber-button:active {
-    @apply scale-[0.98];
+    @apply scale-[0.99];
   }
 
-  /* Scan line effect */
+  /* Removed scan lines for professional look */
   .scan-lines::before {
-    content: "";
-    @apply absolute inset-0 pointer-events-none;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      hsl(var(--neon-cyan) / 0.03) 2px,
-      hsl(var(--neon-cyan) / 0.03) 4px
-    );
+    display: none;
   }
 
-  /* Grid pattern background */
+  /* Clean grid pattern */
   .cyber-grid {
     background-image: 
-      linear-gradient(hsl(var(--border) / 0.5) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--border) / 0.5) 1px, transparent 1px);
+      linear-gradient(hsl(var(--border) / 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
     background-size: 40px 40px;
   }
 
@@ -227,47 +188,26 @@
     @apply text-[hsl(var(--status-critical))];
   }
 
-  /* Pulse animation for live indicators */
+  /* Professional pulse animation */
   .pulse-cyan {
-    animation: pulse-cyan 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    animation: pulse-professional 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
-  @keyframes pulse-cyan {
+  @keyframes pulse-professional {
     0%, 100% {
       opacity: 1;
     }
     50% {
-      opacity: 0.5;
+      opacity: 0.7;
     }
   }
 
-  /* Flicker animation for cyber aesthetic */
+  /* Removed flicker for professional look */
   .flicker {
-    animation: flicker 3s ease-in-out infinite;
-  }
-
-  @keyframes flicker {
-    0%, 100% {
-      opacity: 1;
-    }
-    92% {
-      opacity: 1;
-    }
-    93% {
-      opacity: 0.8;
-    }
-    94% {
-      opacity: 1;
-    }
-    95% {
-      opacity: 0.9;
-    }
-    96% {
-      opacity: 1;
-    }
+    /* No flicker in professional mode */
   }
   
-  /* Spark animation for heat bar */
+  /* Smooth spark animation */
   .animate-spark {
     animation: spark 0.6s ease-out forwards;
   }
@@ -278,76 +218,26 @@
       opacity: 1;
     }
     50% {
-      transform: translateY(-20px) scale(1.2);
+      transform: translateY(-10px) scale(1.1);
       opacity: 0.8;
     }
     100% {
-      transform: translateY(-40px) scale(0.5);
+      transform: translateY(-20px) scale(0.8);
       opacity: 0;
     }
   }
   
-  /* Glitch text effect for berserker mode */
+  /* Removed glitch effect for professional look */
   .glitch-text {
-    animation: glitch 0.3s infinite;
-    position: relative;
-  }
-  
-  @keyframes glitch {
-    0% {
-      transform: translate(0);
-    }
-    20% {
-      transform: translate(-2px, 1px);
-    }
-    40% {
-      transform: translate(2px, -1px);
-    }
-    60% {
-      transform: translate(-1px, 2px);
-    }
-    80% {
-      transform: translate(1px, -2px);
-    }
-    100% {
-      transform: translate(0);
-    }
+    /* Clean text, no glitch */
   }
   
   .glitch-text::before,
   .glitch-text::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    display: none;
   }
   
-  .glitch-text::before {
-    animation: glitch-color 0.2s infinite;
-    color: hsl(var(--status-critical));
-    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-    transform: translate(-2px);
-  }
-  
-  .glitch-text::after {
-    animation: glitch-color 0.2s infinite reverse;
-    color: hsl(var(--neon-cyan));
-    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-    transform: translate(2px);
-  }
-  
-  @keyframes glitch-color {
-    0% {
-      transform: translate(-2px);
-    }
-    100% {
-      transform: translate(2px);
-    }
-  }
-  
-  /* Slow pulse for ethical violation */
+  /* Smooth pulse */
   .animate-pulse-slow {
     animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
@@ -357,13 +247,28 @@
       opacity: 1;
     }
     50% {
-      opacity: 0.7;
+      opacity: 0.8;
+    }
+  }
+  
+  /* Professional glow animation for buttons */
+  .animate-pulse-glow {
+    animation: pulse-glow-pro 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes pulse-glow-pro {
+    0%, 100% {
+      box-shadow: 0 2px 8px hsl(var(--primary) / 0.2);
+    }
+    50% {
+      box-shadow: 0 4px 16px hsl(var(--primary) / 0.3);
     }
   }
 }
 
 @layer utilities {
   .font-mono-data {
-    font-family: "JetBrains Mono", monospace;
+    font-family: "Roboto", "Inter", sans-serif;
+    font-weight: 500;
   }
 }
