@@ -76,27 +76,27 @@ export function AppSidebar() {
       <SidebarHeader className="p-4 border-b border-border/50" data-tour="logo">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
               deadManActive 
-                ? "bg-destructive/20" 
-                : "bg-primary/20"
+                ? "bg-destructive/20 border-2 border-destructive" 
+                : "bg-primary/10 border-2 border-primary"
             }`}>
-              {/* Institutional Seal Placeholder */}
-              <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${
-                deadManActive ? "border-destructive text-destructive" : "border-primary text-primary"
-              }`}>
-                <span className="font-bold text-xs">SEAL</span>
+              {/* CUJ Institutional Seal */}
+              <div className={`text-center ${deadManActive ? "text-destructive" : "text-primary"}`}>
+                <span className="font-bold text-sm leading-none">CUJ</span>
               </div>
             </div>
-            <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full transition-colors ${
+            <div className={`absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full transition-colors ${
               deadManActive ? "bg-destructive" : "bg-accent"
             }`} />
           </div>
           {!collapsed && (
-            <div className="animate-fade-in">
-              <h1 className="font-semibold text-base text-sidebar-foreground tracking-wide">VANI</h1>
-              <p className="text-[10px] text-sidebar-foreground/60 uppercase tracking-wider">
-                Institutional Reporting
+            <div className="animate-fade-in flex-1">
+              <h1 className="font-bold text-sm text-sidebar-foreground leading-tight">
+                Central University of Jammu
+              </h1>
+              <p className="text-[10px] text-sidebar-foreground/60 uppercase tracking-wider mt-0.5">
+                Anonymous Reporting System
               </p>
             </div>
           )}
