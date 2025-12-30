@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 interface TypewriterTextProps {
   text: string;
   speed?: number;
+  delay?: number;
   className?: string;
   onComplete?: () => void;
   enableSound?: boolean;
@@ -11,12 +12,14 @@ interface TypewriterTextProps {
 export function TypewriterText({
   text,
   speed = 30,
+  delay = 0,
   className = "",
   onComplete,
   enableSound = true,
 }: TypewriterTextProps) {
   const [displayedText, setDisplayedText] = useState("");
   const [isComplete, setIsComplete] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
 
   const playTypeSound = () => {
@@ -48,7 +51,21 @@ export function TypewriterText({
     }
   };
 
+  // Handle initial delay
   useEffect(() => {
+    if (delay > 0) {
+      const delayTimer = setTimeout(() => {
+        setHasStarted(true);
+      }, delay);
+      return () => clearTimeout(delayTimer);
+    } else {
+      setHasStarted(true);
+    }
+  }, [delay]);
+
+  useEffect(() => {
+    if (!hasStarted) return;
+    
     if (displayedText.length < text.length) {
       const timer = setTimeout(() => {
         setDisplayedText(text.slice(0, displayedText.length + 1));
@@ -60,13 +77,20 @@ export function TypewriterText({
       setIsComplete(true);
       onComplete?.();
     }
-  }, [displayedText, text, speed, isComplete, onComplete, enableSound]);
+  }, [displayedText, text, speed, isComplete, onComplete, enableSound, hasStarted]);
 
   // Reset when text changes
   useEffect(() => {
     setDisplayedText("");
     setIsComplete(false);
-  }, [text]);
+    if (delay === 0) {
+      setHasStarted(true);
+    } else {
+      setHasStarted(false);
+    }
+  }, [text, delay]);
+
+  if (!hasStarted) return null;
 
   return (
     <span className={className}>
