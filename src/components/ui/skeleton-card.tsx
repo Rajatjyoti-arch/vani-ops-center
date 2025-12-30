@@ -54,7 +54,7 @@ export function CyberSpinner({ size = "md", className }: CyberSpinnerProps) {
       {/* Inner pulse */}
       <div className="absolute inset-2 rounded-full bg-primary/10 animate-pulse" />
       {/* Center dot */}
-      <div className="absolute inset-1/3 rounded-full bg-primary/50 cyber-glow" />
+      <div className="absolute inset-1/3 rounded-full bg-primary/50" />
     </div>
   );
 }

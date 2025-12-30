@@ -11,13 +11,14 @@ import { TourOverlay } from "@/components/onboarding/TourOverlay";
 import { CommandPalette, useKeyboardShortcuts } from "@/components/command/CommandPalette";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { PublicLeakBroadcast } from "@/components/sidebar/PublicLeakBroadcast";
-import { SentinelChatbot } from "@/components/sentinel/SentinelChatbot";
+import { ComplianceAssistant } from "@/components/assistant/ComplianceAssistant";
 import Index from "./pages/Index";
-import IdentityGhost from "./pages/IdentityGhost";
-import StealthVault from "./pages/StealthVault";
-import TheArena from "./pages/TheArena";
+import AnonymousCredentialing from "./pages/AnonymousCredentialing";
+import EvidenceRepository from "./pages/EvidenceRepository";
+import GovernanceMatrix from "./pages/GovernanceMatrix";
 import ResolutionLedger from "./pages/ResolutionLedger";
 import PublicLedger from "./pages/PublicLedger";
+import HelpDocumentation from "./pages/HelpDocumentation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,23 +32,24 @@ function AppContent() {
       <Sonner />
       <TourOverlay />
       <PublicLeakBroadcast />
-      <SentinelChatbot />
+      <ComplianceAssistant />
       <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
       <Routes>
         <Route path="/" element={<Index />} />
-        <Route path="/identity" element={<IdentityGhost />} />
+        <Route path="/identity" element={<AnonymousCredentialing />} />
         <Route path="/vault" element={
           <ProtectedRoute>
-            <StealthVault />
+            <EvidenceRepository />
           </ProtectedRoute>
         } />
         <Route path="/arena" element={
           <ProtectedRoute>
-            <TheArena />
+            <GovernanceMatrix />
           </ProtectedRoute>
         } />
         <Route path="/ledger" element={<ResolutionLedger />} />
         <Route path="/public-ledger" element={<PublicLedger />} />
+        <Route path="/help" element={<HelpDocumentation />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
