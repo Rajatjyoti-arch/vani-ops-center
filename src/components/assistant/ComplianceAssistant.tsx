@@ -12,7 +12,7 @@ interface Message {
 }
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sentinel-chat`;
-const STORAGE_KEY = "vani_sentinel_memory";
+const STORAGE_KEY = "irene_assistant_memory";
 
 const QUICK_ACTIONS = [
   { label: "Data Integrity", query: "Explain how SHA-256 hashing ensures data integrity in the credentialing process." },
