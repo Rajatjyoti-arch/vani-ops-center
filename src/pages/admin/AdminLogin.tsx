@@ -142,12 +142,16 @@ export default function AdminLogin() {
             </Button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-slate-700">
+          <div className="mt-6 pt-6 border-t border-slate-700 space-y-3">
             <p className="text-xs text-slate-500 text-center">
               Access restricted to authorized institutional personnel only.
-              <br />
-              Contact IT Security for credential assistance.
             </p>
+            <a
+              href="/admin/setup"
+              className="block text-center text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+            >
+              First time? Set up admin account →
+            </a>
           </div>
         </div>
 

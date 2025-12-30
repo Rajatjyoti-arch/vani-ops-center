@@ -12,6 +12,7 @@ import {
   MapPin
 } from "lucide-react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+import { InviteAdminModal } from "@/components/admin/InviteAdminModal";
 import { SentimentHeatMap } from "@/components/admin/SentimentHeatMap";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -144,9 +145,12 @@ export default function AdminDashboard() {
               Executive overview of institutional governance metrics
             </p>
           </div>
-          <div className="flex items-center gap-2 text-xs text-slate-500">
-            <Clock className="w-4 h-4" />
-            Last updated: {new Date().toLocaleTimeString()}
+          <div className="flex items-center gap-4">
+            <InviteAdminModal />
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <Clock className="w-4 h-4" />
+              Last updated: {new Date().toLocaleTimeString()}
+            </div>
           </div>
         </div>
 

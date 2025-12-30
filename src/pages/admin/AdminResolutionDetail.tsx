@@ -12,7 +12,8 @@ import {
   Loader2,
   Download,
   Scale,
-  Lock
+  Lock,
+  Mail
 } from "lucide-react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { EvidenceViewer } from "@/components/admin/EvidenceViewer";
@@ -228,6 +229,55 @@ Generated: ${new Date().toISOString()}
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+
+      // Try to send email certificate if student has notification email
+      try {
+        // Lookup ghost identity via vault file to get notification email
+        if (negotiation.vault_file_id) {
+          const { data: vaultData } = await supabase
+            .from("stealth_vault")
+            .select("ghost_identity_id")
+            .eq("id", negotiation.vault_file_id)
+            .single();
+
+          if (vaultData?.ghost_identity_id) {
+            const { data: ghostData } = await supabase
+              .from("ghost_identities")
+              .select("notification_email")
+              .eq("id", vaultData.ghost_identity_id)
+              .single();
+
+            if (ghostData?.notification_email) {
+              const evidenceHash = negotiation.vault_file_id 
+                ? `SHA256:${negotiation.vault_file_id.replace(/-/g, "").slice(0, 32).toUpperCase()}`
+                : "NO_EVIDENCE_ATTACHED";
+
+              await supabase.functions.invoke("send-certificate", {
+                body: {
+                  negotiation_id: negotiation.id,
+                  recipient_email: ghostData.notification_email,
+                  certificate_data: {
+                    case_id: negotiation.id.slice(0, 8).toUpperCase(),
+                    grievance_summary: negotiation.grievance_text.slice(0, 200),
+                    final_consensus: consensus || negotiation.final_consensus || "Resolution achieved",
+                    budget_level: budgetLevel,
+                    urgency_level: urgencyLevel,
+                    priority: priority,
+                    admin_notes: adminNotes,
+                    evidence_hash: evidenceHash,
+                    approved_at: new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" }),
+                    verification_url: `${window.location.origin}/public-ledger`,
+                  },
+                },
+              });
+              console.log("Certificate email sent successfully");
+            }
+          }
+        }
+      } catch (emailErr) {
+        console.error("Error sending certificate email:", emailErr);
+        // Don't fail the approval if email fails
+      }
 
       toast({
         title: "Resolution Approved & Certified",

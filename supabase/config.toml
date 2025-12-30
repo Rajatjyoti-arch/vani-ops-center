@@ -5,3 +5,9 @@ verify_jwt = false
 
 [functions.sentinel-chat]
 verify_jwt = false
+
+[functions.send-certificate]
+verify_jwt = false
+
+[functions.verify-setup-secret]
+verify_jwt = false
