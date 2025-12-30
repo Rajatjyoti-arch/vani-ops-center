@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { MessageCircle, X, Send, Shield, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Shield, Loader2, Mic, MicOff, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -12,20 +12,91 @@ interface Message {
 }
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sentinel-chat`;
+const STORAGE_KEY = "vani_sentinel_memory";
+
+const QUICK_ACTIONS = [
+  { label: "Explain SHA-256", query: "Explain how SHA-256 hashing protects my identity in simple terms." },
+  { label: "Arena Guide", query: "Guide me through how The Arena negotiation works between the AI agents." },
+  { label: "LSB Steganography", query: "What is LSB steganography and how does it hide my grievance in images?" },
+  { label: "Dead Man's Switch", query: "How does the Dead Man's Switch work and what happens when it triggers?" },
+];
 
 export function SentinelChatbot() {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content: "Encrypted channel established. I am the VANI Sentinel. How may I assist your operation?",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const recognitionRef = useRef<any>(null);
+
+  // Check for Web Speech API support
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      setSpeechSupported(true);
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = "en-US";
+
+      recognitionRef.current.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map((result) => result[0].transcript)
+          .join("");
+        setInput(transcript);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        setIsListening(false);
+        if (event.error === "not-allowed") {
+          toast({
+            title: "Microphone Access Denied",
+            description: "Please allow microphone access for voice input.",
+            variant: "destructive",
+          });
+        }
+      };
+    }
+  }, []);
+
+  // Load messages from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setMessages(parsed);
+          return;
+        }
+      } catch (e) {
+        console.error("Failed to parse saved messages:", e);
+      }
+    }
+    // Set default welcome message
+    setMessages([
+      {
+        role: "assistant",
+        content: "Encrypted channel established. I am the VANI Sentinel. How may I assist your operation?",
+      },
+    ]);
+  }, []);
+
+  // Save messages to localStorage
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -39,10 +110,47 @@ export function SentinelChatbot() {
     }
   }, [isOpen]);
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const toggleListening = () => {
+    if (!recognitionRef.current) return;
 
-    const userMessage: Message = { role: "user", content: input.trim() };
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+      } catch (e) {
+        console.error("Failed to start speech recognition:", e);
+      }
+    }
+  };
+
+  const clearMemory = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    setMessages([
+      {
+        role: "assistant",
+        content: "Memory banks purged. Starting fresh encrypted session. How may I assist?",
+      },
+    ]);
+    toast({
+      title: "Memory Cleared",
+      description: "Sentinel conversation history has been erased.",
+    });
+  };
+
+  const handleSend = async (messageText?: string) => {
+    const textToSend = messageText || input.trim();
+    if (!textToSend || isLoading) return;
+
+    // Stop listening if active
+    if (isListening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
+
+    const userMessage: Message = { role: "user", content: textToSend };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
@@ -141,6 +249,10 @@ export function SentinelChatbot() {
     }
   };
 
+  const handleQuickAction = (query: string) => {
+    handleSend(query);
+  };
+
   return (
     <>
       {/* Floating Button */}
@@ -181,19 +293,46 @@ export function SentinelChatbot() {
         `}
       >
         {/* Header */}
-        <div className="flex items-center gap-3 p-4 border-b border-border/50 bg-gradient-to-r from-primary/10 to-transparent">
-          <div className="relative">
-            <Shield className="w-8 h-8 text-primary" />
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-status-safe rounded-full animate-pulse" />
+        <div className="flex items-center justify-between p-4 border-b border-border/50 bg-gradient-to-r from-primary/10 to-transparent">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Shield className="w-8 h-8 text-primary" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-status-safe rounded-full animate-pulse" />
+            </div>
+            <div>
+              <h3 className="font-bold text-foreground text-sm">VANI Sentinel</h3>
+              <p className="text-[10px] text-primary font-mono">SECURE CHANNEL ACTIVE</p>
+            </div>
           </div>
-          <div>
-            <h3 className="font-bold text-foreground text-sm">VANI Sentinel</h3>
-            <p className="text-[10px] text-primary font-mono">SECURE CHANNEL ACTIVE</p>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={clearMemory}
+            className="h-8 w-8 text-muted-foreground hover:text-destructive"
+            title="Clear conversation memory"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="p-2 border-b border-border/30 bg-secondary/20">
+          <div className="flex flex-wrap gap-1.5">
+            {QUICK_ACTIONS.map((action) => (
+              <button
+                key={action.label}
+                onClick={() => handleQuickAction(action.query)}
+                disabled={isLoading}
+                className="px-2 py-1 text-[10px] font-mono bg-primary/10 text-primary border border-primary/30 rounded hover:bg-primary/20 transition-colors disabled:opacity-50"
+              >
+                {action.label}
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Messages */}
-        <ScrollArea className="h-80 p-4" ref={scrollAreaRef}>
+        <ScrollArea className="h-72 p-4" ref={scrollAreaRef}>
           <div className="space-y-4">
             {messages.map((message, index) => (
               <div
@@ -228,17 +367,34 @@ export function SentinelChatbot() {
         {/* Input */}
         <div className="p-4 border-t border-border/50">
           <div className="flex gap-2">
+            {speechSupported && (
+              <Button
+                onClick={toggleListening}
+                size="icon"
+                variant={isListening ? "destructive" : "outline"}
+                className={`shrink-0 ${isListening ? "animate-pulse" : ""}`}
+                title={isListening ? "Stop listening" : "Voice input"}
+              >
+                {isListening ? (
+                  <MicOff className="w-4 h-4" />
+                ) : (
+                  <Mic className="w-4 h-4" />
+                )}
+              </Button>
+            )}
             <Input
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Enter your query..."
-              className="flex-1 bg-secondary/30 border-border/50 text-sm font-mono"
+              placeholder={isListening ? "Listening..." : "Enter your query..."}
+              className={`flex-1 bg-secondary/30 border-border/50 text-sm font-mono ${
+                isListening ? "border-primary/50 animate-pulse" : ""
+              }`}
               disabled={isLoading}
             />
             <Button
-              onClick={handleSend}
+              onClick={() => handleSend()}
               disabled={!input.trim() || isLoading}
               size="icon"
               className="cyber-button bg-primary text-primary-foreground shrink-0"
@@ -251,7 +407,7 @@ export function SentinelChatbot() {
             </Button>
           </div>
           <p className="text-[10px] text-muted-foreground mt-2 text-center font-mono">
-            Powered by Gemini Flash • E2E Encrypted
+            Gemini Flash • Memory Enabled • {speechSupported ? "Voice Ready" : "Text Only"}
           </p>
         </div>
       </div>
@@ -278,4 +434,12 @@ function DataStreamIndicator() {
       <span className="text-primary font-mono text-xs ml-1 animate-pulse">_</span>
     </div>
   );
+}
+
+// TypeScript declarations for Web Speech API
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
 }
