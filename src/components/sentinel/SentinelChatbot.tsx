@@ -15,10 +15,10 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sentinel-cha
 const STORAGE_KEY = "vani_sentinel_memory";
 
 const QUICK_ACTIONS = [
-  { label: "Explain SHA-256", query: "Explain how SHA-256 hashing protects my identity in simple terms." },
-  { label: "Arena Guide", query: "Guide me through how The Arena negotiation works between the AI agents." },
-  { label: "LSB Steganography", query: "What is LSB steganography and how does it hide my grievance in images?" },
-  { label: "Dead Man's Switch", query: "How does the Dead Man's Switch work and what happens when it triggers?" },
+  { label: "SHA-256 Encryption", query: "Explain how SHA-256 hashing protects identities in simple terms." },
+  { label: "Resolution Process", query: "Guide me through how the Governance Resolution Matrix works." },
+  { label: "Data Encoding", query: "What is LSB steganography and how does it protect evidence?" },
+  { label: "Emergency Protocol", query: "How does the Emergency Disclosure system work?" },
 ];
 
 export function SentinelChatbot() {
@@ -86,7 +86,7 @@ export function SentinelChatbot() {
     setMessages([
       {
         role: "assistant",
-        content: "Encrypted channel established. I am the VANI Sentinel. How may I assist your operation?",
+        content: "Welcome to the VANI Administrative Intelligence Assistant. How may I help you today?",
       },
     ]);
   }, []);
@@ -131,7 +131,7 @@ export function SentinelChatbot() {
     setMessages([
       {
         role: "assistant",
-        content: "Memory banks purged. Starting fresh encrypted session. How may I assist?",
+        content: "Conversation cleared. How may I assist you?",
       },
     ]);
     toast({
@@ -297,11 +297,11 @@ export function SentinelChatbot() {
           <div className="flex items-center gap-3">
             <div className="relative">
               <Shield className="w-8 h-8 text-primary" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-status-safe rounded-full animate-pulse" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full" />
             </div>
             <div>
-              <h3 className="font-bold text-foreground text-sm">VANI Sentinel</h3>
-              <p className="text-[10px] text-primary font-mono">SECURE CHANNEL ACTIVE</p>
+              <h3 className="font-semibold text-foreground text-sm">AI Assistant</h3>
+              <p className="text-[10px] text-primary">VANI Support</p>
             </div>
           </div>
           <Button

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Shield, Upload, File, Image, FileText, Lock, Clock, Trash2, Loader2, Binary, Database } from "lucide-react";
+import { Shield, Upload, File, Image, FileText, Lock, Clock, Trash2, Loader2, Binary, Database, Info } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { formatRelativeTime } from "@/lib/crypto";
@@ -95,9 +95,8 @@ const StealthVault = () => {
             fileToUpload = encodedBlob;
             
             toast({
-              title: "🔐 Deep-Pixel Encoding Active",
-              description: "Grievance data embedded into image pixels using LSB steganography.",
-              className: "bg-status-safe/20 border-status-safe text-foreground",
+              title: "Evidence Secured",
+              description: "Data embedded into image using LSB encoding.",
             });
           } catch (encodeError) {
             console.error("Steganography encoding failed:", encodeError);
@@ -126,16 +125,15 @@ const StealthVault = () => {
 
       // Show success notification
       toast({
-        title: "⚡ Data Siphon Complete",
-        description: "Evidence securely uploaded to the vault with pixel-level encryption.",
-        className: "bg-primary/20 border-primary text-foreground",
+        title: "Upload Complete",
+        description: "Evidence securely stored in encrypted repository.",
       });
 
       // Clear form and refresh
       setGrievanceText("");
       fetchFiles();
 
-      // Redirect to Resolution Ledger
+      // Redirect to Compliance Log
       setTimeout(() => {
         navigate("/ledger");
       }, 2000);
@@ -191,30 +189,30 @@ const StealthVault = () => {
       <div className="space-y-6 animate-fade-in">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
+            <h1 className="text-2xl font-semibold text-foreground flex items-center gap-3">
               <Shield className="w-7 h-7 text-primary" />
-              Stealth Vault
+              Encrypted Evidence Repository
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Secure encrypted storage for evidence and grievances
+              Secure storage for confidential documentation and evidence
             </p>
           </div>
         </div>
 
-        {/* Grievance Text Input */}
-        <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+        {/* Report Submission Form */}
+        <Card className="border-border/50 shadow-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg">Submit Grievance</CardTitle>
+            <CardTitle className="text-base">Submit Report</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="grievance">Secret Metadata (Grievance Details)</Label>
+              <Label htmlFor="grievance">Report Details</Label>
               <Textarea
                 id="grievance"
-                placeholder="Describe your grievance or provide context for the evidence..."
+                placeholder="Describe the incident or provide context for the evidence..."
                 value={grievanceText}
                 onChange={(e) => setGrievanceText(e.target.value)}
-                className="bg-secondary/50 border-border/50 min-h-[100px]"
+                className="min-h-[100px]"
               />
             </div>
           </CardContent>
@@ -223,8 +221,8 @@ const StealthVault = () => {
         {/* Upload Zone */}
         <Card
           className={`
-            border-2 border-dashed transition-all duration-300 cursor-pointer
-            ${dragOver ? "border-primary bg-primary/5 cyber-glow" : "border-border/50 bg-card/50"}
+            border-2 border-dashed transition-all duration-200 cursor-pointer
+            ${dragOver ? "border-primary bg-primary/5" : "border-border/50"}
           `}
           onDragOver={(e) => {
             e.preventDefault();
@@ -241,7 +239,7 @@ const StealthVault = () => {
                   Encrypting & Uploading...
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Securing your evidence in the vault
+                  Securing your evidence in the repository
                 </p>
               </>
             ) : (
@@ -253,10 +251,10 @@ const StealthVault = () => {
                   Drop files here to upload
                 </h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  End-to-end encrypted • Auto-expiring links available
+                  All files are encrypted with AES-256 encryption
                 </p>
                 <label htmlFor="file-upload">
-                  <Button className="cyber-button bg-primary text-primary-foreground" asChild>
+                  <Button asChild>
                     <span>
                       <Upload className="w-4 h-4 mr-2" />
                       Select Files
@@ -276,72 +274,72 @@ const StealthVault = () => {
           </CardContent>
         </Card>
 
-        {/* Database Independence Note */}
-        <Card className="bg-primary/5 border-primary/20">
+        {/* Data Independence Note */}
+        <Card className="bg-accent/5 border-accent/20">
           <CardContent className="p-4 flex items-start gap-3">
-            <Database className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+            <Info className="w-5 h-5 text-accent shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-medium text-primary font-mono">DATABASE INDEPENDENT</p>
+              <p className="text-sm font-medium text-accent">Data Independence</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Even if our servers are wiped, this image carries its own truth. 
-                Grievance data is encoded directly into image pixels using LSB steganography.
+                Evidence data is embedded directly into uploaded files using LSB steganography. 
+                This ensures data integrity even if the database is compromised.
               </p>
             </div>
           </CardContent>
         </Card>
 
-        {/* Vault Stats */}
+        {/* Repository Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <Card className="bg-card/80 border-border/50">
+          <Card className="border-border/50">
             <CardContent className="p-4 flex items-center gap-3">
               <div className="p-2 rounded-lg bg-primary/10">
                 <File className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold font-mono">{files.length}</p>
+                <p className="text-2xl font-semibold">{files.length}</p>
                 <p className="text-xs text-muted-foreground">Total Files</p>
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card/80 border-border/50">
+          <Card className="border-border/50">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-status-safe/10">
-                <Binary className="w-5 h-5 text-status-safe" />
+              <div className="p-2 rounded-lg bg-accent/10">
+                <Binary className="w-5 h-5 text-accent" />
               </div>
               <div>
-                <p className="text-2xl font-bold font-mono">LSB</p>
-                <p className="text-xs text-muted-foreground">Steganography</p>
+                <p className="text-2xl font-semibold">LSB</p>
+                <p className="text-xs text-muted-foreground">Encoding</p>
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card/80 border-border/50">
+          <Card className="border-border/50">
             <CardContent className="p-4 flex items-center gap-3">
               <div className="p-2 rounded-lg bg-primary/10">
                 <Lock className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold font-mono">256-bit</p>
+                <p className="text-2xl font-semibold">AES-256</p>
                 <p className="text-xs text-muted-foreground">Encryption</p>
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-card/80 border-border/50">
+          <Card className="border-border/50">
             <CardContent className="p-4 flex items-center gap-3">
               <div className="p-2 rounded-lg bg-status-warning/10">
                 <Clock className="w-5 h-5 text-status-warning" />
               </div>
               <div>
-                <p className="text-2xl font-bold font-mono">{expiringCount}</p>
-                <p className="text-xs text-muted-foreground">Expiring Soon</p>
+                <p className="text-2xl font-semibold">{expiringCount}</p>
+                <p className="text-xs text-muted-foreground">Expiring</p>
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Files List */}
-        <Card className="bg-card/80 border-border/50">
+        <Card className="border-border/50">
           <CardHeader>
-            <CardTitle className="text-lg">Vault Contents</CardTitle>
+            <CardTitle className="text-base">Repository Contents</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -351,7 +349,7 @@ const StealthVault = () => {
             ) : files.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <Lock className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No files in the vault yet</p>
+                <p>No files in the repository</p>
                 <p className="text-sm">Upload evidence to get started</p>
               </div>
             ) : (
@@ -361,9 +359,9 @@ const StealthVault = () => {
                   return (
                     <div
                       key={file.id}
-                      className="flex items-center gap-4 p-3 rounded-lg bg-secondary/20 hover:bg-secondary/40 transition-colors group"
+                      className="flex items-center gap-4 p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors group"
                     >
-                      <div className="p-2 rounded-lg bg-secondary">
+                      <div className="p-2 rounded-lg bg-background">
                         <Icon className="w-5 h-5 text-muted-foreground" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -375,8 +373,8 @@ const StealthVault = () => {
                           {file.secret_metadata && (
                             <>
                               <span>•</span>
-                              <span className="text-primary truncate max-w-[200px]">
-                                Has grievance data
+                              <span className="text-accent">
+                                Contains report data
                               </span>
                             </>
                           )}

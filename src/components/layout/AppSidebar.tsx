@@ -1,4 +1,4 @@
-import { Ghost, Shield, Swords, BookOpen, Lock, Radio } from "lucide-react";
+import { UserCheck, Shield, Scale, BookOpen, Lock, Radio, Building } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -19,47 +19,47 @@ import { useDeadManSwitch } from "@/contexts/DeadManSwitchContext";
 
 const navItems = [
   {
-    title: "Command Center",
+    title: "Dashboard",
     url: "/",
-    icon: Shield,
+    icon: Building,
     description: "System Overview",
     tourId: "nav-command",
   },
   {
-    title: "Identity Ghost",
+    title: "Anonymous Credentialing",
     url: "/identity",
-    icon: Ghost,
-    description: "Anonymous Personas",
+    icon: UserCheck,
+    description: "Secure Authentication",
     tourId: "nav-identity",
   },
   {
-    title: "Stealth Vault",
+    title: "Evidence Repository",
     url: "/vault",
     icon: Shield,
-    description: "Secure Files",
+    description: "Encrypted Storage",
     tourId: "nav-vault",
     protected: true,
   },
   {
-    title: "The Arena",
+    title: "Resolution Matrix",
     url: "/arena",
-    icon: Swords,
-    description: "Discussions",
+    icon: Scale,
+    description: "Governance Process",
     tourId: "nav-arena",
     protected: true,
   },
   {
-    title: "Resolution Ledger",
+    title: "Compliance Log",
     url: "/ledger",
     icon: BookOpen,
-    description: "Issue Tracking",
+    description: "Transparency Records",
     tourId: "nav-ledger",
   },
   {
-    title: "Public Ledger",
+    title: "Public Disclosure",
     url: "/public-ledger",
     icon: Radio,
-    description: "Transparency Node",
+    description: "Transparency Archive",
     tourId: "nav-public-ledger",
   },
 ];
@@ -72,26 +72,31 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
 
   return (
-    <Sidebar className={`border-r border-border/50 bg-sidebar transition-all duration-500 ${deadManActive ? "doomsday-mode" : ""}`}>
+    <Sidebar className={`border-r border-border/50 bg-sidebar transition-all duration-300 ${deadManActive ? "doomsday-mode" : ""}`}>
       <SidebarHeader className="p-4 border-b border-border/50" data-tour="logo">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-500 ${
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
               deadManActive 
-                ? "bg-status-critical/20 cyber-glow-critical" 
-                : "bg-primary/20 cyber-glow"
+                ? "bg-destructive/20" 
+                : "bg-primary/20"
             }`}>
-              <span className={`font-mono font-bold text-lg transition-colors ${deadManActive ? "text-status-critical" : "text-primary"}`}>V</span>
+              {/* Institutional Seal Placeholder */}
+              <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center ${
+                deadManActive ? "border-destructive text-destructive" : "border-primary text-primary"
+              }`}>
+                <span className="font-bold text-xs">SEAL</span>
+              </div>
             </div>
             <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full transition-colors ${
-              deadManActive ? "bg-status-critical animate-pulse" : "bg-primary pulse-cyan"
+              deadManActive ? "bg-destructive" : "bg-accent"
             }`} />
           </div>
           {!collapsed && (
             <div className="animate-fade-in">
-              <h1 className="font-bold text-lg text-foreground tracking-wide">VANI</h1>
-              <p className="text-[10px] text-muted-foreground tracking-widest uppercase">
-                Network Intelligence
+              <h1 className="font-semibold text-base text-sidebar-foreground tracking-wide">VANI</h1>
+              <p className="text-[10px] text-sidebar-foreground/60 uppercase tracking-wider">
+                Institutional Reporting
               </p>
             </div>
           )}
@@ -111,8 +116,8 @@ export function AppSidebar() {
                       asChild
                       className={`
                         group relative overflow-hidden transition-all duration-200
-                        hover:bg-secondary/80 hover:scale-[1.02]
-                        ${isActive ? "bg-primary/10 border border-primary/30" : ""}
+                        hover:bg-sidebar-accent
+                        ${isActive ? "bg-sidebar-accent border-l-2 border-sidebar-primary" : ""}
                         ${isLocked ? "opacity-60" : ""}
                       `}
                     >
@@ -121,33 +126,30 @@ export function AppSidebar() {
                           className={`
                             p-2 rounded-md transition-all duration-200
                             ${isActive 
-                              ? "bg-primary/20 text-primary cyber-glow" 
-                              : "bg-secondary/50 text-muted-foreground group-hover:text-primary group-hover:bg-primary/10"
+                              ? "bg-sidebar-primary/20 text-sidebar-primary" 
+                              : "bg-sidebar-accent text-sidebar-foreground/60 group-hover:text-sidebar-primary"
                             }
                           `}
                         >
                           <item.icon className="w-4 h-4" />
                         </div>
                         {!collapsed && (
-                          <div className="flex flex-col flex-1 animate-fade-in">
+                          <div className="flex flex-col flex-1">
                             <div className="flex items-center gap-2">
                               <span
                                 className={`
                                   text-sm font-medium transition-colors
-                                  ${isActive ? "text-primary text-glow" : "text-foreground group-hover:text-primary"}
+                                  ${isActive ? "text-sidebar-primary" : "text-sidebar-foreground group-hover:text-sidebar-primary"}
                                 `}
                               >
                                 {item.title}
                               </span>
-                              {isLocked && <Lock className="w-3 h-3 text-muted-foreground" />}
+                              {isLocked && <Lock className="w-3 h-3 text-sidebar-foreground/40" />}
                             </div>
-                            <span className="text-[10px] text-muted-foreground">
-                              {isLocked ? "Requires ghost identity" : item.description}
+                            <span className="text-[10px] text-sidebar-foreground/50">
+                              {isLocked ? "Authentication Required" : item.description}
                             </span>
                           </div>
-                        )}
-                        {isActive && (
-                          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-full" />
                         )}
                       </NavLink>
                     </SidebarMenuButton>
@@ -159,7 +161,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Dead Man's Switch */}
+      {/* Emergency Disclosure Switch */}
       <DeadManSwitch collapsed={collapsed} />
 
       <LegacyThreads collapsed={collapsed} />
@@ -171,19 +173,21 @@ export function AppSidebar() {
 
       {/* System status footer */}
       {!collapsed && (
-        <div className="mt-auto p-4 border-t border-border/50">
+        <div className="mt-auto p-4 border-t border-sidebar-border">
           {isAuthenticated && ghostIdentity ? (
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-lg">{ghostIdentity.avatar}</span>
+              <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent">
+                <UserCheck className="w-4 h-4" />
+              </div>
               <div className="flex flex-col">
-                <span className="font-mono text-primary">{ghostIdentity.ghost_name}</span>
-                <span className="text-muted-foreground">Session Active</span>
+                <span className="font-medium text-sidebar-foreground">{ghostIdentity.ghost_name}</span>
+                <span className="text-sidebar-foreground/50">Authenticated</span>
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="flex items-center gap-2 text-xs text-sidebar-foreground/50">
               <div className="w-2 h-2 bg-status-warning rounded-full" />
-              <span className="font-mono">NO IDENTITY</span>
+              <span>Not Authenticated</span>
             </div>
           )}
         </div>
