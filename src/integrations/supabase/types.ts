@@ -14,41 +14,140 @@ export type Database = {
   }
   public: {
     Tables: {
-      arena_negotiations: {
+      admin_invites: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invite_token: string
+          invited_by: string | null
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          invite_token: string
+          invited_by?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invite_token?: string
+          invited_by?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: []
+      }
+      admin_notifications: {
         Row: {
           created_at: string
+          ghost_identity_id: string | null
+          id: string
+          is_read: boolean
+          message: string
+          negotiation_id: string | null
+          notification_type: string
+        }
+        Insert: {
+          created_at?: string
+          ghost_identity_id?: string | null
+          id?: string
+          is_read?: boolean
+          message: string
+          negotiation_id?: string | null
+          notification_type: string
+        }
+        Update: {
+          created_at?: string
+          ghost_identity_id?: string | null
+          id?: string
+          is_read?: boolean
+          message?: string
+          negotiation_id?: string | null
+          notification_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_notifications_ghost_identity_id_fkey"
+            columns: ["ghost_identity_id"]
+            isOneToOne: false
+            referencedRelation: "ghost_identities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "admin_notifications_negotiation_id_fkey"
+            columns: ["negotiation_id"]
+            isOneToOne: false
+            referencedRelation: "arena_negotiations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      arena_negotiations: {
+        Row: {
+          admin_approved_at: string | null
+          admin_approved_by: string | null
+          admin_notes: string | null
+          budget_level: string | null
+          created_at: string
+          department: string | null
           final_consensus: string | null
           governor_score: number | null
           grievance_text: string
           id: string
           negotiation_log: Json
+          priority: string | null
           sentinel_score: number | null
           status: string
           updated_at: string
+          urgency_level: string | null
           vault_file_id: string | null
         }
         Insert: {
+          admin_approved_at?: string | null
+          admin_approved_by?: string | null
+          admin_notes?: string | null
+          budget_level?: string | null
           created_at?: string
+          department?: string | null
           final_consensus?: string | null
           governor_score?: number | null
           grievance_text: string
           id?: string
           negotiation_log?: Json
+          priority?: string | null
           sentinel_score?: number | null
           status?: string
           updated_at?: string
+          urgency_level?: string | null
           vault_file_id?: string | null
         }
         Update: {
+          admin_approved_at?: string | null
+          admin_approved_by?: string | null
+          admin_notes?: string | null
+          budget_level?: string | null
           created_at?: string
+          department?: string | null
           final_consensus?: string | null
           governor_score?: number | null
           grievance_text?: string
           id?: string
           negotiation_log?: Json
+          priority?: string | null
           sentinel_score?: number | null
           status?: string
           updated_at?: string
+          urgency_level?: string | null
           vault_file_id?: string | null
         }
         Relationships: [
@@ -225,15 +324,42 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -360,6 +486,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
