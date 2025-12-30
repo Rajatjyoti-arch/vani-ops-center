@@ -8,16 +8,16 @@ export async function generateHash(input: string): Promise<string> {
   return hashHex;
 }
 
-// Generate a random ghost name
+// Generate a random credential name
 export function generateGhostName(): string {
-  const adjectives = ["Shadow", "Night", "Phantom", "Silent", "Mystic", "Cyber", "Ghost", "Void", "Stealth", "Rogue"];
-  const nouns = ["Wolf", "Owl", "Echo", "Storm", "Raven", "Specter", "Blade", "Hawk", "Viper", "Phoenix"];
+  const adjectives = ["Verified", "Secure", "Protected", "Certified", "Trusted", "Authenticated", "Validated", "Confirmed", "Registered", "Authorized"];
+  const nouns = ["Scholar", "Participant", "Member", "Associate", "Delegate", "Representative", "Advocate", "Contributor", "Observer", "Analyst"];
   return `${adjectives[Math.floor(Math.random() * adjectives.length)]}${nouns[Math.floor(Math.random() * nouns.length)]}`;
 }
 
 // Generate a random avatar emoji
 export function generateAvatar(): string {
-  const avatars = ["🐺", "🦉", "👻", "🦅", "🐉", "🦊", "🐱", "🦇", "🦚", "🐍", "🦎", "🦂"];
+  const avatars = ["🎓", "📋", "🔒", "✓", "📊", "🏛️", "⚖️", "📁", "🔐", "📝", "✅", "🛡️"];
   return avatars[Math.floor(Math.random() * avatars.length)];
 }
 

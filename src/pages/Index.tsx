@@ -12,14 +12,14 @@ const Index = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-foreground">
-              Command Center
+              Administrative Dashboard
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
               Verifiable Anonymous Network Intelligence Overview
             </p>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/30">
-            <div className="w-2 h-2 bg-primary rounded-full pulse-cyan" />
+            <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
             <span className="text-xs font-mono text-primary">LIVE</span>
           </div>
         </div>
