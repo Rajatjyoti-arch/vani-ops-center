@@ -15,13 +15,17 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AdminProtectedRoute } from "@/components/admin/AdminProtectedRoute";
 import { PublicLeakBroadcast } from "@/components/sidebar/PublicLeakBroadcast";
 import { ComplianceAssistant } from "@/components/assistant/ComplianceAssistant";
-import Index from "./pages/Index";
+import LandingPage from "./pages/LandingPage";
+import Dashboard from "./pages/Index";
+import StudentDashboard from "./pages/StudentDashboard";
 import AnonymousCredentialing from "./pages/AnonymousCredentialing";
 import EvidenceRepository from "./pages/EvidenceRepository";
 import GovernanceMatrix from "./pages/GovernanceMatrix";
 import ResolutionLedger from "./pages/ResolutionLedger";
 import PublicLedger from "./pages/PublicLedger";
 import HelpDocumentation from "./pages/HelpDocumentation";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import GDPRCompliance from "./pages/GDPRCompliance";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminResolutions from "./pages/admin/AdminResolutions";
@@ -44,7 +48,11 @@ function AppContent() {
       <ComplianceAssistant />
       <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
       <Routes>
-        <Route path="/" element={<Index />} />
+        {/* Public Landing Page */}
+        <Route path="/" element={<LandingPage />} />
+        
+        {/* Student Routes */}
+        <Route path="/student-dashboard" element={<StudentDashboard />} />
         <Route path="/identity" element={<AnonymousCredentialing />} />
         <Route path="/vault" element={
           <ProtectedRoute>
@@ -59,6 +67,14 @@ function AppContent() {
         <Route path="/ledger" element={<ResolutionLedger />} />
         <Route path="/public-ledger" element={<PublicLedger />} />
         <Route path="/help" element={<HelpDocumentation />} />
+        
+        {/* Internal Dashboard (for authenticated navigation) */}
+        <Route path="/dashboard" element={<Dashboard />} />
+        
+        {/* Legal Pages */}
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/gdpr-compliance" element={<GDPRCompliance />} />
+        
         {/* Admin Routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/setup" element={<AdminSetup />} />
@@ -66,6 +82,7 @@ function AppContent() {
         <Route path="/admin" element={<AdminProtectedRoute><AdminDashboard /></AdminProtectedRoute>} />
         <Route path="/admin/resolutions" element={<AdminProtectedRoute><AdminResolutions /></AdminProtectedRoute>} />
         <Route path="/admin/resolutions/:id" element={<AdminProtectedRoute><AdminResolutionDetail /></AdminProtectedRoute>} />
+        
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
