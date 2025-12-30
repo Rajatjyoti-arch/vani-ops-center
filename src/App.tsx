@@ -27,7 +27,6 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminResolutions from "./pages/admin/AdminResolutions";
 import AdminResolutionDetail from "./pages/admin/AdminResolutionDetail";
 import NotFound from "./pages/NotFound";
-import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 

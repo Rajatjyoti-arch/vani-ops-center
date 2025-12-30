@@ -1,8 +1,11 @@
+import { Link } from "react-router-dom";
+import { Shield } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { SentimentMap } from "@/components/dashboard/SentimentMap";
 import { QuickStats } from "@/components/dashboard/QuickStats";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { CampusImpactScore } from "@/components/dashboard/CampusImpactScore";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   return (
@@ -18,9 +21,17 @@ const Index = () => {
               Verifiable Anonymous Network Intelligence Overview
             </p>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/30">
-            <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-            <span className="text-xs font-mono text-primary">LIVE</span>
+          <div className="flex items-center gap-3">
+            <Link to="/admin/login">
+              <Button variant="outline" size="sm" className="text-xs">
+                <Shield className="w-3 h-3 mr-1.5" />
+                Admin Portal
+              </Button>
+            </Link>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/30">
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+              <span className="text-xs font-mono text-primary">LIVE</span>
+            </div>
           </div>
         </div>
 
