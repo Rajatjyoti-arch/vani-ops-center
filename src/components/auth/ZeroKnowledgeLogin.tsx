@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  Shield, 
-  Key, 
-  Copy, 
-  CheckCircle, 
-  AlertTriangle, 
+import {
+  Shield,
+  Key,
+  Copy,
+  CheckCircle,
+  AlertTriangle,
   Loader2,
   RefreshCw,
   Lock,
@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { CUJLogo } from "@/components/ui/CUJLogo";
+import { VaniLogo } from "@/components/ui/VaniLogo";
 import { supabase } from "@/integrations/supabase/client";
 import { generateHash, generateMnemonicPhrase, generateGhostName, generateAvatar } from "@/lib/crypto";
 import { toast } from "@/hooks/use-toast";
@@ -27,7 +27,7 @@ import { useGhostSession } from "@/contexts/GhostSessionContext";
 export function ZeroKnowledgeLogin() {
   const navigate = useNavigate();
   const { login, isAuthenticated } = useGhostSession();
-  
+
   const [accessPhrase, setAccessPhrase] = useState("");
   const [showPhrase, setShowPhrase] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +53,7 @@ export function ZeroKnowledgeLogin() {
 
   const handleCopyPhrase = async () => {
     if (!generatedPhrase) return;
-    
+
     try {
       await navigator.clipboard.writeText(generatedPhrase.join(" "));
       setIsCopied(true);
@@ -79,7 +79,7 @@ export function ZeroKnowledgeLogin() {
 
   const handleAccess = async () => {
     const phrase = accessPhrase.trim().toLowerCase();
-    
+
     if (!phrase) {
       toast({
         title: "Access Phrase Required",
@@ -104,7 +104,7 @@ export function ZeroKnowledgeLogin() {
     try {
       // Hash the phrase locally - the phrase NEVER leaves the browser
       const phraseHash = await generateHash(phrase);
-      
+
       // Check if this hash exists in the database
       const { data: existingIdentity, error: fetchError } = await supabase
         .from("ghost_identities")
@@ -174,15 +174,7 @@ export function ZeroKnowledgeLogin() {
       <header className="bg-card border-b border-border/50">
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center gap-4">
-            <CUJLogo size={40} className="text-primary" />
-            <div>
-              <h1 className="text-lg font-bold text-foreground">
-                Central University of Jammu
-              </h1>
-              <p className="text-xs text-muted-foreground">
-                VANI - Zero-Knowledge Access Portal
-              </p>
-            </div>
+            <VaniLogo variant="full" size="md" />
           </div>
         </div>
       </header>
@@ -192,8 +184,8 @@ export function ZeroKnowledgeLogin() {
         <div className="w-full max-w-lg space-y-6">
           {/* Security Badge */}
           <div className="flex justify-center">
-            <Badge 
-              variant="outline" 
+            <Badge
+              variant="outline"
               className="bg-accent/10 text-accent border-accent/30 px-4 py-2 text-sm"
             >
               <Shield className="w-4 h-4 mr-2" />
@@ -236,10 +228,10 @@ export function ZeroKnowledgeLogin() {
                       )}
                     </Button>
                   </div>
-                  
+
                   <div className="grid grid-cols-3 gap-2">
                     {generatedPhrase.map((word, index) => (
-                      <div 
+                      <div
                         key={index}
                         className="flex items-center gap-2 p-2 rounded bg-background border border-border/50"
                       >
@@ -344,8 +336,8 @@ export function ZeroKnowledgeLogin() {
                     Critical Security Notice
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    If you lose this phrase, your reports and history are permanently locked. 
-                    Neither the University nor the VANI developers can recover it. 
+                    If you lose this phrase, your reports and history are permanently locked.
+                    Neither the University nor the VANI developers can recover it.
                     This is by design to ensure your complete anonymity.
                   </p>
                 </div>

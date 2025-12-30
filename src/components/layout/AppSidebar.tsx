@@ -1,6 +1,6 @@
 import { UserCheck, Shield, Scale, BookOpen, Lock, Radio, Building, HelpCircle } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
-import { CUJLogo } from "@/components/ui/CUJLogo";
+import { VaniLogo } from "@/components/ui/VaniLogo";
 import {
   Sidebar,
   SidebarContent,
@@ -84,20 +84,18 @@ export function AppSidebar() {
       <SidebarHeader className="p-4 border-b border-border/50" data-tour="logo">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className={`transition-all duration-300 ${
-              deadManActive ? "text-destructive" : "text-primary"
-            }`}>
-              <CUJLogo size={collapsed ? 36 : 44} />
+            <div className={`transition-all duration-300 ${deadManActive ? "opacity-90" : ""
+              }`}>
+              <VaniLogo
+                variant={collapsed ? "icon" : "full"}
+                size={collapsed ? "sm" : "md"}
+              />
             </div>
-            <div className={`absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full transition-colors ${
-              deadManActive ? "bg-destructive" : "bg-accent"
-            }`} />
+            <div className={`absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full transition-colors ${deadManActive ? "bg-destructive" : "bg-accent"
+              }`} />
           </div>
           {!collapsed && (
             <div className="animate-fade-in flex-1">
-              <h1 className="font-bold text-sm text-sidebar-foreground leading-tight">
-                Central University of Jammu
-              </h1>
               <p className="text-[10px] text-sidebar-foreground/60 uppercase tracking-wider mt-0.5">
                 Anonymous Reporting System
               </p>
@@ -128,8 +126,8 @@ export function AppSidebar() {
                         <div
                           className={`
                             p-2 rounded-md transition-all duration-200
-                            ${isActive 
-                              ? "bg-sidebar-primary/20 text-sidebar-primary" 
+                            ${isActive
+                              ? "bg-sidebar-primary/20 text-sidebar-primary"
                               : "bg-sidebar-accent text-sidebar-foreground/60 group-hover:text-sidebar-primary"
                             }
                           `}

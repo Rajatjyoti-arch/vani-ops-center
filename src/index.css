@@ -45,12 +45,18 @@
     --slate-dark: 220 15% 25%;
     --slate-medium: 220 15% 45%;
     --slate-light: 220 15% 75%;
-    
+
     /* Status colors */
     --status-safe: 160 84% 35%;
     --status-warning: 45 93% 47%;
     --status-critical: 0 84% 60%;
     --status-info: 210 100% 50%;
+
+    /* VANI Brand Colors */
+    --vani-blue-dark: 210 85% 15%;
+    --vani-blue: 220 90% 55%;
+    --vani-blue-light: 210 90% 70%;
+    --vani-slate: 215 20% 80%;
 
     /* Sidebar - Professional */
     --sidebar-background: 210 100% 12%;
@@ -91,6 +97,12 @@
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 210 50% 15%;
     --sidebar-ring: 160 84% 45%;
+
+    /* VANI Brand Colors - Dark Mode */
+    --vani-blue-dark: 210 85% 15%;
+    --vani-blue: 220 90% 55%;
+    --vani-blue-light: 210 90% 75%;
+    --vani-slate: 215 20% 85%;
   }
 }
 
@@ -105,15 +117,16 @@
 }
 
 @layer components {
+
   /* Professional subtle effects */
   .professional-shadow {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08),
-                0 4px 12px rgba(0, 0, 0, 0.04);
+      0 4px 12px rgba(0, 0, 0, 0.04);
   }
 
   .professional-shadow-lg {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05),
-                0 10px 30px rgba(0, 0, 0, 0.08);
+      0 10px 30px rgba(0, 0, 0, 0.08);
   }
 
   /* Professional alert styling */
@@ -121,7 +134,7 @@
     border-color: hsl(var(--destructive) / 0.5) !important;
     background: linear-gradient(135deg, hsl(var(--destructive) / 0.05), transparent);
   }
-  
+
   .doomsday-mode::before {
     display: none;
   }
@@ -142,7 +155,7 @@
 
   /* Clean grid pattern */
   .institutional-grid {
-    background-image: 
+    background-image:
       linear-gradient(hsl(var(--border) / 0.3) 1px, transparent 1px),
       linear-gradient(90deg, hsl(var(--border) / 0.3) 1px, transparent 1px);
     background-size: 40px 40px;
@@ -167,57 +180,68 @@
   }
 
   @keyframes pulse-subtle {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 1;
     }
+
     50% {
       opacity: 0.7;
     }
   }
-  
+
   /* Smooth spark animation */
   .animate-spark {
     animation: spark 0.6s ease-out forwards;
   }
-  
+
   @keyframes spark {
     0% {
       transform: translateY(0) scale(1);
       opacity: 1;
     }
+
     50% {
       transform: translateY(-10px) scale(1.1);
       opacity: 0.8;
     }
+
     100% {
       transform: translateY(-20px) scale(0.8);
       opacity: 0;
     }
   }
-  
+
   /* Smooth pulse */
   .animate-pulse-slow {
     animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
-  
+
   @keyframes pulse-slow {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 1;
     }
+
     50% {
       opacity: 0.8;
     }
   }
-  
+
   /* Professional glow animation for buttons */
   .animate-pulse-glow {
     animation: pulse-glow-pro 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
-  
+
   @keyframes pulse-glow-pro {
-    0%, 100% {
+
+    0%,
+    100% {
       box-shadow: 0 2px 8px hsl(var(--primary) / 0.2);
     }
+
     50% {
       box-shadow: 0 4px 16px hsl(var(--primary) / 0.3);
     }

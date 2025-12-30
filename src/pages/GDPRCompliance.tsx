@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, Shield, CheckCircle, Globe, FileText, UserX, Download } from "lucide-react";
-import { CUJLogo } from "@/components/ui/CUJLogo";
+import { VaniLogo } from "@/components/ui/VaniLogo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -12,13 +12,7 @@ const GDPRCompliance = () => {
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <CUJLogo size={40} className="text-primary" />
-              <div>
-                <h1 className="text-lg font-bold text-foreground">
-                  Central University of Jammu
-                </h1>
-                <p className="text-xs text-muted-foreground">VANI System</p>
-              </div>
+              <VaniLogo variant="full" size="md" />
             </div>
             <Link to="/">
               <Button variant="outline" size="sm">
@@ -49,9 +43,9 @@ const GDPRCompliance = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none text-muted-foreground">
               <p>
-                The General Data Protection Regulation (GDPR) is a comprehensive data protection 
-                law that governs how organizations collect, store, and process personal data. 
-                The VANI system is designed with privacy-by-design principles to ensure compliance 
+                The General Data Protection Regulation (GDPR) is a comprehensive data protection
+                law that governs how organizations collect, store, and process personal data.
+                The VANI system is designed with privacy-by-design principles to ensure compliance
                 with GDPR and similar data protection frameworks.
               </p>
             </CardContent>
@@ -161,8 +155,8 @@ const GDPRCompliance = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none text-muted-foreground">
               <p>
-                Data processed by VANI is stored within secure infrastructure with appropriate 
-                safeguards. Any international transfers comply with GDPR requirements, including 
+                Data processed by VANI is stored within secure infrastructure with appropriate
+                safeguards. Any international transfers comply with GDPR requirements, including
                 Standard Contractual Clauses where applicable.
               </p>
             </CardContent>

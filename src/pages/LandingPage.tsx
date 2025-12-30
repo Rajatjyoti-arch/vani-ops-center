@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { 
-  Shield, 
-  UserCheck, 
-  CheckCircle, 
-  TrendingUp, 
+import {
+  Shield,
+  UserCheck,
+  CheckCircle,
+  TrendingUp,
   Activity,
   ArrowRight,
   Lock,
   Scale
 } from "lucide-react";
-import { CUJLogo } from "@/components/ui/CUJLogo";
+import { VaniLogo } from "@/components/ui/VaniLogo";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -68,15 +68,7 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <CUJLogo size={48} className="text-primary" />
-              <div>
-                <h1 className="text-lg font-bold text-foreground">
-                  Central University of Jammu
-                </h1>
-                <p className="text-xs text-muted-foreground">
-                  जम्मू केंद्रीय विश्वविद्यालय
-                </p>
-              </div>
+              <VaniLogo variant="full" size="lg" />
             </div>
             <div className="flex items-center gap-3">
               <Link to="/admin/login">
@@ -94,14 +86,14 @@ const LandingPage = () => {
       <section className="relative py-16 md:py-24 bg-gradient-to-br from-[hsl(var(--navy-dark))] via-[hsl(var(--navy-medium))] to-[hsl(var(--navy-light))] overflow-hidden">
         {/* Subtle grid pattern */}
         <div className="absolute inset-0 institutional-grid opacity-10" />
-        
+
         <div className="relative max-w-7xl mx-auto px-6 text-center">
           <div className="flex justify-center mb-6">
             <div className="p-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
               <Scale className="w-12 h-12 text-white" />
             </div>
           </div>
-          
+
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
             VANI
           </h2>
@@ -109,7 +101,7 @@ const LandingPage = () => {
             Verifiable Anonymous Network Intelligence
           </p>
           <p className="text-base text-white/60 max-w-2xl mx-auto mb-12">
-            Advanced Governance & Anonymous Resolution System for transparent, 
+            Advanced Governance & Anonymous Resolution System for transparent,
             secure, and accountable institutional grievance management.
           </p>
 
@@ -128,7 +120,7 @@ const LandingPage = () => {
                         Student Portal
                       </h3>
                       <p className="text-white/70 text-sm mb-4">
-                        Access anonymous credentialing and submit encrypted reports. 
+                        Access anonymous credentialing and submit encrypted reports.
                         Your identity remains protected through SHA-256 cryptographic hashing.
                       </p>
                       <div className="flex items-center gap-2 text-accent group-hover:gap-3 transition-all">
@@ -154,7 +146,7 @@ const LandingPage = () => {
                         Administrative Oversight
                       </h3>
                       <p className="text-white/70 text-sm mb-4">
-                        Secure access for authorized institutional personnel. 
+                        Secure access for authorized institutional personnel.
                         Review analytics, manage resolutions, and oversee governance processes.
                       </p>
                       <div className="flex items-center gap-2 text-white/90 group-hover:gap-3 transition-all">
@@ -273,14 +265,10 @@ const LandingPage = () => {
             {/* University Info */}
             <div className="md:col-span-2 space-y-4">
               <div className="flex items-center gap-3">
-                <CUJLogo size={40} className="text-primary" />
-                <div>
-                  <h3 className="font-bold text-foreground">Central University of Jammu</h3>
-                  <p className="text-xs text-muted-foreground">जम्मू केंद्रीय विश्वविद्यालय</p>
-                </div>
+                <VaniLogo variant="full" size="md" />
               </div>
               <p className="text-sm text-muted-foreground">
-                Established under the Central Universities Act, 2009. 
+                Established under the Central Universities Act, 2009.
                 Committed to excellence in education, research, and transparent governance.
               </p>
             </div>
@@ -314,9 +302,9 @@ const LandingPage = () => {
                 <Link to="/gdpr-compliance" className="block text-muted-foreground hover:text-primary transition-colors">
                   GDPR Compliance
                 </Link>
-                <a 
-                  href="https://www.cujammu.ac.in" 
-                  target="_blank" 
+                <a
+                  href="https://www.cujammu.ac.in"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="block text-muted-foreground hover:text-primary transition-colors"
                 >

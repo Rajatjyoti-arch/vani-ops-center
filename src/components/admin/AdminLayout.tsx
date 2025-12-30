@@ -1,17 +1,17 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  FileCheck, 
-  Users, 
-  Settings, 
+import {
+  LayoutDashboard,
+  FileCheck,
+  Users,
+  Settings,
   LogOut,
   Shield,
   Bell
 } from "lucide-react";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { Button } from "@/components/ui/button";
-import { CUJLogo } from "@/components/ui/CUJLogo";
+import { VaniLogo } from "@/components/ui/VaniLogo";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -39,16 +39,11 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         {/* Header */}
         <div className="p-4 border-b border-slate-700">
           <div className="flex items-center gap-3">
-            <div className="text-emerald-500">
-              <CUJLogo size={40} />
-            </div>
-            <div>
-              <h1 className="font-semibold text-white text-sm">CUJ Admin Portal</h1>
-              <p className="text-[10px] text-slate-400 uppercase tracking-wider">
-                Administrative Oversight
-              </p>
-            </div>
+            <VaniLogo variant="full" size="md" />
           </div>
+          <p className="text-[10px] text-slate-400 uppercase tracking-wider mt-2">
+            Administrative Oversight
+          </p>
         </div>
 
         {/* Navigation */}
@@ -61,8 +56,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 to={item.url}
                 className={`
                   flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
-                  ${isActive 
-                    ? "bg-emerald-600/20 text-emerald-400 border-l-2 border-emerald-500" 
+                  ${isActive
+                    ? "bg-emerald-600/20 text-emerald-400 border-l-2 border-emerald-500"
                     : "text-slate-400 hover:text-white hover:bg-slate-700/50"
                   }
                 `}

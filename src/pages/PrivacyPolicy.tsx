@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, Shield, Lock, Eye, Database, Clock, Mail } from "lucide-react";
-import { CUJLogo } from "@/components/ui/CUJLogo";
+import { VaniLogo } from "@/components/ui/VaniLogo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -12,13 +12,7 @@ const PrivacyPolicy = () => {
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <CUJLogo size={40} className="text-primary" />
-              <div>
-                <h1 className="text-lg font-bold text-foreground">
-                  Central University of Jammu
-                </h1>
-                <p className="text-xs text-muted-foreground">VANI System</p>
-              </div>
+              <VaniLogo variant="full" size="md" />
             </div>
             <Link to="/">
               <Button variant="outline" size="sm">
@@ -49,9 +43,9 @@ const PrivacyPolicy = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none text-muted-foreground">
               <p>
-                The Central University of Jammu ("University," "we," "us," or "our") is committed to 
-                protecting the privacy and security of all users of the VANI (Verifiable Anonymous 
-                Network Intelligence) system. This Privacy Policy explains how we collect, use, 
+                The Central University of Jammu ("University," "we," "us," or "our") is committed to
+                protecting the privacy and security of all users of the VANI (Verifiable Anonymous
+                Network Intelligence) system. This Privacy Policy explains how we collect, use,
                 disclose, and safeguard your information.
               </p>
             </CardContent>
@@ -66,7 +60,7 @@ const PrivacyPolicy = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none text-muted-foreground">
               <p>
-                VANI uses cryptographic hashing (SHA-256) to create anonymous credentials. Your 
+                VANI uses cryptographic hashing (SHA-256) to create anonymous credentials. Your
                 institutional ID is transformed into an irreversible hash, ensuring:
               </p>
               <ul>
@@ -126,8 +120,8 @@ const PrivacyPolicy = () => {
             </CardHeader>
             <CardContent className="prose prose-sm max-w-none text-muted-foreground">
               <p>
-                Anonymous credentials and associated data are retained for the duration necessary 
-                to fulfill the purposes outlined in this policy. Users may request deletion of 
+                Anonymous credentials and associated data are retained for the duration necessary
+                to fulfill the purposes outlined in this policy. Users may request deletion of
                 their anonymous identity through the system's secure channels.
               </p>
             </CardContent>
