@@ -160,14 +160,72 @@ serve(async (req) => {
   }
 
   try {
-    const { grievanceText, currentRound, negotiationLog = [], ethicalViolationDetected = false } = await req.json();
+    const body = await req.json();
+    const { 
+      grievanceText, 
+      currentRound, 
+      negotiationLog = [], 
+      ethicalViolationDetected = false,
+      adminParameters,
+      mode 
+    } = body;
     
-    console.log('Starting resolution round:', currentRound, 'grievance:', grievanceText.substring(0, 100));
+    console.log('Starting resolution round:', currentRound, 'mode:', mode, 'grievance:', grievanceText?.substring(0, 100));
 
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
+    // Handle admin finalization mode
+    if (mode === 'finalize' && adminParameters) {
+      console.log('Admin finalization mode with parameters:', adminParameters);
+      
+      let context = `Case being reviewed: "${grievanceText}"\n\n`;
+      if (negotiationLog && negotiationLog.length > 0) {
+        context += "Previous deliberation:\n";
+        for (const round of negotiationLog) {
+          const agentLabel = round.agent === 'Sentinel' ? 'Student Advocate' : 
+                            round.agent === 'Governor' ? 'Administration' : 'Resolution Officer';
+          context += `${agentLabel}: ${round.message}\n`;
+        }
+      }
+      
+      context += `\n\nADMINISTRATIVE PARAMETERS FOR FINAL CONSENSUS:
+- Budget Availability: ${adminParameters.budgetLevel}
+- Urgency Level: ${adminParameters.urgencyLevel}
+- Implementation Timeline: ${adminParameters.implementationDays} days`;
+
+      const finalizePrompt = `You are the Resolution Officer AI finalizing a consensus. The administration has set specific parameters for this resolution.
+
+Given the deliberation history and the administrative parameters provided, generate a final, actionable consensus that:
+1. Addresses the core grievance
+2. Respects the budget availability (${adminParameters.budgetLevel})
+3. Accounts for the urgency level (${adminParameters.urgencyLevel})
+4. Fits within the ${adminParameters.implementationDays}-day implementation timeline
+5. Provides specific, measurable action items
+
+Be concise but comprehensive. This will be the official resolution record.
+Format your response as JSON: {"consensus": "your final consensus text"}`;
+
+      const response = await callAI(finalizePrompt, context);
+      
+      // Try to extract consensus from response
+      let consensusText = response.message;
+      try {
+        const parsed = JSON.parse(response.message.match(/\{[\s\S]*\}/)?.[0] || '{}');
+        if (parsed.consensus) {
+          consensusText = parsed.consensus;
+        }
+      } catch (e) {
+        // Use message as-is if JSON parsing fails
+      }
+
+      return new Response(JSON.stringify({ consensus: consensusText }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Regular negotiation flow
     // Build context from previous rounds
     let context = `Case being reviewed: "${grievanceText}"\n\n`;
     if (negotiationLog.length > 0) {

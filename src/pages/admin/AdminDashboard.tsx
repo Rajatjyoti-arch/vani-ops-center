@@ -8,9 +8,11 @@ import {
   Clock,
   ChevronRight,
   Building2,
-  Scale
+  Scale,
+  MapPin
 } from "lucide-react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+import { SentimentHeatMap } from "@/components/admin/SentimentHeatMap";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -206,6 +208,19 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Sentiment Heat Map */}
+        <Card className="bg-slate-800 border-slate-700">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-white text-base flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-emerald-400" />
+              Institutional Sentiment Heat Map
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SentimentHeatMap />
+          </CardContent>
+        </Card>
 
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
