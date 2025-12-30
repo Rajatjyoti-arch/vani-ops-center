@@ -50,6 +50,8 @@ export type Database = {
       admin_notifications: {
         Row: {
           created_at: string
+          email_sent: boolean
+          email_sent_at: string | null
           ghost_identity_id: string | null
           id: string
           is_read: boolean
@@ -59,6 +61,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          email_sent?: boolean
+          email_sent_at?: string | null
           ghost_identity_id?: string | null
           id?: string
           is_read?: boolean
@@ -68,6 +72,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          email_sent?: boolean
+          email_sent_at?: string | null
           ghost_identity_id?: string | null
           id?: string
           is_read?: boolean
@@ -166,6 +172,7 @@ export type Database = {
           created_at: string
           ghost_name: string
           id: string
+          notification_email: string | null
           reports_submitted: number
           reputation: number
           roll_number_hash: string
@@ -176,6 +183,7 @@ export type Database = {
           created_at?: string
           ghost_name: string
           id?: string
+          notification_email?: string | null
           reports_submitted?: number
           reputation?: number
           roll_number_hash: string
@@ -186,6 +194,7 @@ export type Database = {
           created_at?: string
           ghost_name?: string
           id?: string
+          notification_email?: string | null
           reports_submitted?: number
           reputation?: number
           roll_number_hash?: string
