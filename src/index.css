@@ -115,10 +115,52 @@
                 0 0 40px hsl(var(--neon-cyan) / 0.3),
                 0 0 60px hsl(var(--neon-cyan) / 0.1);
   }
+  
+  /* Critical/Doomsday glow effect */
+  .cyber-glow-critical {
+    box-shadow: 0 0 20px hsl(var(--status-critical) / 0.5),
+                0 0 40px hsl(var(--status-critical) / 0.3),
+                0 0 60px hsl(var(--status-critical) / 0.1);
+  }
 
   .text-glow {
     text-shadow: 0 0 10px hsl(var(--neon-cyan) / 0.5),
                  0 0 20px hsl(var(--neon-cyan) / 0.3);
+  }
+  
+  .text-glow-critical {
+    text-shadow: 0 0 10px hsl(var(--status-critical) / 0.5),
+                 0 0 20px hsl(var(--status-critical) / 0.3);
+  }
+  
+  /* Doomsday mode for sidebar */
+  .doomsday-mode {
+    border-color: hsl(var(--status-critical) / 0.5) !important;
+    box-shadow: inset 0 0 30px hsl(var(--status-critical) / 0.1),
+                0 0 20px hsl(var(--status-critical) / 0.2);
+  }
+  
+  .doomsday-mode::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      hsl(var(--status-critical) / 0.05) 0%,
+      transparent 50%,
+      hsl(var(--status-critical) / 0.05) 100%
+    );
+    pointer-events: none;
+    animation: doomsday-pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes doomsday-pulse {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
   }
 
   /* Cyber button interactions */
