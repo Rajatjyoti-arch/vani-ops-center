@@ -1,12 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { AlertTriangle, Clock } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
-
-const COUNTDOWN_DURATION = 48 * 60 * 60; // 48 hours in seconds
+import { useDeadManSwitch } from "@/contexts/DeadManSwitchContext";
 
 export function DeadManSwitch({ collapsed }: { collapsed: boolean }) {
-  const [isActive, setIsActive] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(COUNTDOWN_DURATION);
+  const { isActive, timeRemaining, hasTriggered, setIsActive, checkIn } = useDeadManSwitch();
 
   const formatTime = useCallback((seconds: number) => {
     const hours = Math.floor(seconds / 3600);
@@ -15,28 +13,8 @@ export function DeadManSwitch({ collapsed }: { collapsed: boolean }) {
     return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   }, []);
 
-  useEffect(() => {
-    if (!isActive) {
-      setTimeRemaining(COUNTDOWN_DURATION);
-      return;
-    }
-
-    const interval = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 1) {
-          // Trigger broadcast (simulated)
-          console.log("Dead Man's Switch triggered - Broadcasting to Public Transparency Node");
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isActive]);
-
   const handleCheckIn = () => {
-    setTimeRemaining(COUNTDOWN_DURATION);
+    checkIn();
   };
 
   if (collapsed) {

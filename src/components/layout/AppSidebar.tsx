@@ -1,4 +1,4 @@
-import { Ghost, Shield, Swords, BookOpen, Lock } from "lucide-react";
+import { Ghost, Shield, Swords, BookOpen, Lock, Radio } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -15,6 +15,7 @@ import { DeadManSwitch } from "@/components/sidebar/DeadManSwitch";
 import { LegacyThreads } from "@/components/sidebar/LegacyThreads";
 import { SettingsPanel } from "@/components/sidebar/SettingsPanel";
 import { useGhostSession } from "@/contexts/GhostSessionContext";
+import { useDeadManSwitch } from "@/contexts/DeadManSwitchContext";
 
 const navItems = [
   {
@@ -54,23 +55,37 @@ const navItems = [
     description: "Issue Tracking",
     tourId: "nav-ledger",
   },
+  {
+    title: "Public Ledger",
+    url: "/public-ledger",
+    icon: Radio,
+    description: "Transparency Node",
+    tourId: "nav-public-ledger",
+  },
 ];
 
 export function AppSidebar() {
   const location = useLocation();
   const { state } = useSidebar();
   const { ghostIdentity, isAuthenticated } = useGhostSession();
+  const { isActive: deadManActive } = useDeadManSwitch();
   const collapsed = state === "collapsed";
 
   return (
-    <Sidebar className="border-r border-border/50 bg-sidebar">
+    <Sidebar className={`border-r border-border/50 bg-sidebar transition-all duration-500 ${deadManActive ? "doomsday-mode" : ""}`}>
       <SidebarHeader className="p-4 border-b border-border/50" data-tour="logo">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center cyber-glow">
-              <span className="text-primary font-mono font-bold text-lg">V</span>
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-500 ${
+              deadManActive 
+                ? "bg-status-critical/20 cyber-glow-critical" 
+                : "bg-primary/20 cyber-glow"
+            }`}>
+              <span className={`font-mono font-bold text-lg transition-colors ${deadManActive ? "text-status-critical" : "text-primary"}`}>V</span>
             </div>
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary rounded-full pulse-cyan" />
+            <div className={`absolute -top-1 -right-1 w-3 h-3 rounded-full transition-colors ${
+              deadManActive ? "bg-status-critical animate-pulse" : "bg-primary pulse-cyan"
+            }`} />
           </div>
           {!collapsed && (
             <div className="animate-fade-in">
