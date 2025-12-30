@@ -8,9 +8,11 @@ import { SettingsProvider } from "@/contexts/SettingsContext";
 import { OnboardingProvider } from "@/contexts/OnboardingContext";
 import { GhostSessionProvider } from "@/contexts/GhostSessionContext";
 import { DeadManSwitchProvider } from "@/contexts/DeadManSwitchContext";
+import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { TourOverlay } from "@/components/onboarding/TourOverlay";
 import { CommandPalette, useKeyboardShortcuts } from "@/components/command/CommandPalette";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { AdminProtectedRoute } from "@/components/admin/AdminProtectedRoute";
 import { PublicLeakBroadcast } from "@/components/sidebar/PublicLeakBroadcast";
 import { ComplianceAssistant } from "@/components/assistant/ComplianceAssistant";
 import Index from "./pages/Index";
@@ -20,6 +22,11 @@ import GovernanceMatrix from "./pages/GovernanceMatrix";
 import ResolutionLedger from "./pages/ResolutionLedger";
 import PublicLedger from "./pages/PublicLedger";
 import HelpDocumentation from "./pages/HelpDocumentation";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminResolutions from "./pages/admin/AdminResolutions";
+import AdminResolutionDetail from "./pages/admin/AdminResolutionDetail";
+import NotFound from "./pages/NotFound";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -51,6 +58,11 @@ function AppContent() {
         <Route path="/ledger" element={<ResolutionLedger />} />
         <Route path="/public-ledger" element={<PublicLedger />} />
         <Route path="/help" element={<HelpDocumentation />} />
+        {/* Admin Routes */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminProtectedRoute><AdminDashboard /></AdminProtectedRoute>} />
+        <Route path="/admin/resolutions" element={<AdminProtectedRoute><AdminResolutions /></AdminProtectedRoute>} />
+        <Route path="/admin/resolutions/:id" element={<AdminProtectedRoute><AdminResolutionDetail /></AdminProtectedRoute>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -64,13 +76,15 @@ const App = () => (
       <SettingsProvider>
         <GhostSessionProvider>
           <DeadManSwitchProvider>
-            <BrowserRouter>
-              <OnboardingProvider>
-                <TooltipProvider>
-                  <AppContent />
-                </TooltipProvider>
-              </OnboardingProvider>
-            </BrowserRouter>
+            <AdminAuthProvider>
+              <BrowserRouter>
+                <OnboardingProvider>
+                  <TooltipProvider>
+                    <AppContent />
+                  </TooltipProvider>
+                </OnboardingProvider>
+              </BrowserRouter>
+            </AdminAuthProvider>
           </DeadManSwitchProvider>
         </GhostSessionProvider>
       </SettingsProvider>
