@@ -1,73 +1,56 @@
-# Welcome to your Lovable project
+VANI: Verifiable Anonymous Network Intelligence
+VANI is a next-generation Institutional Governance and Risk Management platform designed to bridge the gap between student anonymity and administrative accountability. By leveraging Zero-Knowledge Architecture and Multi-Agent AI Negotiation, VANI provides a secure, mathematical framework for conflict resolution and campus welfare analytics.
 
-## Project info
+🏗 System Architecture
+VANI operates on a dual-portal system to ensure distinct workflows for all stakeholders:
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+1. The Student Service Portal (Anonymous Credentialing)
+Zero-Knowledge Entry: Students access the system via a locally-generated Private Governance Key.
 
-## How can I edit this code?
+Cryptographic Anonymization: The system utilizes SHA-256 hashing on the client-side, ensuring that no personally identifiable information (PII) ever reaches the server.
 
-There are several ways of editing your application.
+Encrypted Repository: Submissions are stored in an Encrypted Evidence Repository where data is tied to the unique cryptographic hash, not a student identity.
 
-**Use Lovable**
+2. The Administrative Oversight Dashboard
+Role-Based Access Control (RBAC): Authorized personnel access a high-level oversight suite via secure Multi-Factor Authentication (MFA).
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+Institutional Sentiment Analytics: A geospatial heat map provides real-time data on campus welfare trends and high-risk areas.
 
-Changes made via Lovable will be committed automatically to this repo.
+Governance Resolution Matrix: A multi-agent AI environment where Synthetic Proxies negotiate solutions based on real-world institutional policy constraints.
 
-**Use your preferred IDE**
+🚀 Key Features
+Autonomous Negotiation Matrix: Powered by Google Gemini 1.5 Pro, the system models compromises between 'Sentinel' (Student Advocate) and 'Governor' (Admin) proxies to reach an equitable consensus.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Automated Disclosure Protocol: A built-in accountability mechanism (the "Dead-Man's Switch") that ensures critical safety data is addressed within a set timeframe.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Compliance & Transparency Log: A verifiable, read-only ledger of resolved cases and issued Resolution Certificates.
 
-Follow these steps:
+VANI Administrative Assistant: A persistent, Gemini 1.5 Flash-powered AI officer that guides users through institutional protocols and data privacy standards.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+🛠 Tech Stack
+Frontend: React.js / Tailwind CSS.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Backend & Database: Supabase (PostgreSQL) with Row-Level Security (RLS) policies.
 
-# Step 3: Install the necessary dependencies.
-npm i
+Artificial Intelligence: Google Gemini 1.5 Pro (Logic) & Gemini 1.5 Flash (Interface Assistant).
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+Cryptography: Client-side SHA-256 Hashing and AES-256 Evidence Encryption.
 
-**Edit a file directly in GitHub**
+🛡 Security & Privacy Statement
+VANI is built on the principle of Inherent Privacy.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Identity Obfuscation: Student IDs are hashed locally; the original ID is never transmitted or stored.
 
-**Use GitHub Codespaces**
+Unbreakable Anonymity: Because the private key never leaves the student's device, it is mathematically impossible for administrators or developers to trace a report back to an individual.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Data Integrity: Every resolution is cryptographically signed and stored in a transparent compliance log to prevent tampering.
 
-## What technologies are used for this project?
+⚙️ Installation & Setup
+Clone the Repository: git clone https://github.com/your-username/vani-governance.git
 
-This project is built with:
+Environment Variables: Configure your .env file with your Supabase URL, Anon Key, and Gemini API Key.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Database Migration: Run the provided SQL schema in the Supabase SQL Editor to initialize the Governance and Sentiment tables.
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+📄 Disclaimer
+This platform is intended for institutional governance and risk management. It is designed to supplement, not replace, existing legal and administrative procedures.[Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
