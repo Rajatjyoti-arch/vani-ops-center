@@ -24,9 +24,9 @@ interface Report {
 }
 
 const statusConfig = {
-  submitted: { label: "Submitted", color: "bg-muted text-muted-foreground", icon: Clock },
+  submitted: { label: "Received", color: "bg-muted text-muted-foreground", icon: Clock },
   under_review: { label: "Under Review", color: "bg-status-info/20 text-status-info", icon: Eye },
-  investigating: { label: "Investigating", color: "bg-status-warning/20 text-status-warning", icon: AlertCircle },
+  investigating: { label: "In Progress", color: "bg-status-warning/20 text-status-warning", icon: AlertCircle },
   resolved: { label: "Resolved", color: "bg-status-safe/20 text-status-safe", icon: CheckCircle },
 };
 
@@ -34,7 +34,7 @@ const severityConfig = {
   low: "text-muted-foreground",
   medium: "text-status-warning",
   high: "text-status-critical",
-  critical: "text-status-critical font-bold animate-pulse",
+  critical: "text-status-critical font-bold",
 };
 
 const ResolutionLedger = () => {
@@ -95,22 +95,22 @@ const ResolutionLedger = () => {
           <div>
             <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
               <BookOpen className="w-7 h-7 text-primary" />
-              Resolution Ledger
+              Transparency & Compliance Log
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Track and monitor all submitted reports and their resolution status
+              Official record of all submitted cases and their resolution status
             </p>
           </div>
         </div>
 
-        {/* Signed Digital Contracts */}
+        {/* Verified Resolution Agreements */}
         <NegotiationContracts />
 
-        {/* Stats Cards */}
+        {/* Statistics Overview */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="bg-card/80 border-border/50">
             <CardContent className="p-4">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider">Total Reports</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">Total Cases</p>
               <p className="text-2xl font-bold font-mono text-foreground mt-1">{stats.total}</p>
             </CardContent>
           </Card>
@@ -122,13 +122,13 @@ const ResolutionLedger = () => {
           </Card>
           <Card className="bg-card/80 border-border/50">
             <CardContent className="p-4">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider">Pending</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">In Progress</p>
               <p className="text-2xl font-bold font-mono text-status-warning mt-1">{stats.pending}</p>
             </CardContent>
           </Card>
           <Card className="bg-card/80 border-border/50">
             <CardContent className="p-4">
-              <p className="text-xs text-muted-foreground uppercase tracking-wider">Resolution Rate</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wider">Compliance Rate</p>
               <p className="text-2xl font-bold font-mono text-primary mt-1">{stats.resolutionRate}%</p>
             </CardContent>
           </Card>
@@ -138,7 +138,7 @@ const ResolutionLedger = () => {
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
             <Input
-              placeholder="Search by title or ID..."
+              placeholder="Search cases by title or reference ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-secondary/50 border-border/50 pl-10"
@@ -168,12 +168,12 @@ const ResolutionLedger = () => {
           </div>
         </div>
 
-        {/* Reports Timeline */}
+        {/* Case Timeline */}
         <Card className="bg-card/80 border-border/50">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <Filter className="w-4 h-4 text-primary" />
-              Report Timeline
+              Case Timeline
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -184,8 +184,8 @@ const ResolutionLedger = () => {
             ) : filteredReports.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <BookOpen className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No reports found</p>
-                <p className="text-sm">Submit a report via Identity Ghost or Stealth Vault</p>
+                <p>No cases found</p>
+                <p className="text-sm">Submit a case via Anonymous Credentialing or Evidence Repository</p>
               </div>
             ) : (
               <div className="space-y-4">

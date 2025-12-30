@@ -61,29 +61,29 @@ export function NegotiationContracts() {
 
     const certificate = `
 ╔════════════════════════════════════════════════════════════════════╗
-║                    VANI CRYPTOGRAPHIC CERTIFICATE                  ║
-║              Verifiable Anonymous Network Intelligence             ║
+║              INSTITUTIONAL RESOLUTION CERTIFICATE                   ║
+║           Verified Anonymous Network Intelligence Platform          ║
 ╠════════════════════════════════════════════════════════════════════╣
 ║                                                                    ║
-║  SIGNED DIGITAL CONTRACT                                           ║
+║  OFFICIAL RESOLUTION AGREEMENT                                      ║
 ║                                                                    ║
-║  Contract ID: ${negotiation.id}
+║  Agreement ID: ${negotiation.id}
 ║                                                                    ║
-║  Issue Date: ${new Date(negotiation.created_at).toISOString()}
+║  Filed Date: ${new Date(negotiation.created_at).toISOString()}
 ║  Resolution Date: ${new Date(negotiation.updated_at).toISOString()}
 ║                                                                    ║
-║  GRIEVANCE SUMMARY:                                                ║
+║  CASE SUMMARY:                                                     ║
 ║  ${negotiation.grievance_text.slice(0, 60)}${negotiation.grievance_text.length > 60 ? "..." : ""}
 ║                                                                    ║
-║  FINAL CONSENSUS:                                                  ║
+║  RESOLUTION OUTCOME:                                               ║
 ║  ${negotiation.final_consensus?.slice(0, 60) || "N/A"}${(negotiation.final_consensus?.length || 0) > 60 ? "..." : ""}
 ║                                                                    ║
-║  NEGOTIATION METRICS:                                              ║
-║  ├── Sentinel Score: ${negotiation.sentinel_score}%
-║  ├── Governor Score: ${negotiation.governor_score}%
-║  └── Rounds Completed: ${negotiation.negotiation_log.length}
+║  RESOLUTION METRICS:                                               ║
+║  ├── Advocate Score: ${negotiation.sentinel_score}%
+║  ├── Administration Score: ${negotiation.governor_score}%
+║  └── Sessions Completed: ${negotiation.negotiation_log.length}
 ║                                                                    ║
-║  CRYPTOGRAPHIC HASH (SHA-256):                                     ║
+║  VERIFICATION HASH (SHA-256):                                      ║
 ║  ${certHash}
 ║                                                                    ║
 ║  This certificate is cryptographically signed and verifiable.      ║
@@ -96,14 +96,14 @@ export function NegotiationContracts() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `VANI-Contract-${negotiation.id.slice(0, 8)}.txt`;
+    a.download = `Resolution-Agreement-${negotiation.id.slice(0, 8)}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
     toast.success("Certificate Downloaded", {
-      description: "Cryptographic proof saved to device",
+      description: "Official resolution agreement saved",
     });
   };
 
@@ -113,7 +113,7 @@ export function NegotiationContracts() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <FileSignature className="w-4 h-4 text-primary" />
-            Signed Digital Contracts
+            Verified Resolution Agreements
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -130,11 +130,11 @@ export function NegotiationContracts() {
   }
 
   return (
-    <Card className="bg-card/80 border-primary/30 cyber-glow">
+    <Card className="bg-card/80 border-primary/30">
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2">
           <FileSignature className="w-4 h-4 text-primary" />
-          Signed Digital Contracts
+          Verified Resolution Agreements
           <span className="ml-auto text-xs font-mono text-muted-foreground">
             {negotiations.length} verified
           </span>
@@ -151,7 +151,7 @@ export function NegotiationContracts() {
               <div className="flex items-center gap-2">
                 <Scale className="w-4 h-4 text-status-safe" />
                 <span className="font-mono text-xs text-primary">
-                  CONTRACT-{negotiation.id.slice(0, 8).toUpperCase()}
+                  AGREEMENT-{negotiation.id.slice(0, 8).toUpperCase()}
                 </span>
               </div>
               <span className="text-[10px] text-muted-foreground">
@@ -159,7 +159,7 @@ export function NegotiationContracts() {
               </span>
             </div>
 
-            {/* Grievance */}
+            {/* Case Summary */}
             <p className="text-sm text-foreground/80 line-clamp-2">
               {negotiation.grievance_text}
             </p>
@@ -175,14 +175,14 @@ export function NegotiationContracts() {
                 <span className="text-status-warning font-mono">{negotiation.governor_score}%</span>
               </div>
               <span className="text-muted-foreground">
-                {negotiation.negotiation_log.length} rounds
+                {negotiation.negotiation_log.length} sessions
               </span>
             </div>
 
-            {/* Consensus */}
+            {/* Resolution Outcome */}
             {negotiation.final_consensus && (
               <div className="p-2 bg-status-safe/10 border border-status-safe/30 rounded text-xs text-status-safe">
-                <span className="font-mono uppercase text-[10px] block mb-1">Final Consensus:</span>
+                <span className="font-mono uppercase text-[10px] block mb-1">Resolution Outcome:</span>
                 <span className="text-foreground/90">{negotiation.final_consensus}</span>
               </div>
             )}
@@ -192,10 +192,10 @@ export function NegotiationContracts() {
               size="sm"
               variant="outline"
               onClick={() => downloadCertificate(negotiation)}
-              className="w-full cyber-button border-primary/30 text-primary hover:bg-primary/10"
+              className="w-full border-primary/30 text-primary hover:bg-primary/10"
             >
               <Download className="w-3 h-3 mr-2" />
-              Download Cryptographic Certificate
+              Download Resolution Certificate
             </Button>
           </div>
         ))}

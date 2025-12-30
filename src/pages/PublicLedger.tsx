@@ -33,30 +33,30 @@ export default function PublicLedger() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-              <Radio className="w-7 h-7 text-status-critical animate-pulse" />
-              Public Transparency Node
+              <Radio className="w-7 h-7 text-status-critical" />
+              Public Transparency Archive
             </h1>
             <p className="text-muted-foreground text-sm mt-1">
-              Immutable record of released evidence • Cannot be censored or deleted
+              Official record of disclosed evidence pursuant to institutional transparency protocols
             </p>
           </div>
-          <Badge variant="destructive" className="font-mono animate-pulse">
+          <Badge variant="destructive" className="font-mono">
             <Eye className="w-3 h-3 mr-1" />
-            LIVE
+            ACTIVE
           </Badge>
         </div>
 
-        {/* Warning banner */}
+        {/* Notice banner */}
         <div className="bg-status-critical/10 border border-status-critical/30 rounded-lg p-4 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-status-critical shrink-0 mt-0.5" />
           <div>
             <p className="text-sm font-medium text-status-critical">
-              This ledger contains evidence released via Dead Man's Switch activation
+              Emergency Disclosure Archive
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              All entries are cryptographically signed and timestamp-verified. This data exists independently 
-              of any administrative control and serves as proof of grievances that could not be resolved 
-              through normal negotiation channels.
+              This archive contains evidence released pursuant to emergency disclosure protocols.
+              All entries are cryptographically verified and maintain an immutable audit trail
+              as required by institutional transparency standards.
             </p>
           </div>
         </div>
@@ -67,11 +67,11 @@ export default function PublicLedger() {
             <CardContent className="py-12 text-center">
               <FileWarning className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
               <h3 className="text-lg font-medium text-foreground mb-2">
-                No Public Leaks
+                No Active Disclosures
               </h3>
               <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                This transparency node is empty. Evidence is only released here when a Dead Man's Switch 
-                is triggered due to failed negotiations or lack of check-in.
+                This transparency archive is currently empty. Evidence is only published here 
+                when emergency disclosure protocols are activated due to unresolved escalation procedures.
               </p>
             </CardContent>
           </Card>
@@ -79,7 +79,7 @@ export default function PublicLedger() {
           <div className="space-y-4">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground font-mono">
-                {entries.length} ENTRIES IN PUBLIC LEDGER
+                {entries.length} ENTRIES IN TRANSPARENCY ARCHIVE
               </span>
             </div>
             
@@ -113,7 +113,7 @@ export default function PublicLedger() {
                   <div className="mt-3 flex items-center gap-4 text-[10px] text-muted-foreground font-mono">
                     <span>HASH: {entry.id.slice(0, 8)}...{entry.id.slice(-4)}</span>
                     <span>VERIFIED: TRUE</span>
-                    <span>IMMUTABLE: TRUE</span>
+                    <span>ARCHIVED: TRUE</span>
                   </div>
                 </CardContent>
               </Card>
@@ -124,7 +124,7 @@ export default function PublicLedger() {
         {/* Footer note */}
         <div className="text-center py-6 border-t border-border/30">
           <p className="text-xs text-muted-foreground font-mono">
-            "The truth cannot be silenced. This node operates independently of all administrative control."
+            "This archive maintains an immutable record of institutional transparency disclosures."
           </p>
         </div>
       </div>

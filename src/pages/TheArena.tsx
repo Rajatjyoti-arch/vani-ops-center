@@ -48,32 +48,32 @@ const agentStyles = {
     color: "text-primary",
     bg: "bg-primary/10",
     border: "border-primary/30",
-    label: "Sentinel-AI",
-    subtitle: "Student Proxy",
+    label: "Student Advocate",
+    subtitle: "Rights Representative",
     berserkerColor: "text-status-critical",
     berserkerBg: "bg-status-critical/20",
     berserkerBorder: "border-status-critical/50",
-    berserkerLabel: "SENTINEL-AI [BERSERKER]",
+    berserkerLabel: "ADVOCATE [ESCALATION MODE]",
   },
   Governor: {
     icon: Building2,
     color: "text-status-warning",
     bg: "bg-status-warning/10",
     border: "border-status-warning/30",
-    label: "Governor-AI",
-    subtitle: "Campus Admin",
+    label: "Administration",
+    subtitle: "Institutional Representative",
   },
   Arbiter: {
     icon: Scale,
     color: "text-status-safe",
     bg: "bg-status-safe/10",
     border: "border-status-safe/30",
-    label: "The Arbiter",
+    label: "Resolution Officer",
     subtitle: "Neutral Mediator",
     ethicsColor: "text-status-critical",
     ethicsBg: "bg-status-critical/20",
     ethicsBorder: "border-status-critical/50",
-    ethicsLabel: "THE ARBITER [ETHICS OVERRIDE]",
+    ethicsLabel: "RESOLUTION OFFICER [COMPLIANCE REVIEW]",
   },
 };
 
@@ -111,13 +111,13 @@ const TheArena = () => {
 
   const startNegotiation = async () => {
     if (!selectedFileId) {
-      toast.error("Select a grievance file to begin negotiation");
+      toast.error("Please select a case file to begin the resolution process");
       return;
     }
 
     const selectedFile = vaultFiles.find(f => f.id === selectedFileId);
     if (!selectedFile?.secret_metadata) {
-      toast.error("No grievance data found in selected file");
+      toast.error("No case data found in selected file");
       return;
     }
 
@@ -144,7 +144,7 @@ const TheArena = () => {
 
     if (error) {
       console.error('Error creating negotiation:', error);
-      toast.error("Failed to start negotiation");
+      toast.error("Failed to initiate resolution process");
       setIsNegotiating(false);
       return;
     }
@@ -196,8 +196,8 @@ const TheArena = () => {
         });
 
         if (response.error) {
-          console.error('Negotiation error:', response.error);
-          toast.error("Negotiation round failed");
+          console.error('Resolution error:', response.error);
+          toast.error("Resolution session interrupted");
           break;
         }
 
@@ -242,9 +242,8 @@ const TheArena = () => {
             status: 'completed' 
           } : null);
 
-          toast.success("Data Siphon Complete", {
-            description: "Negotiation concluded. Consensus reached.",
-            className: "cyber-glow",
+          toast.success("Resolution Complete", {
+            description: "Case concluded. Resolution recorded.",
           });
 
           setTimeout(() => {
@@ -263,25 +262,24 @@ const TheArena = () => {
         await new Promise(resolve => setTimeout(resolve, 1500));
 
       } catch (error) {
-        console.error('Round error:', error);
-        toast.error("Negotiation interrupted");
+        console.error('Session error:', error);
+        toast.error("Resolution session interrupted");
         break;
       }
     }
 
-    // If no arbiter was triggered, complete normally after 4 rounds
+    // If no arbiter was triggered, complete normally after 4 sessions
     if (log.length >= 8 && !log.some(l => l.agent === 'Arbiter')) {
       await supabase
         .from('arena_negotiations')
         .update({
-          final_consensus: "Negotiation concluded after 4 rounds. Review the arguments above.",
+          final_consensus: "Resolution concluded after 4 sessions. Review the discussion above.",
           status: 'completed',
         })
         .eq('id', negotiationId);
 
-      toast.success("Data Siphon Complete", {
-        description: "Negotiation completed. Redirecting to ledger...",
-        className: "cyber-glow",
+      toast.success("Resolution Complete", {
+        description: "Case resolved. Redirecting to compliance log...",
       });
 
       setTimeout(() => {
@@ -300,27 +298,25 @@ const TheArena = () => {
 
   return (
     <DashboardLayout>
-      {/* Ethical Violation Alert */}
+      {/* Compliance Review Alert */}
       <EthicalViolationAlert 
         isVisible={showViolationAlert} 
         onDismiss={() => setShowViolationAlert(false)} 
       />
       
       <div className="space-y-6 animate-fade-in relative">
-        {/* Matrix Rain Background */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
-          <MatrixRain />
-        </div>
+        {/* Background Effect - Subtle professional gradient */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden bg-gradient-to-b from-background to-secondary/20" style={{ zIndex: -1 }} />
 
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-              <Swords className="w-7 h-7 text-primary" />
-              The Arena
+              <Scale className="w-7 h-7 text-primary" />
+              Governance Resolution Matrix
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Multi-Agent Negotiation Matrix
+              Formal Case Resolution Process
             </p>
           </div>
         </div>
@@ -329,14 +325,14 @@ const TheArena = () => {
         <Card className="bg-card/80 backdrop-blur-sm border-border/50">
           <CardHeader>
             <CardTitle className="text-sm font-mono uppercase tracking-wider text-muted-foreground">
-              Select Grievance File
+              Select Case File
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex gap-4">
               <Select value={selectedFileId} onValueChange={setSelectedFileId} disabled={isNegotiating}>
                 <SelectTrigger className="flex-1 bg-secondary/50 border-border/50">
-                  <SelectValue placeholder="Choose from Stealth Vault..." />
+                  <SelectValue placeholder="Choose from Evidence Repository..." />
                 </SelectTrigger>
                 <SelectContent>
                   {vaultFiles.map((file) => (
@@ -355,21 +351,21 @@ const TheArena = () => {
               <Button 
                 onClick={startNegotiation} 
                 disabled={!selectedFileId || isNegotiating}
-                className="cyber-button gap-2 bg-primary text-primary-foreground"
+                className="gap-2 bg-primary text-primary-foreground"
               >
                 {isNegotiating ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <Play className="w-4 h-4" />
                 )}
-                {isNegotiating ? "Negotiating..." : "Initiate Matrix"}
+                {isNegotiating ? "Processing..." : "Begin Resolution"}
               </Button>
             </div>
 
             {selectedFileId && vaultFiles.find(f => f.id === selectedFileId) && (
               <div className="p-3 bg-secondary/30 rounded border border-border/30">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs text-muted-foreground font-mono">GRIEVANCE PAYLOAD:</p>
+                  <p className="text-xs text-muted-foreground font-mono">CASE DETAILS:</p>
                   {vaultFiles.find(f => f.id === selectedFileId)?.file_path.match(/\.(png|jpg|jpeg|webp)$/i) && (
                     <DeepScanReveal 
                       vaultFileId={selectedFileId}
@@ -386,51 +382,51 @@ const TheArena = () => {
           </CardContent>
         </Card>
 
-        {/* Negotiation Metrics */}
+        {/* Resolution Metrics */}
         {negotiation && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Sentinel Score */}
+            {/* Advocate Score */}
             <Card className={`bg-card/80 backdrop-blur-sm border-primary/30`}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3 mb-3">
                   <Shield className="w-5 h-5 text-primary" />
-                  <span className="font-mono text-sm text-primary">SENTINEL STRENGTH</span>
+                  <span className="font-mono text-sm text-primary">ADVOCATE POSITION</span>
                 </div>
                 <div className="space-y-2">
                   <Progress value={sentinelScore} className="h-3" />
                   <div className="flex justify-between text-xs font-mono">
-                    <span className="text-muted-foreground">Power Level</span>
+                    <span className="text-muted-foreground">Strength</span>
                     <span className="text-primary">{sentinelScore}%</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Victory Probability */}
+            {/* Resolution Probability */}
             <Card className="bg-card/80 backdrop-blur-sm border-status-safe/30">
               <CardContent className="p-4">
                 <div className="flex items-center gap-3 mb-3">
                   <TrendingUp className="w-5 h-5 text-status-safe" />
-                  <span className="font-mono text-sm text-status-safe">VICTORY PROBABILITY</span>
+                  <span className="font-mono text-sm text-status-safe">RESOLUTION OUTLOOK</span>
                 </div>
                 <div className="text-center">
                   <span className="text-4xl font-bold font-mono text-foreground">{victoryProbability()}%</span>
-                  <p className="text-xs text-muted-foreground mt-1">Student Advantage</p>
+                  <p className="text-xs text-muted-foreground mt-1">Favorable Outcome</p>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Governor Score */}
+            {/* Administration Score */}
             <Card className={`bg-card/80 backdrop-blur-sm border-status-warning/30`}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3 mb-3">
                   <Building2 className="w-5 h-5 text-status-warning" />
-                  <span className="font-mono text-sm text-status-warning">GOVERNOR STRENGTH</span>
+                  <span className="font-mono text-sm text-status-warning">ADMINISTRATION POSITION</span>
                 </div>
                 <div className="space-y-2">
                   <Progress value={governorScore} className="h-3" />
                   <div className="flex justify-between text-xs font-mono">
-                    <span className="text-muted-foreground">Power Level</span>
+                    <span className="text-muted-foreground">Strength</span>
                     <span className="text-status-warning">{governorScore}%</span>
                   </div>
                 </div>
@@ -439,7 +435,7 @@ const TheArena = () => {
           </div>
         )}
 
-        {/* Round Indicator */}
+        {/* Session Indicator */}
         {negotiation && (
           <>
             <div className="flex items-center justify-center gap-4 py-2">
@@ -450,9 +446,9 @@ const TheArena = () => {
                     w-12 h-12 rounded-full border-2 flex items-center justify-center font-mono font-bold
                     transition-all duration-300
                     ${ethicalViolationDetected && currentRound === round
-                      ? 'border-status-critical bg-status-critical/20 text-status-critical scale-110 animate-pulse'
+                      ? 'border-status-critical bg-status-critical/20 text-status-critical scale-110'
                       : currentRound === round 
-                        ? 'border-primary bg-primary/20 text-primary scale-110 cyber-glow' 
+                        ? 'border-primary bg-primary/20 text-primary scale-110' 
                         : currentRound > round 
                           ? 'border-status-safe/50 bg-status-safe/10 text-status-safe' 
                           : 'border-border/50 bg-secondary/30 text-muted-foreground'
@@ -466,7 +462,7 @@ const TheArena = () => {
               ))}
             </div>
             
-            {/* Heat Bar */}
+            {/* Progress Bar */}
             <HeatBar 
               sentinelScore={sentinelScore} 
               governorScore={governorScore} 
@@ -476,12 +472,12 @@ const TheArena = () => {
           </>
         )}
 
-        {/* Negotiation Log */}
+        {/* Resolution Transcript */}
         {negotiation && negotiation.negotiation_log.length > 0 && (
           <div className="space-y-4">
             <h2 className="font-mono text-sm uppercase tracking-wider text-muted-foreground flex items-center gap-2">
               <MessageSquare className="w-4 h-4" />
-              Negotiation Transcript
+              Resolution Transcript
             </h2>
             
             <div className="space-y-3">
@@ -522,13 +518,13 @@ const TheArena = () => {
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start gap-4">
-                        <div className={`p-2 rounded-lg ${style.bg} ${style.border} border ${isBerserker ? 'animate-pulse' : ''}`}>
+                        <div className={`p-2 rounded-lg ${style.bg} ${style.border} border`}>
                           <Icon className={`w-5 h-5 ${style.color}`} />
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                              <span className={`font-bold ${style.color} ${isBerserker ? 'glitch-text' : ''}`}>
+                              <span className={`font-bold ${style.color}`}>
                                 {style.label || baseStyle.label}
                               </span>
                               {(isBerserker || isEthicsOverride) && (
@@ -546,13 +542,13 @@ const TheArena = () => {
                                 </span>
                               )}
                               <span className="text-xs text-muted-foreground font-mono">
-                                R{entry.round}
+                                Session {entry.round}
                               </span>
                             </div>
                           </div>
                           <p className={`text-sm leading-relaxed ${
                             isBerserker 
-                              ? 'font-bold text-status-critical glitch-text' 
+                              ? 'font-bold text-status-critical' 
                               : isEthicsOverride 
                                 ? 'font-semibold text-status-critical' 
                                 : 'text-foreground'
@@ -573,13 +569,13 @@ const TheArena = () => {
           </div>
         )}
 
-        {/* Final Consensus */}
+        {/* Resolution Outcome */}
         {negotiation?.final_consensus && (
-          <Card className={`cyber-glow ${ethicalViolationDetected ? 'bg-status-critical/10 border-status-critical/30' : 'bg-status-safe/10 border-status-safe/30'}`}>
+          <Card className={`${ethicalViolationDetected ? 'bg-status-critical/10 border-status-critical/30' : 'bg-status-safe/10 border-status-safe/30'}`}>
             <CardHeader>
               <CardTitle className={`flex items-center gap-2 ${ethicalViolationDetected ? 'text-status-critical' : 'text-status-safe'}`}>
                 <Scale className="w-5 h-5" />
-                {ethicalViolationDetected ? 'Ethics Override Ruling' : 'Final Consensus'}
+                {ethicalViolationDetected ? 'Compliance Review Ruling' : 'Resolution Outcome'}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -593,7 +589,7 @@ const TheArena = () => {
           <div className="flex items-center justify-center py-8">
             <div className="flex items-center gap-3 text-primary">
               <Loader2 className="w-6 h-6 animate-spin" />
-              <span className="font-mono text-sm animate-pulse">Processing negotiation matrix...</span>
+              <span className="font-mono text-sm">Processing resolution session...</span>
             </div>
           </div>
         )}
