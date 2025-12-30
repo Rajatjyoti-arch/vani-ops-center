@@ -1,25 +1,11 @@
 import { useState, useEffect } from "react";
-import { Menu, Activity, Clock, Sun, Moon } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Menu, Activity, Clock } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 export function AppHeader() {
   const [integrity, setIntegrity] = useState(97);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  // Prevent hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Fluctuate system integrity between 94-99%
   useEffect(() => {
@@ -64,10 +50,10 @@ export function AppHeader() {
   return (
     <header className="h-14 border-b border-border/50 bg-card/50 backdrop-blur-sm flex items-center justify-between px-4">
       <div className="flex items-center gap-4">
-        <SidebarTrigger className="cyber-button text-muted-foreground hover:text-primary">
+        <SidebarTrigger className="h-9 w-9 bg-secondary/20 hover:bg-primary/20 text-foreground hover:text-primary transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-primary/20">
           <Menu className="h-5 w-5" />
         </SidebarTrigger>
-        
+
         <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
           <Activity className="w-3 h-3 text-primary animate-pulse" />
           <span className="font-mono">VANI://SECURE_CHANNEL</span>
@@ -81,11 +67,11 @@ export function AppHeader() {
             System Integrity
           </span>
           <div className="flex items-center gap-2">
-            <Progress 
-              value={integrity} 
+            <Progress
+              value={integrity}
               className="w-24 h-2 bg-secondary"
             />
-            <span 
+            <span
               className={`
                 font-mono text-sm font-bold transition-all duration-300
                 ${integrity >= 97 ? "text-status-safe" : integrity >= 95 ? "text-status-warning" : "text-status-critical"}
@@ -106,30 +92,6 @@ export function AppHeader() {
             </span>
           </div>
         </div>
-
-        {/* Theme Toggle */}
-        {mounted && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="h-8 w-8 text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {theme === "dark" ? (
-                  <Sun className="h-4 w-4" />
-                ) : (
-                  <Moon className="h-4 w-4" />
-                )}
-                <span className="sr-only">Toggle theme</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}</p>
-            </TooltipContent>
-          </Tooltip>
-        )}
       </div>
     </header>
   );

@@ -13,6 +13,33 @@ interface StatCardProps {
 }
 
 function StatCard({ title, value, change, icon: Icon, trend, isLoading }: StatCardProps) {
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    const numericValue = typeof value === 'number' ? value : parseInt(value.toString().replace(/\D/g, '')) || 0;
+    const duration = 1000;
+    const steps = 60;
+    const stepTime = duration / steps;
+    const increment = numericValue / steps;
+
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= numericValue) {
+        setDisplayValue(numericValue);
+        clearInterval(timer);
+      } else {
+        setDisplayValue(Math.floor(current));
+      }
+    }, stepTime);
+
+    return () => clearInterval(timer);
+  }, [value, isLoading]);
+
+  const suffix = typeof value === 'string' && value.includes('%') ? '%' : '';
+
   const trendColors = {
     up: "text-status-safe",
     down: "text-status-critical",
@@ -20,7 +47,7 @@ function StatCard({ title, value, change, icon: Icon, trend, isLoading }: StatCa
   };
 
   return (
-    <Card className="bg-card/80 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all duration-300 group">
+    <Card className="bg-card/80 backdrop-blur-sm border-border/50 hover:border-primary/30 transition-all duration-300 group hover:shadow-primary/5 hover:-translate-y-0.5">
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -32,7 +59,7 @@ function StatCard({ title, value, change, icon: Icon, trend, isLoading }: StatCa
             ) : (
               <>
                 <p className="text-2xl font-bold font-mono text-foreground group-hover:text-primary transition-colors">
-                  {value}
+                  {displayValue}{suffix}
                 </p>
                 {change && (
                   <p className={`text-xs mt-1 ${trendColors[trend || "neutral"]}`}>
@@ -42,7 +69,7 @@ function StatCard({ title, value, change, icon: Icon, trend, isLoading }: StatCa
               </>
             )}
           </div>
-          <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-all">
+          <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
             <Icon className="w-5 h-5 text-primary" />
           </div>
         </div>

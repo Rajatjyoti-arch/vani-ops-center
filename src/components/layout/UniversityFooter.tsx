@@ -8,8 +8,8 @@ export function UniversityFooter() {
           {/* University Info */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-primary/10 border-2 border-primary flex items-center justify-center">
-                <span className="font-bold text-primary text-sm">CUJ</span>
+              <div className="w-12 h-12 rounded-full overflow-hidden flex items-center justify-center">
+                <img src="/cuj-logo.png" alt="CUJ Logo" className="w-full h-full object-contain" />
               </div>
               <div>
                 <h3 className="font-bold text-foreground">Central University of Jammu</h3>
@@ -17,7 +17,7 @@ export function UniversityFooter() {
               </div>
             </div>
             <p className="text-sm text-muted-foreground">
-              Established under the Central Universities Act, 2009. 
+              Established under the Central Universities Act, 2009.
               Committed to excellence in education and research.
             </p>
           </div>
@@ -42,9 +42,9 @@ export function UniversityFooter() {
               </div>
               <div className="flex items-center gap-3">
                 <Globe className="w-4 h-4 text-primary shrink-0" />
-                <a 
-                  href="https://www.cujammu.ac.in" 
-                  target="_blank" 
+                <a
+                  href="https://www.cujammu.ac.in"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline flex items-center gap-1"
                 >
@@ -59,49 +59,49 @@ export function UniversityFooter() {
           <div className="space-y-4">
             <h4 className="font-semibold text-foreground">Quick Links</h4>
             <div className="grid grid-cols-2 gap-2 text-sm">
-              <a 
-                href="https://www.cujammu.ac.in/index.php?action=about-us" 
-                target="_blank" 
+              <a
+                href="https://www.cujammu.ac.in/index.php?action=about-us"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
                 About Us
               </a>
-              <a 
-                href="https://www.cujammu.ac.in/index.php?action=academics" 
-                target="_blank" 
+              <a
+                href="https://www.cujammu.ac.in/index.php?action=academics"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
                 Academics
               </a>
-              <a 
-                href="https://www.cujammu.ac.in/index.php?action=admissions" 
-                target="_blank" 
+              <a
+                href="https://www.cujammu.ac.in/index.php?action=admissions"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
                 Admissions
               </a>
-              <a 
-                href="https://www.cujammu.ac.in/index.php?action=research" 
-                target="_blank" 
+              <a
+                href="https://www.cujammu.ac.in/index.php?action=research"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
                 Research
               </a>
-              <a 
-                href="https://www.cujammu.ac.in/index.php?action=student-corner" 
-                target="_blank" 
+              <a
+                href="https://www.cujammu.ac.in/index.php?action=student-corner"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
                 Student Corner
               </a>
-              <a 
-                href="https://www.cujammu.ac.in/index.php?action=facilities" 
-                target="_blank" 
+              <a
+                href="https://www.cujammu.ac.in/index.php?action=facilities"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
               >

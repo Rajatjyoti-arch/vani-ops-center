@@ -24,8 +24,8 @@ export function CampusImpactScore() {
 
       const totalReports = data?.length || 0;
       const resolvedReports = data?.filter(r => r.status === "resolved").length || 0;
-      const impactScore = totalReports > 0 
-        ? Math.round((resolvedReports / totalReports) * 100) 
+      const impactScore = totalReports > 0
+        ? Math.round((resolvedReports / totalReports) * 100)
         : 0;
 
       setTotal(totalReports);
@@ -41,7 +41,7 @@ export function CampusImpactScore() {
     <Card className="bg-card/80 backdrop-blur-sm border-primary/30 overflow-hidden relative group">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
       <CardContent className="p-4 relative">
-        <div className="flex items-start justify-between mb-3">
+        <div className="flex items-start justify-between mb-2">
           <div>
             <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
               Campus Impact Score
@@ -50,10 +50,12 @@ export function CampusImpactScore() {
               <Loader2 className="w-6 h-6 animate-spin text-primary mt-2" />
             ) : (
               <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold font-mono text-primary">
+                <span className="text-2xl font-bold font-mono text-primary">
                   {score}%
                 </span>
-                <span className="text-xs text-muted-foreground">impact</span>
+                <span className="text-xs text-muted-foreground">
+                  {resolved} / {total} resolved
+                </span>
               </div>
             )}
           </div>
@@ -61,15 +63,9 @@ export function CampusImpactScore() {
             <TrendingUp className="w-5 h-5 text-primary" />
           </div>
         </div>
-        
+
         {!isLoading && (
-          <>
-            <Progress value={score} className="h-2 mb-2" />
-            <div className="flex justify-between text-xs text-muted-foreground font-mono">
-              <span>{resolved} resolved</span>
-              <span>{total - resolved} pending</span>
-            </div>
-          </>
+          <Progress value={score} className="h-1.5 mt-3" />
         )}
       </CardContent>
     </Card>

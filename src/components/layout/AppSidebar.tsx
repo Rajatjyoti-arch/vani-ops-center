@@ -1,6 +1,7 @@
 import { UserCheck, Shield, Scale, BookOpen, Lock, Radio, Building, HelpCircle } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import { VaniLogo } from "@/components/ui/VaniLogo";
+import { UniversityBranding } from "@/components/ui/UniversityBranding";
 import {
   Sidebar,
   SidebarContent,
@@ -91,8 +92,6 @@ export function AppSidebar() {
                 size={collapsed ? "sm" : "md"}
               />
             </div>
-            <div className={`absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full transition-colors ${deadManActive ? "bg-destructive" : "bg-accent"
-              }`} />
           </div>
           {!collapsed && (
             <div className="animate-fade-in flex-1">
@@ -102,6 +101,12 @@ export function AppSidebar() {
             </div>
           )}
         </div>
+
+        {!collapsed && (
+          <div className="mt-4 pt-4 border-t border-border/40 animate-fade-in">
+            <UniversityBranding size="sm" />
+          </div>
+        )}
       </SidebarHeader>
 
       <SidebarContent className="px-2 py-4">

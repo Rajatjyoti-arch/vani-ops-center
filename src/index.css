@@ -8,68 +8,7 @@
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    --foreground: 220 25% 15%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 220 25% 15%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 15%;
-
-    --primary: 210 100% 25%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 220 15% 92%;
-    --secondary-foreground: 220 25% 15%;
-
-    --muted: 220 15% 95%;
-    --muted-foreground: 220 15% 45%;
-
-    --accent: 160 84% 35%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 220 15% 88%;
-    --input: 220 15% 88%;
-    --ring: 210 100% 25%;
-
-    --radius: 0.5rem;
-
-    /* Institutional colors */
-    --navy-dark: 210 100% 12%;
-    --navy-medium: 210 100% 25%;
-    --navy-light: 210 50% 40%;
-    --slate-dark: 220 15% 25%;
-    --slate-medium: 220 15% 45%;
-    --slate-light: 220 15% 75%;
-
-    /* Status colors */
-    --status-safe: 160 84% 35%;
-    --status-warning: 45 93% 47%;
-    --status-critical: 0 84% 60%;
-    --status-info: 210 100% 50%;
-
-    /* VANI Brand Colors */
-    --vani-blue-dark: 210 85% 15%;
-    --vani-blue: 220 90% 55%;
-    --vani-blue-light: 210 90% 70%;
-    --vani-slate: 215 20% 80%;
-
-    /* Sidebar - Professional */
-    --sidebar-background: 210 100% 12%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 160 84% 45%;
-    --sidebar-primary-foreground: 210 100% 12%;
-    --sidebar-accent: 210 50% 20%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 210 50% 20%;
-    --sidebar-ring: 160 84% 45%;
-  }
-
-  .dark {
+    /* Enforced Dark Mode Variables */
     --background: 210 100% 8%;
     --foreground: 0 0% 98%;
     --card: 210 100% 10%;
@@ -89,6 +28,9 @@
     --border: 210 50% 20%;
     --input: 210 50% 20%;
     --ring: 160 84% 45%;
+    --radius: 0.5rem;
+
+    /* Sidebar - Professional (Dark) */
     --sidebar-background: 210 100% 6%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 160 84% 45%;
@@ -98,7 +40,21 @@
     --sidebar-border: 210 50% 15%;
     --sidebar-ring: 160 84% 45%;
 
-    /* VANI Brand Colors - Dark Mode */
+    /* Institutional colors */
+    --navy-dark: 210 100% 12%;
+    --navy-medium: 210 100% 25%;
+    --navy-light: 210 50% 40%;
+    --slate-dark: 220 15% 25%;
+    --slate-medium: 220 15% 45%;
+    --slate-light: 220 15% 75%;
+
+    /* Status colors */
+    --status-safe: 160 84% 35%;
+    --status-warning: 45 93% 47%;
+    --status-critical: 0 84% 60%;
+    --status-info: 210 100% 50%;
+
+    /* VANI Brand Colors - Enforced Dark Mode */
     --vani-blue-dark: 210 85% 15%;
     --vani-blue: 220 90% 55%;
     --vani-blue-light: 210 90% 75%;

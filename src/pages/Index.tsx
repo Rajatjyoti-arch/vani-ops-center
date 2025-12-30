@@ -8,6 +8,8 @@ import { CampusImpactScore } from "@/components/dashboard/CampusImpactScore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+import { UniversityBranding } from "@/components/ui/UniversityBranding";
+
 const Index = () => {
   return (
     <DashboardLayout>
@@ -18,6 +20,7 @@ const Index = () => {
             <h1 className="text-2xl font-bold text-foreground tracking-tight">
               Operational Command Center
             </h1>
+            <UniversityBranding size="sm" className="mt-2 mb-3 opacity-90" />
             <div className="flex items-center gap-2 mt-2">
               <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
                 <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
@@ -28,12 +31,7 @@ const Index = () => {
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" className="gap-2 hidden sm:flex">
-              <Activity className="w-4 h-4" />
-              System Health
-            </Button>
-          </div>
+
         </div>
 
         {/* Access Control / Portal Entry Points */}

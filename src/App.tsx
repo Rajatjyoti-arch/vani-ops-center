@@ -40,7 +40,7 @@ const queryClient = new QueryClient();
 
 function AppContent() {
   const { commandPaletteOpen, setCommandPaletteOpen } = useKeyboardShortcuts();
-  
+
   return (
     <>
       <Toaster />
@@ -52,7 +52,7 @@ function AppContent() {
       <Routes>
         {/* Public Landing Page */}
         <Route path="/" element={<LandingPage />} />
-        
+
         {/* Student Routes */}
         <Route path="/student-dashboard" element={<StudentDashboard />} />
         <Route path="/identity" element={<AnonymousCredentialing />} />
@@ -69,14 +69,14 @@ function AppContent() {
         <Route path="/ledger" element={<ResolutionLedger />} />
         <Route path="/public-ledger" element={<PublicLedger />} />
         <Route path="/help" element={<HelpDocumentation />} />
-        
+
         {/* Internal Dashboard (for authenticated navigation) */}
         <Route path="/dashboard" element={<Dashboard />} />
-        
+
         {/* Legal Pages */}
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/gdpr-compliance" element={<GDPRCompliance />} />
-        
+
         {/* Admin Routes */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/setup" element={<AdminSetup />} />
@@ -86,7 +86,7 @@ function AppContent() {
         <Route path="/admin" element={<AdminProtectedRoute><AdminDashboard /></AdminProtectedRoute>} />
         <Route path="/admin/resolutions" element={<AdminProtectedRoute><AdminResolutions /></AdminProtectedRoute>} />
         <Route path="/admin/resolutions/:id" element={<AdminProtectedRoute><AdminResolutionDetail /></AdminProtectedRoute>} />
-        
+
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -95,7 +95,7 @@ function AppContent() {
 }
 
 const App = () => (
-  <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+  <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
     <QueryClientProvider client={queryClient}>
       <SettingsProvider>
         <GhostSessionProvider>

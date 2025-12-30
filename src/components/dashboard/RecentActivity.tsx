@@ -35,7 +35,7 @@ export function RecentActivity() {
   useEffect(() => {
     const fetchActivity = async () => {
       setIsLoading(true);
-      
+
       // Fetch recent ghost identities
       const { data: identities } = await supabase
         .from("ghost_identities")
@@ -82,7 +82,7 @@ export function RecentActivity() {
         activityItems.push({
           id: `report-${r.id}`,
           type,
-          message: r.status === "resolved" 
+          message: r.status === "resolved"
             ? `Issue "${r.title}" marked as resolved`
             : `New report: "${r.title}"`,
           time: formatRelativeTime(r.created_at),
@@ -145,7 +145,7 @@ export function RecentActivity() {
                   className="flex items-start gap-3 p-3 rounded-lg bg-secondary/20 hover:bg-secondary/40 transition-colors animate-fade-in"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <div className={`p-1.5 rounded-md ${config.color}`}>
+                  <div className={`p-1.5 rounded-md ${config.color} ${index === 0 ? 'animate-pulse-slow' : ''}`}>
                     <Icon className="w-3.5 h-3.5" />
                   </div>
                   <div className="flex-1 min-w-0">
