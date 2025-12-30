@@ -12,10 +12,12 @@ import { MatrixRain } from "@/components/effects/MatrixRain";
 import { TypewriterText } from "@/components/effects/TypewriterText";
 import { HeatBar } from "@/components/arena/HeatBar";
 import { EthicalViolationAlert } from "@/components/arena/EthicalViolationAlert";
+import { DeepScanReveal } from "@/components/arena/DeepScanReveal";
 
 interface VaultFile {
   id: string;
   file_name: string;
+  file_path: string;
   secret_metadata: string | null;
   created_at: string;
 }
@@ -92,7 +94,7 @@ const TheArena = () => {
     const fetchVaultFiles = async () => {
       const { data, error } = await supabase
         .from('stealth_vault')
-        .select('id, file_name, secret_metadata, created_at')
+        .select('id, file_name, file_path, secret_metadata, created_at')
         .not('secret_metadata', 'is', null)
         .order('created_at', { ascending: false });
 
@@ -366,7 +368,16 @@ const TheArena = () => {
 
             {selectedFileId && vaultFiles.find(f => f.id === selectedFileId) && (
               <div className="p-3 bg-secondary/30 rounded border border-border/30">
-                <p className="text-xs text-muted-foreground mb-1 font-mono">GRIEVANCE PAYLOAD:</p>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs text-muted-foreground font-mono">GRIEVANCE PAYLOAD:</p>
+                  {vaultFiles.find(f => f.id === selectedFileId)?.file_path.match(/\.(png|jpg|jpeg|webp)$/i) && (
+                    <DeepScanReveal 
+                      vaultFileId={selectedFileId}
+                      filePath={vaultFiles.find(f => f.id === selectedFileId)!.file_path}
+                      fileName={vaultFiles.find(f => f.id === selectedFileId)!.file_name}
+                    />
+                  )}
+                </div>
                 <p className="text-sm text-foreground">
                   {vaultFiles.find(f => f.id === selectedFileId)?.secret_metadata}
                 </p>

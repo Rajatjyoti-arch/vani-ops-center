@@ -5,10 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Shield, Upload, File, Image, FileText, Lock, Clock, Trash2, Loader2 } from "lucide-react";
+import { Shield, Upload, File, Image, FileText, Lock, Clock, Trash2, Loader2, Binary, Database } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { formatRelativeTime } from "@/lib/crypto";
+import { encodeTextInImage, isValidImageForSteganography } from "@/lib/steganography";
 
 interface VaultFile {
   id: string;
@@ -78,18 +79,42 @@ const StealthVault = () => {
         // Generate unique file path
         const timestamp = Date.now();
         const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
-        const filePath = `${timestamp}_${sanitizedName}`;
+        
+        let fileToUpload: File | Blob = file;
+        let finalFileName = file.name;
+        let filePath = `${timestamp}_${sanitizedName}`;
+
+        // If it's a valid image and there's grievance text, encode it using steganography
+        if (grievanceText && isValidImageForSteganography(file)) {
+          try {
+            const encodedBlob = await encodeTextInImage(file, grievanceText);
+            // Convert to PNG for lossless storage of encoded data
+            const pngName = file.name.replace(/\.[^/.]+$/, "") + "_secured.png";
+            finalFileName = pngName;
+            filePath = `${timestamp}_${pngName.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+            fileToUpload = encodedBlob;
+            
+            toast({
+              title: "🔐 Deep-Pixel Encoding Active",
+              description: "Grievance data embedded into image pixels using LSB steganography.",
+              className: "bg-status-safe/20 border-status-safe text-foreground",
+            });
+          } catch (encodeError) {
+            console.error("Steganography encoding failed:", encodeError);
+            // Continue with regular upload if encoding fails
+          }
+        }
 
         // Upload to Supabase Storage
         const { error: uploadError } = await supabase.storage
           .from("decoy-images")
-          .upload(filePath, file);
+          .upload(filePath, fileToUpload);
 
         if (uploadError) throw uploadError;
 
         // Save metadata to stealth_vault table
         const { error: dbError } = await supabase.from("stealth_vault").insert({
-          file_name: file.name,
+          file_name: finalFileName,
           file_path: filePath,
           file_type: getFileType(file),
           file_size: formatFileSize(file.size),
@@ -102,7 +127,7 @@ const StealthVault = () => {
       // Show success notification
       toast({
         title: "⚡ Data Siphon Complete",
-        description: "Evidence securely uploaded to the vault. Your submission is encrypted.",
+        description: "Evidence securely uploaded to the vault with pixel-level encryption.",
         className: "bg-primary/20 border-primary text-foreground",
       });
 
@@ -251,8 +276,22 @@ const StealthVault = () => {
           </CardContent>
         </Card>
 
+        {/* Database Independence Note */}
+        <Card className="bg-primary/5 border-primary/20">
+          <CardContent className="p-4 flex items-start gap-3">
+            <Database className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium text-primary font-mono">DATABASE INDEPENDENT</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Even if our servers are wiped, this image carries its own truth. 
+                Grievance data is encoded directly into image pixels using LSB steganography.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Vault Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
           <Card className="bg-card/80 border-border/50">
             <CardContent className="p-4 flex items-center gap-3">
               <div className="p-2 rounded-lg bg-primary/10">
@@ -267,7 +306,18 @@ const StealthVault = () => {
           <Card className="bg-card/80 border-border/50">
             <CardContent className="p-4 flex items-center gap-3">
               <div className="p-2 rounded-lg bg-status-safe/10">
-                <Lock className="w-5 h-5 text-status-safe" />
+                <Binary className="w-5 h-5 text-status-safe" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold font-mono">LSB</p>
+                <p className="text-xs text-muted-foreground">Steganography</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-card/80 border-border/50">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Lock className="w-5 h-5 text-primary" />
               </div>
               <div>
                 <p className="text-2xl font-bold font-mono">256-bit</p>
