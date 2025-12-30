@@ -13,6 +13,7 @@ import { useGhostSession } from "@/contexts/GhostSessionContext";
 import { NeuralScanner } from "@/components/identity/NeuralScanner";
 import { DigitalShredder } from "@/components/identity/DigitalShredder";
 import { NeuralScanResult } from "@/components/identity/NeuralScanResult";
+import { NotificationPreferences } from "@/components/identity/NotificationPreferences";
 
 interface GhostIdentity {
   id: string;
@@ -356,6 +357,15 @@ const IdentityGhost = () => {
               </div>
             </CardContent>
           </Card>
+        )}
+
+        {/* Notification Preferences */}
+        {activeIdentity && scanPhase === "idle" && (
+          <NotificationPreferences
+            ghostIdentityId={activeIdentity.id}
+            currentEmail={(activeIdentity as any).notification_email}
+            onUpdate={() => fetchIdentities()}
+          />
         )}
 
         {/* All Identities Grid */}
