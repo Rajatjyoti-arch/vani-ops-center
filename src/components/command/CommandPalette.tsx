@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
-import { Ghost, Shield, Swords, BookOpen, Settings, HelpCircle, Keyboard, Home } from "lucide-react";
+import { UserCheck, Shield, Scale, BookOpen, Settings, HelpCircle, Keyboard, Home } from "lucide-react";
 import { playClickSound, playTransitionSound } from "@/lib/audio";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useOnboarding } from "@/contexts/OnboardingContext";
@@ -23,17 +23,17 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   }, [onOpenChange, soundEnabled]);
 
   const navigationCommands = [
-    { icon: Home, label: "Command Center", shortcut: "G then H", action: () => navigate("/") },
-    { icon: Ghost, label: "Identity Ghost", shortcut: "G then I", action: () => navigate("/identity") },
-    { icon: Shield, label: "Stealth Vault", shortcut: "G then V", action: () => navigate("/vault") },
-    { icon: Swords, label: "The Arena", shortcut: "G then A", action: () => navigate("/arena") },
-    { icon: BookOpen, label: "Resolution Ledger", shortcut: "G then L", action: () => navigate("/ledger") },
+    { icon: Home, label: "Dashboard", shortcut: "G then H", action: () => navigate("/") },
+    { icon: UserCheck, label: "Anonymous Credentialing", shortcut: "G then I", action: () => navigate("/identity") },
+    { icon: Shield, label: "Encrypted Repository", shortcut: "G then V", action: () => navigate("/vault") },
+    { icon: Scale, label: "Governance Matrix", shortcut: "G then A", action: () => navigate("/arena") },
+    { icon: BookOpen, label: "Compliance Log", shortcut: "G then L", action: () => navigate("/ledger") },
   ];
 
   const actionCommands = [
     { 
-      icon: Ghost, 
-      label: "New Ghost Identity", 
+      icon: UserCheck, 
+      label: "New Credential", 
       shortcut: "Ctrl+N", 
       action: () => navigate("/identity") 
     },
@@ -124,7 +124,7 @@ export function useKeyboardShortcuts() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger shortcuts when typing in inputs
+      // Do not trigger shortcuts when typing in inputs
       if (
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement ||

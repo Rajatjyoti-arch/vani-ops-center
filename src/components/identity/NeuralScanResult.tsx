@@ -30,7 +30,7 @@ export function NeuralScanResult({ isVisible, ghostName, hashSuffix, isNewIdenti
       {/* Success icon */}
       <div className="flex justify-center mb-4">
         <div className="relative">
-          <Shield className="w-16 h-16 text-primary cyber-glow" />
+          <Shield className="w-16 h-16 text-primary" />
           <CheckCircle className="absolute -bottom-1 -right-1 w-6 h-6 text-status-safe" />
         </div>
       </div>
@@ -40,24 +40,24 @@ export function NeuralScanResult({ isVisible, ghostName, hashSuffix, isNewIdenti
         <div className="space-y-3 text-center">
           <div className="space-y-1">
             <p className="text-sm font-mono text-status-safe">
-              <TypewriterText text="✓ Bio-data Purged" speed={30} />
+              <TypewriterText text="✓ Personal Data Secured" speed={30} />
             </p>
             <p className="text-sm font-mono text-status-safe">
-              <TypewriterText text="✓ Identity Obfuscated" speed={30} delay={500} />
+              <TypewriterText text="✓ Identity Protected" speed={30} delay={500} />
             </p>
             <p className="text-sm font-mono text-status-safe">
-              <TypewriterText text="✓ Neural Signature Scrambled" speed={30} delay={1000} />
+              <TypewriterText text="✓ Credential Verified" speed={30} delay={1000} />
             </p>
           </div>
 
           {showWelcome && (
             <div className="pt-4 animate-fade-in">
-              <p className="text-lg font-mono text-primary text-glow">
-                Welcome, Ghost 0x{hashSuffix}
+              <p className="text-lg font-mono text-primary">
+                Welcome, Participant #{hashSuffix}
               </p>
               <p className="text-sm text-muted-foreground mt-2">
                 {isNewIdentity
-                  ? `New identity "${ghostName}" has been forged`
+                  ? `New credential "${ghostName}" has been created`
                   : `Identity verified as "${ghostName}"`}
               </p>
             </div>
@@ -70,9 +70,6 @@ export function NeuralScanResult({ isVisible, ghostName, hashSuffix, isNewIdenti
       <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-primary/50" />
       <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-primary/50" />
       <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-primary/50" />
-
-      {/* Scanlines */}
-      <div className="absolute inset-0 scan-lines pointer-events-none opacity-20" />
     </div>
   );
 }

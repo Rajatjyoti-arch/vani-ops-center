@@ -53,7 +53,7 @@ const agentStyles = {
     berserkerColor: "text-status-critical",
     berserkerBg: "bg-status-critical/20",
     berserkerBorder: "border-status-critical/50",
-    berserkerLabel: "ADVOCATE [ESCALATION MODE]",
+    berserkerLabel: "ADVOCATE [PRIORITY ESCALATION]",
   },
   Governor: {
     icon: Building2,
@@ -486,7 +486,7 @@ const TheArena = () => {
                 const Icon = baseStyle.icon;
                 
                 // Determine if this entry is in special mode
-                const isBerserker = entry.berserkerMode && entry.agent === 'Sentinel';
+                const isEscalation = entry.berserkerMode && entry.agent === 'Sentinel';
                 const isEthicsOverride = entry.ethicalViolation && entry.agent === 'Arbiter';
                 
                 // Get appropriate styles with safe fallbacks
@@ -501,10 +501,10 @@ const TheArena = () => {
                 const ethicsLabel = 'ethicsLabel' in baseStyle ? baseStyle.ethicsLabel : baseStyle.label;
                 
                 const style = {
-                  color: isBerserker ? berserkerColor : isEthicsOverride ? ethicsColor : baseStyle.color,
-                  bg: isBerserker ? berserkerBg : isEthicsOverride ? ethicsBg : baseStyle.bg,
-                  border: isBerserker ? berserkerBorder : isEthicsOverride ? ethicsBorder : baseStyle.border,
-                  label: isBerserker ? berserkerLabel : isEthicsOverride ? ethicsLabel : baseStyle.label,
+                  color: isEscalation ? berserkerColor : isEthicsOverride ? ethicsColor : baseStyle.color,
+                  bg: isEscalation ? berserkerBg : isEthicsOverride ? ethicsBg : baseStyle.bg,
+                  border: isEscalation ? berserkerBorder : isEthicsOverride ? ethicsBorder : baseStyle.border,
+                  label: isEscalation ? berserkerLabel : isEthicsOverride ? ethicsLabel : baseStyle.label,
                 };
                 
                 return (
@@ -513,7 +513,7 @@ const TheArena = () => {
                     className={`
                       ${style.bg} border ${style.border}
                       animate-fade-in transition-all duration-300
-                      ${isBerserker || isEthicsOverride ? 'ring-2 ring-status-critical/50' : ''}
+                      ${isEscalation || isEthicsOverride ? 'ring-2 ring-status-critical/50' : ''}
                     `}
                   >
                     <CardContent className="p-4">
@@ -527,10 +527,10 @@ const TheArena = () => {
                               <span className={`font-bold ${style.color}`}>
                                 {style.label || baseStyle.label}
                               </span>
-                              {(isBerserker || isEthicsOverride) && (
+                              {(isEscalation || isEthicsOverride) && (
                                 <AlertTriangle className="w-4 h-4 text-status-critical animate-pulse" />
                               )}
-                              {!isBerserker && !isEthicsOverride && (
+                              {!isEscalation && !isEthicsOverride && (
                                 <span className="text-xs text-muted-foreground">({baseStyle.subtitle})</span>
                               )}
                             </div>
@@ -547,7 +547,7 @@ const TheArena = () => {
                             </div>
                           </div>
                           <p className={`text-sm leading-relaxed ${
-                            isBerserker 
+                            isEscalation 
                               ? 'font-bold text-status-critical' 
                               : isEthicsOverride 
                                 ? 'font-semibold text-status-critical' 
@@ -555,7 +555,7 @@ const TheArena = () => {
                           }`}>
                             <TypewriterText 
                               text={entry.message} 
-                              speed={isBerserker ? 8 : 15} 
+                              speed={isEscalation ? 8 : 15}
                               enableSound={index === negotiation.negotiation_log.length - 1}
                             />
                           </p>

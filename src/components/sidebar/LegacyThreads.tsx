@@ -13,21 +13,21 @@ interface LegacyThread {
 const LEGACY_THREADS: LegacyThread[] = [
   {
     id: "1",
-    ghost_name: "ShadowMentor_99",
+    ghost_name: "SeniorMentor_99",
     reputation: 85,
-    message: "Trust the process. Document everything. The system fears transparency.",
+    message: "Trust the process. Document everything. The system values transparency.",
   },
   {
     id: "2",
-    ghost_name: "CyberSage_42",
+    ghost_name: "PolicyAdvisor_42",
     reputation: 72,
     message: "Always encrypt your evidence before upload. Future you will thank present you.",
   },
   {
     id: "3",
-    ghost_name: "DigitalGuardian_X",
+    ghost_name: "ComplianceGuide_X",
     reputation: 90,
-    message: "The Arena favors those who argue with facts, not emotion. Let data speak.",
+    message: "The Governance Matrix favors those who present evidence-based arguments. Let data guide decisions.",
   },
 ];
 
@@ -73,7 +73,7 @@ export function LegacyThreads({ collapsed }: { collapsed: boolean }) {
               ? "bg-status-safe/20 text-status-safe"
               : "bg-secondary/50 text-muted-foreground"
           }`}
-          title="Legacy Threads"
+          title="Historical Records"
         >
           <Scroll className="w-4 h-4" />
         </div>
@@ -90,7 +90,7 @@ export function LegacyThreads({ collapsed }: { collapsed: boolean }) {
         <div className="flex items-center gap-2">
           <Scroll className="w-4 h-4 text-primary" />
           <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider group-hover:text-primary transition-colors">
-            Legacy Threads
+            Historical Records
           </span>
         </div>
         {hasAccess ? (
@@ -118,7 +118,7 @@ export function LegacyThreads({ collapsed }: { collapsed: boolean }) {
             </div>
           ) : accessibleThreads.length === 0 ? (
             <p className="text-[10px] text-muted-foreground text-center py-2">
-              No time-capsules available yet
+              No archived records available yet
             </p>
           ) : (
             accessibleThreads.map((thread) => (
