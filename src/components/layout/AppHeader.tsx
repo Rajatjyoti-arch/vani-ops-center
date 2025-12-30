@@ -1,11 +1,25 @@
 import { useState, useEffect } from "react";
-import { Menu, Activity, Clock } from "lucide-react";
+import { Menu, Activity, Clock, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function AppHeader() {
   const [integrity, setIntegrity] = useState(97);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Fluctuate system integrity between 94-99%
   useEffect(() => {
@@ -92,6 +106,30 @@ export function AppHeader() {
             </span>
           </div>
         </div>
+
+        {/* Theme Toggle */}
+        {mounted && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="h-8 w-8 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )}
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
       </div>
     </header>
   );
