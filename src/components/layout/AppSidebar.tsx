@@ -109,7 +109,7 @@ export function AppSidebar() {
       <SidebarContent className="px-2 py-4">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-1.5">
               {navItems.map((item) => {
                 const isActive = location.pathname === item.url;
                 const isLocked = item.protected && !isAuthenticated;
