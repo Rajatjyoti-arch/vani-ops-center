@@ -146,12 +146,20 @@ export default function AdminLogin() {
             <p className="text-xs text-slate-500 text-center">
               Access restricted to authorized institutional personnel only.
             </p>
-            <a
-              href="/admin/setup"
-              className="block text-center text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
-            >
-              First time? Set up admin account →
-            </a>
+            <div className="flex flex-col items-center gap-2">
+              <a
+                href="/admin/password-reset"
+                className="text-xs text-slate-400 hover:text-slate-300 transition-colors"
+              >
+                Forgot your password?
+              </a>
+              <a
+                href="/admin/setup"
+                className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+              >
+                First time? Set up admin account →
+              </a>
+            </div>
           </div>
         </div>
 
