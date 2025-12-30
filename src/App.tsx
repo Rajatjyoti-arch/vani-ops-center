@@ -32,6 +32,8 @@ import AdminResolutions from "./pages/admin/AdminResolutions";
 import AdminResolutionDetail from "./pages/admin/AdminResolutionDetail";
 import AdminSetup from "./pages/admin/AdminSetup";
 import AcceptInvite from "./pages/admin/AcceptInvite";
+import AdminPasswordReset from "./pages/admin/AdminPasswordReset";
+import AdminUpdatePassword from "./pages/admin/AdminUpdatePassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -79,6 +81,8 @@ function AppContent() {
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/setup" element={<AdminSetup />} />
         <Route path="/admin/accept-invite" element={<AcceptInvite />} />
+        <Route path="/admin/password-reset" element={<AdminPasswordReset />} />
+        <Route path="/admin/update-password" element={<AdminUpdatePassword />} />
         <Route path="/admin" element={<AdminProtectedRoute><AdminDashboard /></AdminProtectedRoute>} />
         <Route path="/admin/resolutions" element={<AdminProtectedRoute><AdminResolutions /></AdminProtectedRoute>} />
         <Route path="/admin/resolutions/:id" element={<AdminProtectedRoute><AdminResolutionDetail /></AdminProtectedRoute>} />
