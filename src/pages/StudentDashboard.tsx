@@ -2,6 +2,7 @@ import { Link, Navigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { 
   Fingerprint, 
   FileText, 
@@ -11,17 +12,33 @@ import {
   ArrowRight,
   CheckCircle,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Lock,
+  LogOut
 } from "lucide-react";
 import { useGhostSession } from "@/contexts/GhostSessionContext";
+import { NotificationPreferences } from "@/components/identity/NotificationPreferences";
+import { ZeroKnowledgeLogin } from "@/components/auth/ZeroKnowledgeLogin";
+import { useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
 const StudentDashboard = () => {
-  const { isAuthenticated, ghostIdentity } = useGhostSession();
+  const { isAuthenticated, ghostIdentity, logout } = useGhostSession();
+  const navigate = useNavigate();
 
-  // If not authenticated, redirect to identity page
+  // If not authenticated, show the Zero-Knowledge Login
   if (!isAuthenticated) {
-    return <Navigate to="/identity" state={{ from: "/student-dashboard" }} />;
+    return <ZeroKnowledgeLogin />;
   }
+
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Session Ended",
+      description: "Your anonymous session has been securely terminated.",
+    });
+    navigate("/student-dashboard");
+  };
 
   const quickActions = [
     {
@@ -71,34 +88,57 @@ const StudentDashboard = () => {
               Your anonymous credential is active and secure
             </p>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 border border-accent/30">
-            <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-            <span className="text-xs font-medium text-accent">PROTECTED</span>
+          <div className="flex items-center gap-3">
+            <Badge 
+              variant="outline" 
+              className="bg-accent/10 text-accent border-accent/30 px-3 py-1.5"
+            >
+              <Lock className="w-3 h-3 mr-1.5" />
+              Zero-Knowledge Protected
+            </Badge>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={handleLogout}
+              className="gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              End Session
+            </Button>
           </div>
         </div>
 
-        {/* Credential Status Card */}
-        <Card className="border-accent/30 bg-accent/5">
+        {/* Security Status Card */}
+        <Card className="border-accent/30 bg-gradient-to-r from-accent/5 to-transparent">
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-full bg-accent/20">
                 <Fingerprint className="w-8 h-8 text-accent" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-foreground">
-                  {ghostIdentity?.ghost_name}
-                </h3>
-                <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-semibold text-foreground">
+                    {ghostIdentity?.ghost_name}
+                  </h3>
+                  <Badge variant="secondary" className="text-xs">
+                    ID: 0x{ghostIdentity?.roll_number_hash.slice(-8).toUpperCase()}
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <span>Trust Score: {ghostIdentity?.reputation}%</span>
                   <span>•</span>
                   <span>{ghostIdentity?.reports_submitted} submissions</span>
                 </div>
               </div>
-              <Link to="/identity">
-                <Button variant="outline" size="sm">
-                  Manage Credential
-                </Button>
-              </Link>
+              <div className="text-right">
+                <div className="flex items-center gap-1.5 text-xs text-accent mb-1">
+                  <Shield className="w-3 h-3" />
+                  <span>Mathematically Private</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  No server logs of your access phrase
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -135,7 +175,15 @@ const StudentDashboard = () => {
           </div>
         </div>
 
-        {/* Recent Activity Summary */}
+        {/* Notification Preferences */}
+        {ghostIdentity && (
+          <NotificationPreferences
+            ghostIdentityId={ghostIdentity.id}
+            currentEmail={(ghostIdentity as any).notification_email || null}
+          />
+        )}
+
+        {/* Activity Summary */}
         <Card className="border-border/50">
           <CardHeader>
             <CardTitle className="text-base">Activity Summary</CardTitle>
