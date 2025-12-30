@@ -86,7 +86,7 @@ export function ComplianceAssistant() {
     setMessages([
       {
         role: "assistant",
-        content: "Welcome to the VANI Compliance Assistant. I'm here to help you navigate institutional reporting procedures and policy compliance. How may I assist you today?",
+        content: "Hi, I am Irene. How may I help you today?",
       },
     ]);
   }, []);
@@ -131,7 +131,7 @@ export function ComplianceAssistant() {
     setMessages([
       {
         role: "assistant",
-        content: "Conversation history cleared. How may I assist you with compliance and procedural guidance?",
+        content: "Hi, I am Irene. How may I help you today?",
       },
     ]);
     toast({
@@ -268,7 +268,7 @@ export function ComplianceAssistant() {
           hover:scale-110 hover:shadow-xl
           ${isOpen ? "rotate-180" : ""}
         `}
-        aria-label="Toggle VANI Compliance Assistant"
+        aria-label="Toggle Irene Assistant"
       >
         {isOpen ? (
           <X className="w-6 h-6" />
@@ -302,7 +302,7 @@ export function ComplianceAssistant() {
               <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-status-safe rounded-full border-2 border-background" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground text-sm">VANI Compliance Assistant</h3>
+              <h3 className="font-semibold text-foreground text-sm">Irene</h3>
               <p className="text-[10px] text-muted-foreground">Central University of Jammu</p>
             </div>
           </div>
