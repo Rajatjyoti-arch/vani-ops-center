@@ -1,5 +1,6 @@
 import { UserCheck, Shield, Scale, BookOpen, Lock, Radio, Building } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
+import { CUJLogo } from "@/components/ui/CUJLogo";
 import {
   Sidebar,
   SidebarContent,
@@ -76,17 +77,12 @@ export function AppSidebar() {
       <SidebarHeader className="p-4 border-b border-border/50" data-tour="logo">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
-              deadManActive 
-                ? "bg-destructive/20 border-2 border-destructive" 
-                : "bg-primary/10 border-2 border-primary"
+            <div className={`transition-all duration-300 ${
+              deadManActive ? "text-destructive" : "text-primary"
             }`}>
-              {/* CUJ Institutional Seal */}
-              <div className={`text-center ${deadManActive ? "text-destructive" : "text-primary"}`}>
-                <span className="font-bold text-sm leading-none">CUJ</span>
-              </div>
+              <CUJLogo size={collapsed ? 36 : 44} />
             </div>
-            <div className={`absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full transition-colors ${
+            <div className={`absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full transition-colors ${
               deadManActive ? "bg-destructive" : "bg-accent"
             }`} />
           </div>
