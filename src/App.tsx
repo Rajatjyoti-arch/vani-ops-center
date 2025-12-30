@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "next-themes";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { OnboardingProvider } from "@/contexts/OnboardingContext";
 import { GhostSessionProvider } from "@/contexts/GhostSessionContext";
@@ -58,21 +59,23 @@ function AppContent() {
 }
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <SettingsProvider>
-      <GhostSessionProvider>
-        <DeadManSwitchProvider>
-          <BrowserRouter>
-            <OnboardingProvider>
-              <TooltipProvider>
-                <AppContent />
-              </TooltipProvider>
-            </OnboardingProvider>
-          </BrowserRouter>
-        </DeadManSwitchProvider>
-      </GhostSessionProvider>
-    </SettingsProvider>
-  </QueryClientProvider>
+  <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+    <QueryClientProvider client={queryClient}>
+      <SettingsProvider>
+        <GhostSessionProvider>
+          <DeadManSwitchProvider>
+            <BrowserRouter>
+              <OnboardingProvider>
+                <TooltipProvider>
+                  <AppContent />
+                </TooltipProvider>
+              </OnboardingProvider>
+            </BrowserRouter>
+          </DeadManSwitchProvider>
+        </GhostSessionProvider>
+      </SettingsProvider>
+    </QueryClientProvider>
+  </ThemeProvider>
 );
 
 export default App;
