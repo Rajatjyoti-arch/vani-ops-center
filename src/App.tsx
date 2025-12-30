@@ -11,6 +11,7 @@ import { TourOverlay } from "@/components/onboarding/TourOverlay";
 import { CommandPalette, useKeyboardShortcuts } from "@/components/command/CommandPalette";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { PublicLeakBroadcast } from "@/components/sidebar/PublicLeakBroadcast";
+import { SentinelChatbot } from "@/components/sentinel/SentinelChatbot";
 import Index from "./pages/Index";
 import IdentityGhost from "./pages/IdentityGhost";
 import StealthVault from "./pages/StealthVault";
@@ -30,6 +31,7 @@ function AppContent() {
       <Sonner />
       <TourOverlay />
       <PublicLeakBroadcast />
+      <SentinelChatbot />
       <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
       <Routes>
         <Route path="/" element={<Index />} />
