@@ -17,7 +17,7 @@ import {
   Building2,
   ChevronDown
 } from "lucide-react";
-import { VaniLogo } from "@/components/ui/VaniLogo";
+import { VaniLogo, VaniBrandingBlock } from "@/components/ui/VaniLogo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -51,23 +51,39 @@ const LandingPage = () => {
     <div className="min-h-screen bg-background flex flex-col font-sans overflow-x-hidden selection:bg-primary/20">
       {/* Navigation Bar */}
       <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/50 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          {/* VANI Branding with University Affiliation */}
+          <div className="flex items-center gap-4 group cursor-pointer transition-all duration-300 hover:opacity-90">
             <VaniLogo variant="icon" size="sm" />
-            <span className="font-bold text-lg tracking-tight text-foreground">VANI</span>
+            <div className="flex flex-col leading-tight">
+              <span
+                className="font-semibold text-foreground tracking-[0.15em] uppercase transition-colors duration-300"
+                style={{
+                  fontSize: '17px',
+                  fontFamily: "'Inter', 'SF Pro Display', -apple-system, sans-serif"
+                }}
+              >
+                VANI
+              </span>
+              <span className="text-[11px] text-muted-foreground/60 font-normal tracking-wide hidden sm:block">
+                Central University of Jammu
+              </span>
+            </div>
           </div>
           <div className="flex items-center gap-4">
-            <button
+            <Button
               onClick={scrollToHowItWorks}
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
+              variant="default"
+              size="sm"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 hidden sm:flex"
             >
               How it Works
-            </button>
+            </Button>
             <Button
               onClick={handleEnterSystem}
               variant="default"
               size="sm"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
             >
               Enter System
             </Button>
@@ -76,7 +92,7 @@ const LandingPage = () => {
       </header>
 
       {/* 1. Hero Section */}
-      <section className="relative pt-32 pb-24 md:pt-48 md:pb-40 overflow-hidden">
+      <section className="relative pt-36 pb-24 md:pt-52 md:pb-40 overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background" />
         <div className="absolute inset-0 -z-20 institutional-grid opacity-[0.03] animate-grid-flow" />
@@ -87,7 +103,16 @@ const LandingPage = () => {
             <span className="text-xs font-medium text-emerald-500 tracking-wide uppercase">System Operational</span>
           </div>
 
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tighter text-foreground mb-6 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+          {/* Modern VANI Wordmark - Neo-Grotesk Typography */}
+          <h1
+            className="text-6xl md:text-8xl font-semibold text-foreground mb-6 animate-fade-in-up"
+            style={{
+              animationDelay: "0.1s",
+              fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
+              letterSpacing: '0.15em',
+              fontWeight: 600
+            }}
+          >
             VANI
           </h1>
 
@@ -106,16 +131,16 @@ const LandingPage = () => {
             <Button
               onClick={handleEnterSystem}
               size="lg"
-              className="w-full sm:w-auto text-lg px-8 py-6 h-auto shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 bg-primary hover:bg-primary/90 hover:-translate-y-0.5"
+              className="group/btn w-full sm:w-auto text-lg px-8 py-6 h-auto shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 ease-out bg-primary hover:bg-primary/90 hover:-translate-y-1"
             >
               Enter System
-              <ArrowRight className="ml-2 w-5 h-5" />
+              <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover/btn:translate-x-1" />
             </Button>
             <Button
               onClick={scrollToHowItWorks}
               variant="outline"
               size="lg"
-              className="w-full sm:w-auto text-lg px-8 py-6 h-auto border-border/50 hover:bg-secondary/50"
+              className="w-full sm:w-auto text-lg px-8 py-6 h-auto bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 ease-out hover:-translate-y-1"
             >
               Learn How It Works
             </Button>
@@ -230,11 +255,11 @@ const LandingPage = () => {
                 color: "text-status-warning"
               }
             ].map((step, i) => (
-              <div key={i} className="group relative bg-background pt-4">
-                <div className="w-16 h-16 mx-auto bg-card border border-border rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 z-10 relative">
-                  <step.icon className={cn("w-8 h-8", step.color)} />
+              <div key={i} className="group relative bg-background pt-4 cursor-default">
+                <div className="w-16 h-16 mx-auto bg-card border border-border rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 group-hover:shadow-xl group-hover:border-primary/30 transition-all duration-300 ease-out z-10 relative">
+                  <step.icon className={cn("w-8 h-8 transition-transform duration-300 group-hover:scale-105", step.color)} />
                 </div>
-                <h3 className="text-lg font-bold text-center mb-3">{step.title}</h3>
+                <h3 className="text-lg font-bold text-center mb-3 transition-colors duration-300 group-hover:text-primary">{step.title}</h3>
                 <p className="text-sm text-muted-foreground text-center leading-relaxed">
                   {step.desc}
                 </p>
@@ -253,9 +278,9 @@ const LandingPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="group border-border/50 bg-card/50 hover:bg-card hover:border-primary/30 transition-all duration-300 overflow-hidden">
+            <Card className="group border-border/50 bg-card/50 hover:bg-card hover:border-primary/30 transition-all duration-300 ease-out overflow-hidden hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/5">
               <CardContent className="p-8">
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-110">
                   <Users className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="text-xl font-bold mb-3">Anonymous Identity</h3>
@@ -267,9 +292,9 @@ const LandingPage = () => {
               </CardContent>
             </Card>
 
-            <Card className="group border-border/50 bg-card/50 hover:bg-card hover:border-accent/30 transition-all duration-300 overflow-hidden">
+            <Card className="group border-border/50 bg-card/50 hover:bg-card hover:border-accent/30 transition-all duration-300 ease-out overflow-hidden hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/5">
               <CardContent className="p-8">
-                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
+                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-all duration-300 group-hover:scale-110">
                   <FileText className="w-6 h-6 text-accent" />
                 </div>
                 <h3 className="text-xl font-bold mb-3">Secure Evidence</h3>
@@ -281,9 +306,9 @@ const LandingPage = () => {
               </CardContent>
             </Card>
 
-            <Card className="group border-border/50 bg-card/50 hover:bg-card hover:border-status-info/30 transition-all duration-300 overflow-hidden">
+            <Card className="group border-border/50 bg-card/50 hover:bg-card hover:border-status-info/30 transition-all duration-300 ease-out overflow-hidden hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/5">
               <CardContent className="p-8">
-                <div className="w-12 h-12 rounded-lg bg-status-info/10 flex items-center justify-center mb-6 group-hover:bg-status-info/20 transition-colors">
+                <div className="w-12 h-12 rounded-lg bg-status-info/10 flex items-center justify-center mb-6 group-hover:bg-status-info/20 transition-all duration-300 group-hover:scale-110">
                   <Activity className="w-6 h-6 text-status-info" />
                 </div>
                 <h3 className="text-xl font-bold mb-3">Real-time Analytics</h3>
@@ -304,21 +329,21 @@ const LandingPage = () => {
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-10">
             Built for Institutions That Matter
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 opacity-60">
-            <div className="flex flex-col items-center gap-2">
-              <Building2 className="w-8 h-8" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="flex flex-col items-center gap-2 group cursor-default opacity-60 hover:opacity-100 transition-all duration-300">
+              <Building2 className="w-8 h-8 transition-transform duration-300 group-hover:scale-110" />
               <span className="font-semibold">Universities</span>
             </div>
-            <div className="flex flex-col items-center gap-2">
-              <Network className="w-8 h-8" />
+            <div className="flex flex-col items-center gap-2 group cursor-default opacity-60 hover:opacity-100 transition-all duration-300">
+              <Network className="w-8 h-8 transition-transform duration-300 group-hover:scale-110" />
               <span className="font-semibold">Corporations</span>
             </div>
-            <div className="flex flex-col items-center gap-2">
-              <Scale className="w-8 h-8" />
+            <div className="flex flex-col items-center gap-2 group cursor-default opacity-60 hover:opacity-100 transition-all duration-300">
+              <Scale className="w-8 h-8 transition-transform duration-300 group-hover:scale-110" />
               <span className="font-semibold">Government</span>
             </div>
-            <div className="flex flex-col items-center gap-2">
-              <Shield className="w-8 h-8" />
+            <div className="flex flex-col items-center gap-2 group cursor-default opacity-60 hover:opacity-100 transition-all duration-300">
+              <Shield className="w-8 h-8 transition-transform duration-300 group-hover:scale-110" />
               <span className="font-semibold">Oversight Bodies</span>
             </div>
           </div>
@@ -340,11 +365,11 @@ const LandingPage = () => {
               "Sakshi",
               "Mantavya Kumar"
             ].map((member) => (
-              <div key={member} className="flex flex-col items-center gap-3 group">
-                <div className="w-16 h-16 rounded-full bg-background border border-border flex items-center justify-center shadow-sm group-hover:border-primary/50 transition-colors">
-                  <Users className="w-8 h-8 text-muted-foreground/50 group-hover:text-primary/50 transition-colors" />
+              <div key={member} className="flex flex-col items-center gap-3 group cursor-default">
+                <div className="w-16 h-16 rounded-full bg-background border border-border flex items-center justify-center shadow-sm group-hover:border-primary/50 group-hover:shadow-lg group-hover:shadow-primary/10 group-hover:-translate-y-1 transition-all duration-300 ease-out">
+                  <Users className="w-8 h-8 text-muted-foreground/50 group-hover:text-primary/50 transition-colors duration-300" />
                 </div>
-                <span className="font-medium text-foreground group-hover:text-primary transition-colors">{member}</span>
+                <span className="font-medium text-foreground group-hover:text-primary transition-colors duration-300">{member}</span>
               </div>
             ))}
           </div>
@@ -354,17 +379,35 @@ const LandingPage = () => {
       {/* 7. Footer */}
       <footer className="py-12 border-t border-border/50 bg-background">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 group">
             <VaniLogo variant="icon" size="sm" />
             <div className="flex flex-col">
-              <span className="text-sm font-semibold text-foreground">VANI Platform</span>
-              <span className="text-xs text-muted-foreground">© {new Date().getFullYear()} Team CYNOX</span>
+              <span
+                className="text-sm font-semibold text-foreground tracking-[0.1em] uppercase"
+                style={{ fontFamily: "'Inter', sans-serif" }}
+              >
+                VANI Platform
+              </span>
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className="text-[10px] text-muted-foreground/60">Central University of Jammu</span>
+                <span className="text-[10px] text-muted-foreground/40">•</span>
+                <span className="text-[10px] text-muted-foreground/50">© {new Date().getFullYear()} Team CYNOX</span>
+              </div>
             </div>
           </div>
           <div className="flex gap-8 text-sm text-muted-foreground">
-            <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
-            <Link to="/gdpr-compliance" className="hover:text-primary transition-colors">GDPR Compliance</Link>
-            <Link to="/help" className="hover:text-primary transition-colors">Documentation</Link>
+            <Link to="/privacy-policy" className="relative group/link hover:text-primary transition-colors duration-300">
+              <span>Privacy Policy</span>
+              <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover/link:w-full" />
+            </Link>
+            <Link to="/gdpr-compliance" className="relative group/link hover:text-primary transition-colors duration-300">
+              <span>GDPR Compliance</span>
+              <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover/link:w-full" />
+            </Link>
+            <Link to="/help" className="relative group/link hover:text-primary transition-colors duration-300">
+              <span>Documentation</span>
+              <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover/link:w-full" />
+            </Link>
           </div>
         </div>
       </footer>

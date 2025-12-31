@@ -4,146 +4,160 @@ interface VaniLogoProps {
     variant?: "full" | "icon";
     size?: "sm" | "md" | "lg";
     className?: string;
-    animate?: boolean;
+    showUniversity?: boolean;
 }
 
 const sizeMap = {
-    sm: { icon: 32, text: 14, gap: 8 },
-    md: { icon: 40, text: 18, gap: 12 },
-    lg: { icon: 48, text: 22, gap: 14 },
+    sm: { icon: 44, text: 17, gap: 10, university: 11 },
+    md: { icon: 56, text: 22, gap: 14, university: 12 },
+    lg: { icon: 68, text: 26, gap: 16, university: 13 },
 };
 
 export function VaniLogo({
     variant = "full",
     size = "md",
     className = "",
-    animate = false
+    showUniversity = false
 }: VaniLogoProps) {
     const dimensions = sizeMap[size];
 
     return (
         <div
             className={cn(
-                "flex items-center transition-all duration-300 hover:opacity-90 hover:scale-[1.02]",
+                "flex items-center group",
                 className
             )}
             style={{ gap: dimensions.gap }}
             role="img"
             aria-label="VANI - Verifiable Anonymous Network Intelligence"
         >
-            {/* Shield Icon */}
-            <svg
+            {/* Official VANI Logo Image */}
+            <img
+                src="/vani-logo-final.png"
+                alt="VANI Logo"
                 width={dimensions.icon}
                 height={dimensions.icon}
-                viewBox="0 0 100 100"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className={cn(
-                    "shrink-0 transition-all duration-300",
-                    animate && "animate-logo-stroke"
-                )}
-            >
-                <title>VANI Shield</title>
+                className="shrink-0 object-contain rounded-full"
+                style={{
+                    width: dimensions.icon,
+                    height: dimensions.icon,
+                }}
+            />
 
-                {/* Shield Outer Shape */}
-                <path
-                    d="M50 5 L90 20 L90 50 C90 75 70 90 50 95 C30 90 10 75 10 50 L10 20 Z"
-                    className="fill-[hsl(var(--vani-blue-dark))] dark:fill-[hsl(var(--vani-blue-light))]"
-                    stroke="currentColor"
-                    strokeWidth="0"
-                />
-
-                {/* Shield Inner Border */}
-                <path
-                    d="M50 10 L85 23 L85 50 C85 72 67 85 50 90 C33 85 15 72 15 50 L15 23 Z"
-                    className="fill-[hsl(var(--vani-blue))] dark:fill-[hsl(var(--vani-blue-dark))]"
-                    stroke="currentColor"
-                    strokeWidth="0"
-                />
-
-                {/* Hood Silhouette */}
-                <ellipse
-                    cx="50"
-                    cy="35"
-                    rx="15"
-                    ry="12"
-                    className="fill-[hsl(var(--vani-blue-light))] dark:fill-[hsl(var(--vani-slate))]"
-                />
-                <path
-                    d="M35 38 Q50 20 65 38 Q65 55 50 60 Q35 55 35 38"
-                    className="fill-[hsl(var(--vani-blue-dark))] dark:fill-[hsl(var(--vani-blue))]"
-                />
-
-                {/* Face shadow area */}
-                <ellipse
-                    cx="50"
-                    cy="48"
-                    rx="10"
-                    ry="7"
-                    className="fill-[hsl(var(--vani-blue-dark)/0.8)] dark:fill-[hsl(var(--vani-blue)/0.8)]"
-                />
-
-                {/* Circuit lines - left */}
-                <circle cx="25" cy="40" r="3" className="fill-[hsl(var(--vani-blue-light))]" />
-                <circle cx="22" cy="50" r="2" className="fill-[hsl(var(--vani-blue-light))]" />
-                <circle cx="25" cy="58" r="2.5" className="fill-[hsl(var(--vani-blue-light))]" />
-                <path
-                    d="M25 43 L25 47 M22 50 L25 50 L25 55.5"
-                    className="stroke-[hsl(var(--vani-blue-light))]"
-                    strokeWidth="1.5"
-                    fill="none"
-                />
-
-                {/* Network cubes - right */}
-                <rect x="68" y="35" width="8" height="8" rx="1" className="fill-[hsl(var(--vani-blue-light))] opacity-80" transform="rotate(10 72 39)" />
-                <rect x="72" y="43" width="6" height="6" rx="1" className="fill-[hsl(var(--vani-blue-light))] opacity-60" transform="rotate(-5 75 46)" />
-                <rect x="65" y="48" width="7" height="7" rx="1" className="fill-[hsl(var(--vani-blue-light))] opacity-70" transform="rotate(5 68.5 51.5)" />
-
-                {/* Lock body */}
-                <rect
-                    x="38"
-                    y="62"
-                    width="24"
-                    height="18"
-                    rx="3"
-                    className="fill-[hsl(var(--vani-blue-light))] dark:fill-[hsl(var(--vani-blue-light))]"
-                />
-
-                {/* Lock shackle */}
-                <path
-                    d="M43 62 L43 56 Q43 52 50 52 Q57 52 57 56 L57 62"
-                    className="stroke-[hsl(var(--vani-blue-light))] dark:stroke-[hsl(var(--vani-blue-light))]"
-                    strokeWidth="3"
-                    fill="none"
-                    strokeLinecap="round"
-                />
-
-                {/* Checkmark inside lock */}
-                <path
-                    d="M44 70 L48 74 L56 66"
-                    className="stroke-[hsl(var(--vani-blue-dark))] dark:stroke-[hsl(var(--vani-blue-dark))]"
-                    strokeWidth="3"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-            </svg>
-
-            {/* Text - only show for full variant */}
+            {/* Text and University branding */}
             {variant === "full" && (
-                <span
-                    className={cn(
-                        "font-bold tracking-tight transition-colors duration-300",
-                        "text-[hsl(var(--vani-blue-dark))] dark:text-white"
+                <div className="flex flex-col">
+                    <span
+                        className={cn(
+                            "font-semibold tracking-[0.08em] uppercase transition-colors duration-300",
+                            "text-foreground"
+                        )}
+                        style={{
+                            fontSize: dimensions.text,
+                            fontFamily: "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
+                            letterSpacing: '0.12em'
+                        }}
+                    >
+                        VANI
+                    </span>
+                    {showUniversity && (
+                        <span
+                            className="text-muted-foreground/70 font-normal tracking-wide transition-colors duration-300"
+                            style={{
+                                fontSize: dimensions.university,
+                                fontFamily: "'Inter', sans-serif"
+                            }}
+                        >
+                            Central University of Jammu
+                        </span>
                     )}
-                    style={{ fontSize: dimensions.text }}
-                >
-                    VANI
-                </span>
+                </div>
             )}
         </div>
     );
 }
 
-// Export for backward compatibility - can be removed later
+// Compact branding block for header/footer with university affiliation
+export function VaniBrandingBlock({
+    size = "md",
+    className = ""
+}: {
+    size?: "sm" | "md" | "lg";
+    className?: string;
+}) {
+    const dimensions = sizeMap[size];
+
+    return (
+        <div className={cn("flex items-center gap-3 group", className)}>
+            {/* VANI Logo */}
+            <VaniLogo variant="icon" size={size} />
+
+            {/* Text block */}
+            <div className="flex flex-col">
+                <span
+                    className="font-semibold tracking-[0.12em] uppercase text-foreground transition-colors duration-300"
+                    style={{
+                        fontSize: dimensions.text,
+                        fontFamily: "'Inter', 'SF Pro Display', -apple-system, sans-serif"
+                    }}
+                >
+                    VANI
+                </span>
+                <div className="flex items-center gap-2 mt-0.5">
+                    {/* CUJ Mini Logo */}
+                    <CUJMiniLogo size={12} />
+                    <span
+                        className="text-muted-foreground/60 font-normal tracking-wide"
+                        style={{
+                            fontSize: dimensions.university,
+                            fontFamily: "'Inter', sans-serif"
+                        }}
+                    >
+                        Central University of Jammu
+                    </span>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// Central University of Jammu mini logo
+export function CUJMiniLogo({ size = 16 }: { size?: number }) {
+    return (
+        <svg
+            width={size}
+            height={size}
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="shrink-0 opacity-60 group-hover:opacity-80 transition-opacity duration-300"
+        >
+            <title>Central University of Jammu</title>
+            {/* Simplified institution emblem - open book with torch */}
+            <path
+                d="M12 2L3 7V17L12 22L21 17V7L12 2Z"
+                className="stroke-muted-foreground"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+                fill="none"
+            />
+            {/* Torch/pillar */}
+            <path
+                d="M12 8V16M10 16H14"
+                className="stroke-muted-foreground"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+            />
+            {/* Flame */}
+            <circle
+                cx="12"
+                cy="6"
+                r="1.5"
+                className="fill-muted-foreground"
+            />
+        </svg>
+    );
+}
+
+// Export for backward compatibility
 export { VaniLogo as CUJLogo };

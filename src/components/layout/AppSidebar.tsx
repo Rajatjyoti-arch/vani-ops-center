@@ -82,22 +82,25 @@ export function AppSidebar() {
 
   return (
     <Sidebar className={`border-r border-border/50 bg-sidebar transition-all duration-300 ${deadManActive ? "doomsday-mode" : ""}`}>
-      <SidebarHeader className="p-4 border-b border-border/50" data-tour="logo">
+      <SidebarHeader className="p-5 border-b border-border/50" data-tour="logo">
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className={`transition-all duration-300 ${deadManActive ? "opacity-90" : ""
               }`}>
               <VaniLogo
-                variant={collapsed ? "icon" : "full"}
-                size={collapsed ? "sm" : "md"}
+                variant="icon"
+                size="sm"
               />
             </div>
           </div>
           {!collapsed && (
-            <div className="animate-fade-in flex-1">
-              <p className="text-[10px] text-sidebar-foreground/60 uppercase tracking-wider mt-0.5">
-                Anonymous Reporting System
-              </p>
+            <div className="animate-fade-in flex flex-col items-start justify-center gap-0.5 pr-1">
+              <span className="font-semibold text-sidebar-foreground tracking-[0.15em] uppercase text-sm leading-none">
+                VANI
+              </span>
+              <span className="text-[9px] text-sidebar-foreground/50 uppercase tracking-normal leading-tight whitespace-normal">
+                Anonymous Reporting<br />System
+              </span>
             </div>
           )}
         </div>
