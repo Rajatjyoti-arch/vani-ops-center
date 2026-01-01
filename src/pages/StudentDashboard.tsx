@@ -28,12 +28,6 @@ import { toast } from "@/hooks/use-toast";
 const StudentDashboard = () => {
   const { isAuthenticated, ghostIdentity, logout } = useGhostSession();
   const navigate = useNavigate();
-
-  // If not authenticated, show the Zero-Knowledge Login
-  if (!isAuthenticated) {
-    return <ZeroKnowledgeLogin />;
-  }
-
   const { demoMode } = useSettings();
   const [reportCounts, setReportCounts] = useState({
     resolved: 0,
@@ -73,6 +67,11 @@ const StudentDashboard = () => {
 
     fetchReportCounts();
   }, [ghostIdentity, demoMode]);
+
+  // If not authenticated, show the Zero-Knowledge Login
+  if (!isAuthenticated) {
+    return <ZeroKnowledgeLogin />;
+  }
 
   const handleLogout = () => {
     logout();
