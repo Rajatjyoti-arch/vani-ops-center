@@ -16,6 +16,7 @@ import { AdminProtectedRoute } from "@/components/admin/AdminProtectedRoute";
 import { PublicLeakBroadcast } from "@/components/sidebar/PublicLeakBroadcast";
 import { ComplianceAssistant } from "@/components/assistant/ComplianceAssistant";
 import LandingPage from "./pages/LandingPage";
+import PortalSelection from "./pages/PortalSelection";
 import Dashboard from "./pages/Index";
 import StudentDashboard from "./pages/StudentDashboard";
 import AnonymousCredentialing from "./pages/AnonymousCredentialing";
@@ -52,6 +53,7 @@ function AppContent() {
       <Routes>
         {/* Public Landing Page */}
         <Route path="/" element={<LandingPage />} />
+        <Route path="/portal" element={<PortalSelection />} />
 
         {/* Student Routes */}
         <Route path="/student-dashboard" element={<StudentDashboard />} />
