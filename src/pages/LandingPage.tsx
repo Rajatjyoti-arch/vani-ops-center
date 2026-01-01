@@ -41,7 +41,7 @@ const LandingPage = () => {
   }, []);
 
   const handleEnterSystem = () => {
-    navigate("/dashboard");
+    navigate("/portal");
   };
 
   const scrollToHowItWorks = () => {
