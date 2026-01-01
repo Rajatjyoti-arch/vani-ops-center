@@ -1,14 +1,17 @@
+import { useState, useEffect } from "react";
 import { Link, Navigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useSettings } from "@/contexts/SettingsContext";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Fingerprint, 
-  FileText, 
-  Scale, 
-  BookOpen, 
-  Shield, 
+import {
+  Fingerprint,
+  FileText,
+  Scale,
+  BookOpen,
+  Shield,
   ArrowRight,
   CheckCircle,
   Clock,
@@ -30,6 +33,46 @@ const StudentDashboard = () => {
   if (!isAuthenticated) {
     return <ZeroKnowledgeLogin />;
   }
+
+  const { demoMode } = useSettings();
+  const [reportCounts, setReportCounts] = useState({
+    resolved: 0,
+    pending: 0,
+    underReview: 0
+  });
+
+  useEffect(() => {
+    const fetchReportCounts = async () => {
+      if (!ghostIdentity) return;
+
+      const { data, error } = await supabase
+        .from("reports")
+        .select("status")
+        .eq("ghost_identity_id", ghostIdentity.id);
+
+      if (error) {
+        console.error("Error fetching report counts:", error);
+        return;
+      }
+
+      if (demoMode && (!data || data.length === 0)) {
+        setReportCounts({
+          resolved: 3,
+          pending: 1,
+          underReview: 2
+        });
+      } else {
+        const counts = {
+          resolved: data?.filter(r => r.status === "resolved").length || 0,
+          pending: data?.filter(r => r.status === "open").length || 0,
+          underReview: data?.filter(r => r.status === "in_review").length || 0
+        };
+        setReportCounts(counts);
+      }
+    };
+
+    fetchReportCounts();
+  }, [ghostIdentity, demoMode]);
 
   const handleLogout = () => {
     logout();
@@ -89,15 +132,15 @@ const StudentDashboard = () => {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <Badge 
-              variant="outline" 
+            <Badge
+              variant="outline"
               className="bg-accent/10 text-accent border-accent/30 px-3 py-1.5"
             >
               <Lock className="w-3 h-3 mr-1.5" />
               Zero-Knowledge Protected
             </Badge>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={handleLogout}
               className="gap-2"
@@ -193,21 +236,21 @@ const StudentDashboard = () => {
               <div className="flex items-center gap-3 p-4 rounded-lg bg-secondary/50">
                 <CheckCircle className="w-5 h-5 text-accent" />
                 <div>
-                  <div className="font-semibold text-foreground">0</div>
+                  <div className="font-semibold text-foreground">{reportCounts.resolved}</div>
                   <div className="text-xs text-muted-foreground">Resolved</div>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-4 rounded-lg bg-secondary/50">
                 <Clock className="w-5 h-5 text-[hsl(var(--status-warning))]" />
                 <div>
-                  <div className="font-semibold text-foreground">0</div>
+                  <div className="font-semibold text-foreground">{reportCounts.pending}</div>
                   <div className="text-xs text-muted-foreground">Pending</div>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-4 rounded-lg bg-secondary/50">
                 <AlertCircle className="w-5 h-5 text-primary" />
                 <div>
-                  <div className="font-semibold text-foreground">0</div>
+                  <div className="font-semibold text-foreground">{reportCounts.underReview}</div>
                   <div className="text-xs text-muted-foreground">Under Review</div>
                 </div>
               </div>

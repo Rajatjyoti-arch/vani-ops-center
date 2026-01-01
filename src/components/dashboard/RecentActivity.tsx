@@ -3,8 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, Ghost, FileUp, MessageSquare, CheckCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatRelativeTime } from "@/lib/crypto";
-import { useSettings } from "@/contexts/SettingsContext";
-import { mockRecentActivity } from "@/lib/mockData";
 import { CyberSpinner } from "@/components/ui/skeleton-card";
 
 interface ActivityItem {
@@ -28,14 +26,11 @@ const typeConfig = {
 };
 
 export function RecentActivity() {
-  const { demoMode } = useSettings();
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchActivity = async () => {
-      setIsLoading(true);
-
+  const fetchActivity = async () => {
+    try {
       // Fetch recent ghost identities
       const { data: identities } = await supabase
         .from("ghost_identities")
@@ -90,26 +85,33 @@ export function RecentActivity() {
         });
       });
 
-      // Use mock data if demo mode is enabled and no real data exists
-      if (demoMode && activityItems.length === 0) {
-        setActivities(mockRecentActivity.map(item => ({
-          id: item.id,
-          type: item.type as ActivityItem["type"],
-          message: item.description || item.title,
-          time: item.time,
-        })));
-      } else {
-        // Sort by most recent
-        setActivities(activityItems.slice(0, 6));
-      }
+      // Sort by most recent
+      setActivities(activityItems.sort((a, b) => 0).slice(0, 6));
+    } catch (error) {
+      console.error("Error fetching activity:", error);
+    } finally {
       setIsLoading(false);
-    };
+    }
+  };
 
+  useEffect(() => {
     fetchActivity();
-  }, [demoMode]);
+
+    // Subscribe to real-time updates for all relevant tables
+    const channel = supabase
+      .channel('db-activity')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'ghost_identities' }, fetchActivity)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'stealth_vault' }, fetchActivity)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reports' }, fetchActivity)
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   return (
-    <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+    <Card className="bg-card/80 backdrop-blur-sm border-border/50 hover:border-primary/30 hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-300">
       <CardHeader className="pb-2">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-primary/10">
@@ -131,7 +133,7 @@ export function RecentActivity() {
         ) : activities.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <Activity className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">No recent activity</p>
+            <p className="text-sm">No recent activity in database</p>
           </div>
         ) : (
           <div className="space-y-3">

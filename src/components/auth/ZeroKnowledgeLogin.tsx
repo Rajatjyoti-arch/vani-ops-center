@@ -37,7 +37,7 @@ export function ZeroKnowledgeLogin() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/student-dashboard");
+      navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);
 
@@ -121,7 +121,7 @@ export function ZeroKnowledgeLogin() {
           title: "Access Granted",
           description: `Welcome back, ${existingIdentity.ghost_name}`,
         });
-        navigate("/student-dashboard");
+        navigate("/dashboard");
       } else if (isNewUser) {
         // New user - create identity
         const newIdentity = {
@@ -145,7 +145,7 @@ export function ZeroKnowledgeLogin() {
           title: "Identity Created",
           description: `Your anonymous identity "${data.ghost_name}" has been established.`,
         });
-        navigate("/student-dashboard");
+        navigate("/dashboard");
       } else {
         // Unknown phrase - not a new user
         toast({

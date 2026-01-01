@@ -21,9 +21,11 @@ import { VaniLogo, VaniBrandingBlock } from "@/components/ui/VaniLogo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useGhostSession } from "@/contexts/GhostSessionContext";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useGhostSession();
   const [taglineIndex, setTaglineIndex] = useState(0);
   const taglines = [
     "Anonymous, yet accountable",

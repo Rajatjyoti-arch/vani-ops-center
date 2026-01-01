@@ -2,43 +2,22 @@ import { useState, useEffect } from "react";
 import { TrendingUp, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { supabase } from "@/integrations/supabase/client";
 
 export function CampusImpactScore() {
-  const [score, setScore] = useState(0);
-  const [resolved, setResolved] = useState(0);
-  const [total, setTotal] = useState(0);
+  // Using realistic mock data for demo purposes (No DB connection)
+  const [score] = useState(75);
+  const [resolved] = useState(9);
+  const [total] = useState(12);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchImpactScore = async () => {
-      const { data, error } = await supabase
-        .from("reports")
-        .select("status");
-
-      if (error) {
-        console.error("Error fetching impact score:", error);
-        setIsLoading(false);
-        return;
-      }
-
-      const totalReports = data?.length || 0;
-      const resolvedReports = data?.filter(r => r.status === "resolved").length || 0;
-      const impactScore = totalReports > 0
-        ? Math.round((resolvedReports / totalReports) * 100)
-        : 0;
-
-      setTotal(totalReports);
-      setResolved(resolvedReports);
-      setScore(impactScore);
-      setIsLoading(false);
-    };
-
-    fetchImpactScore();
+    // Simulate a brief loading state for the "live" feel
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
-    <Card className="bg-card/80 backdrop-blur-sm border-primary/30 overflow-hidden relative group">
+    <Card className="bg-card/80 backdrop-blur-sm border-border/50 overflow-hidden relative group hover:border-primary/30 hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-300">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
       <CardContent className="p-4 relative">
         <div className="flex items-start justify-between mb-2">

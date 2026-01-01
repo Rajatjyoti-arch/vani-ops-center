@@ -31,12 +31,12 @@ const IdentityGhost = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { ghostIdentity: sessionIdentity, isAuthenticated, login, logout } = useGhostSession();
-  
+
   const [identities, setIdentities] = useState<GhostIdentity[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [rollNumber, setRollNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Neural scan state
   const [scanPhase, setScanPhase] = useState<ScanPhase>("idle");
   const [generatedHash, setGeneratedHash] = useState("");
@@ -45,7 +45,7 @@ const IdentityGhost = () => {
     hashSuffix: string;
     isNewIdentity: boolean;
   } | null>(null);
-  
+
   // Get return URL from navigation state
   const returnUrl = (location.state as { from?: string })?.from;
 
@@ -86,7 +86,7 @@ const IdentityGhost = () => {
     // Generate hash first
     const hash = await generateHash(rollNumber);
     setGeneratedHash(hash);
-    
+
     // Start neural scan phase
     setScanPhase("neural-scan");
   };
@@ -113,7 +113,7 @@ const IdentityGhost = () => {
           .select("*")
           .eq("id", existing.id)
           .single();
-        
+
         if (fullIdentity) {
           login(fullIdentity);
           setActiveId(existing.id);
@@ -169,7 +169,7 @@ const IdentityGhost = () => {
   useEffect(() => {
     if (scanPhase === "result") {
       const timeout = setTimeout(() => {
-        navigate(returnUrl || "/vault");
+        navigate(returnUrl || "/dashboard");
       }, 4000);
       return () => clearTimeout(timeout);
     }

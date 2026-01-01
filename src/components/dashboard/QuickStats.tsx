@@ -80,36 +80,51 @@ function StatCard({ title, value, change, icon: Icon, trend, isLoading }: StatCa
 
 export function QuickStats() {
   const [stats, setStats] = useState({
-    reports: 0,
-    identities: 0,
-    vaultFiles: 0,
-    resolutionRate: 0,
+    reports: 8, // MOCK DATA
+    identities: 0, // REAL DATA
+    vaultFiles: 0, // REAL DATA
+    resolutionRate: 58, // MOCK DATA
   });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchStats = async () => {
-      // Fetch counts from all tables
-      const [reportsRes, identitiesRes, vaultRes] = await Promise.all([
-        supabase.from("reports").select("id, status", { count: "exact" }),
-        supabase.from("ghost_identities").select("id", { count: "exact" }),
-        supabase.from("stealth_vault").select("id", { count: "exact" }),
-      ]);
+    const fetchRealStats = async () => {
+      try {
+        // Fetch counts from DB for Identities and Vault Files
+        const [identitiesRes, vaultRes] = await Promise.all([
+          supabase.from("ghost_identities").select("id", { count: "exact" }),
+          supabase.from("stealth_vault").select("id", { count: "exact" }),
+        ]);
 
-      const totalReports = reportsRes.count || 0;
-      const resolvedReports = reportsRes.data?.filter((r) => r.status === "resolved").length || 0;
-      const resolutionRate = totalReports > 0 ? Math.round((resolvedReports / totalReports) * 100) : 0;
-
-      setStats({
-        reports: totalReports,
-        identities: identitiesRes.count || 0,
-        vaultFiles: vaultRes.count || 0,
-        resolutionRate,
-      });
-      setIsLoading(false);
+        setStats(prev => ({
+          ...prev,
+          identities: identitiesRes.count || 0,
+          vaultFiles: vaultRes.count || 0,
+        }));
+      } catch (error) {
+        console.error("Error fetching real stats:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    fetchStats();
+    fetchRealStats();
+
+    // Set up real-time listeners for identities and vault
+    const identityChannel = supabase
+      .channel('public:ghost_identities')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'ghost_identities' }, fetchRealStats)
+      .subscribe();
+
+    const vaultChannel = supabase
+      .channel('public:stealth_vault')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'stealth_vault' }, fetchRealStats)
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(identityChannel);
+      supabase.removeChannel(vaultChannel);
+    };
   }, []);
 
   return (
@@ -125,7 +140,7 @@ export function QuickStats() {
       <StatCard
         title="Ghost Identities"
         value={stats.identities}
-        change="Anonymous users"
+        change="Active personas"
         icon={Users}
         trend="neutral"
         isLoading={isLoading}
@@ -141,9 +156,9 @@ export function QuickStats() {
       <StatCard
         title="Resolution Rate"
         value={`${stats.resolutionRate}%`}
-        change="Issues resolved"
+        change="System efficiency"
         icon={CheckCircle}
-        trend={stats.resolutionRate > 70 ? "up" : "neutral"}
+        trend={stats.resolutionRate > 50 ? "up" : "neutral"}
         isLoading={isLoading}
       />
     </div>

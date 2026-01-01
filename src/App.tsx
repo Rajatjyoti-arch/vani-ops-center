@@ -71,7 +71,11 @@ function AppContent() {
         <Route path="/help" element={<HelpDocumentation />} />
 
         {/* Internal Dashboard (for authenticated navigation) */}
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
 
         {/* Legal Pages */}
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />

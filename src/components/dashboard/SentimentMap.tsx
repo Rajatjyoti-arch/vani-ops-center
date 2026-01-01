@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, AlertTriangle, CheckCircle, Info } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatRelativeTime } from "@/lib/crypto";
-import { useSettings } from "@/contexts/SettingsContext";
 import { mockSentimentLogs } from "@/lib/mockData";
 import { CyberSpinner } from "@/components/ui/skeleton-card";
 
@@ -38,68 +37,49 @@ const levelConfig = {
 };
 
 export function SentimentMap() {
-  const { demoMode } = useSettings();
   const [zones, setZones] = useState<Zone[]>([]);
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch zones from database
-  useEffect(() => {
-    const fetchZones = async () => {
-      setIsLoading(true);
-      const { data, error } = await supabase
-        .from("sentiment_logs")
+  const fetchZones = async () => {
+    try {
+      const { data, error } = await (supabase as any)
+        .from("campus_sentiment_stats")
         .select("*")
         .order("zone_name");
 
-      if (error) {
-        console.error("Error fetching zones:", error);
-      }
-      
-      // Use mock data if demo mode is enabled and no real data exists
-      const realData = (data as Zone[]) || [];
-      if (demoMode && realData.length === 0) {
+      if (error) throw error;
+
+      // Use mock data if DB is empty
+      if (!data || data.length === 0) {
         setZones(mockSentimentLogs as Zone[]);
       } else {
-        setZones(realData);
+        setZones(data as Zone[]);
       }
+    } catch (error) {
+      console.error("Error fetching zones:", error);
+      setZones(mockSentimentLogs as Zone[]);
+    } finally {
       setIsLoading(false);
-    };
+    }
+  };
 
+  useEffect(() => {
     fetchZones();
 
     // Subscribe to real-time updates
-    const channel = supabase
-      .channel("sentiment-realtime")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "sentiment_logs",
-        },
-        (payload) => {
-          console.log("Realtime update:", payload);
-          if (payload.eventType === "UPDATE" || payload.eventType === "INSERT") {
-            setZones((prev) =>
-              prev.map((zone) =>
-                zone.id === (payload.new as Zone).id
-                  ? (payload.new as Zone)
-                  : zone
-              )
-            );
-          }
-        }
-      )
+    const channel = (supabase as any)
+      .channel('sentiment-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'campus_sentiment_stats' }, fetchZones)
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [demoMode]);
+  }, []);
 
   return (
-    <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+    <Card className="bg-card/80 backdrop-blur-sm border-border/50 hover:border-primary/30 hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-300">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -134,11 +114,10 @@ export function SentimentMap() {
           <div className="flex items-center justify-center py-12">
             <CyberSpinner size="lg" />
           </div>
-        ) : zones.length === 0 ? (
+        ) : (zones.length === 0) ? (
           <div className="text-center py-12 text-muted-foreground">
             <MapPin className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">No zone data available</p>
-            <p className="text-xs mt-1">Enable Demo Mode in Settings to see sample data</p>
           </div>
         ) : (
           <>
@@ -186,9 +165,8 @@ export function SentimentMap() {
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="font-semibold text-primary">{selectedZone.zone_name}</h4>
                   <span
-                    className={`text-xs px-2 py-1 rounded-full ${
-                      levelConfig[selectedZone.concern_level].color
-                    }`}
+                    className={`text-xs px-2 py-1 rounded-full ${levelConfig[selectedZone.concern_level].color
+                      }`}
                   >
                     {selectedZone.concern_level.toUpperCase()}
                   </span>

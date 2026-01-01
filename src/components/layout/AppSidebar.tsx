@@ -22,10 +22,11 @@ import { useDeadManSwitch } from "@/contexts/DeadManSwitchContext";
 const navItems = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "/dashboard",
     icon: Building,
     description: "System Overview",
     tourId: "nav-command",
+    protected: true,
   },
   {
     title: "Credentialing",
