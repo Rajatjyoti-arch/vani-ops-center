@@ -56,14 +56,14 @@ export function SentimentHeatMap() {
   if (sentimentData.length === 0) {
     // Show placeholder zones
     const placeholderZones = [
-      { zone_name: "Academic Block A", concern_level: "safe", reports_count: 2 },
-      { zone_name: "Library", concern_level: "safe", reports_count: 1 },
-      { zone_name: "Hostel Complex", concern_level: "warning", reports_count: 5 },
-      { zone_name: "Cafeteria", concern_level: "safe", reports_count: 0 },
-      { zone_name: "Sports Complex", concern_level: "safe", reports_count: 1 },
-      { zone_name: "Admin Building", concern_level: "safe", reports_count: 0 },
-      { zone_name: "Labs", concern_level: "warning", reports_count: 3 },
-      { zone_name: "Parking", concern_level: "critical", reports_count: 7 },
+      { zone_name: "Chanakya Building", concern_level: "safe", reports_count: 2 },
+      { zone_name: "Rhya-Bus Stand", concern_level: "warning", reports_count: 5 },
+      { zone_name: "DDE Building", concern_level: "safe", reports_count: 1 },
+      { zone_name: "Shailputri Bhawan", concern_level: "safe", reports_count: 0 },
+      { zone_name: "Aryabhatta Building", concern_level: "safe", reports_count: 1 },
+      { zone_name: "SPM", concern_level: "safe", reports_count: 0 },
+      { zone_name: "BRS Hostel", concern_level: "warning", reports_count: 3 },
+      { zone_name: "Health Center", concern_level: "critical", reports_count: 7 },
     ];
 
     return (

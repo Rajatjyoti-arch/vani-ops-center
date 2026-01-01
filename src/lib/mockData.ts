@@ -5,7 +5,7 @@ export const mockReports = [
     id: "demo-1",
     report_id: "RPT-A3X7K9",
     title: "Library Accessibility Issues - Wheelchair Ramps Missing",
-    zone: "Central Library",
+    zone: "Chanakya Building",
     status: "resolved" as const,
     severity: "high" as const,
     created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
@@ -16,7 +16,7 @@ export const mockReports = [
     id: "demo-2",
     report_id: "RPT-B5M2P8",
     title: "Late Night Shuttle Service Concerns",
-    zone: "Transport Hub",
+    zone: "Rhya-Bus Stand",
     status: "investigating" as const,
     severity: "medium" as const,
     created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
@@ -27,7 +27,7 @@ export const mockReports = [
     id: "demo-3",
     report_id: "RPT-C8N4Q1",
     title: "Cafeteria Food Quality and Hygiene Standards",
-    zone: "Student Center",
+    zone: "DDE Building",
     status: "under_review" as const,
     severity: "critical" as const,
     created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
@@ -49,7 +49,7 @@ export const mockReports = [
     id: "demo-5",
     report_id: "RPT-E9K1S7",
     title: "Dormitory Heating System Malfunction",
-    zone: "Residential Hall A",
+    zone: "Shailputri Bhawan",
     status: "resolved" as const,
     severity: "high" as const,
     created_at: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
@@ -59,15 +59,15 @@ export const mockReports = [
 ];
 
 export const mockSentimentLogs = [
-  { id: "demo-s1", zone_id: "zone-1", zone_name: "Central Library", concern_level: "safe", reports_count: 12, last_report_at: new Date().toISOString() },
-  { id: "demo-s2", zone_id: "zone-2", zone_name: "Transport Hub", concern_level: "warning", reports_count: 28, last_report_at: new Date().toISOString() },
-  { id: "demo-s3", zone_id: "zone-3", zone_name: "Student Center", concern_level: "critical", reports_count: 45, last_report_at: new Date().toISOString() },
+  { id: "demo-s1", zone_id: "zone-1", zone_name: "Chanakya Building", concern_level: "safe", reports_count: 12, last_report_at: new Date().toISOString() },
+  { id: "demo-s2", zone_id: "zone-2", zone_name: "Rhya-Bus Stand", concern_level: "warning", reports_count: 28, last_report_at: new Date().toISOString() },
+  { id: "demo-s3", zone_id: "zone-3", zone_name: "DDE Building", concern_level: "critical", reports_count: 45, last_report_at: new Date().toISOString() },
   { id: "demo-s4", zone_id: "zone-4", zone_name: "Health Center", concern_level: "warning", reports_count: 19, last_report_at: new Date().toISOString() },
-  { id: "demo-s5", zone_id: "zone-5", zone_name: "Residential Hall A", concern_level: "safe", reports_count: 8, last_report_at: new Date().toISOString() },
-  { id: "demo-s6", zone_id: "zone-6", zone_name: "Science Building", concern_level: "safe", reports_count: 5, last_report_at: new Date().toISOString() },
+  { id: "demo-s5", zone_id: "zone-5", zone_name: "Shailputri Bhawan", concern_level: "safe", reports_count: 8, last_report_at: new Date().toISOString() },
+  { id: "demo-s6", zone_id: "zone-6", zone_name: "Aryabhatta Building", concern_level: "safe", reports_count: 5, last_report_at: new Date().toISOString() },
   { id: "demo-s7", zone_id: "zone-7", zone_name: "Sports Complex", concern_level: "warning", reports_count: 15, last_report_at: new Date().toISOString() },
-  { id: "demo-s8", zone_id: "zone-8", zone_name: "Admin Block", concern_level: "critical", reports_count: 32, last_report_at: new Date().toISOString() },
-  { id: "demo-s9", zone_id: "zone-9", zone_name: "Parking Zone", concern_level: "safe", reports_count: 3, last_report_at: new Date().toISOString() },
+  { id: "demo-s8", zone_id: "zone-8", zone_name: "SPM", concern_level: "critical", reports_count: 32, last_report_at: new Date().toISOString() },
+  { id: "demo-s9", zone_id: "zone-9", zone_name: "BRS Hostel", concern_level: "safe", reports_count: 3, last_report_at: new Date().toISOString() },
 ];
 
 export const mockNegotiations = [
