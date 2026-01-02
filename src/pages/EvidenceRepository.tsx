@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Shield, Upload, File, Image, FileText, Lock, Clock, Trash2, Loader2, Binary, Database, Info } from "lucide-react";
+import { Shield, Upload, File, Image, FileText, Lock, Clock, Trash2, Loader2, Binary, Database, Info, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { formatRelativeTime } from "@/lib/crypto";
@@ -188,14 +188,24 @@ const StealthVault = () => {
     <DashboardLayout>
       <div className="space-y-6 animate-fade-in">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold text-foreground flex items-center gap-3">
-              <Shield className="w-7 h-7 text-primary" />
-              Encrypted Evidence Repository
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Secure storage for confidential documentation and evidence
-            </p>
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => navigate(-1)}
+              className="shrink-0"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h1 className="text-2xl font-semibold text-foreground flex items-center gap-3">
+                <Shield className="w-7 h-7 text-primary" />
+                Encrypted Evidence Repository
+              </h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                Secure storage for confidential documentation and evidence
+              </p>
+            </div>
           </div>
         </div>
 
