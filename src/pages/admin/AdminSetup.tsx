@@ -23,10 +23,10 @@ export default function AdminSetup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [step, setStep] = useState<"secret" | "credentials" | "success">("secret");
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingAdmins, setIsCheckingAdmins] = useState(true);
   const [hasExistingAdmins, setHasExistingAdmins] = useState(false);
-  const [step, setStep] = useState<"secret" | "credentials">("secret");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -155,10 +155,11 @@ export default function AdminSetup() {
 
       toast({
         title: "Admin Account Created",
-        description: "You can now sign in to the admin portal",
+        description: "Please check your email to confirm your account.",
       });
 
-      navigate("/admin/login");
+      // Show success step with email confirmation message
+      setStep("success");
     } catch (err: any) {
       console.error("Error creating admin:", err);
       toast({
@@ -220,17 +221,24 @@ export default function AdminSetup() {
         {/* Progress Indicator */}
         <div className="flex items-center justify-center gap-3 mb-8">
           <div className={`flex items-center gap-2 ${step === "secret" ? "text-emerald-400" : "text-slate-500"}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step === "secret" ? "bg-emerald-500/20 border border-emerald-500" : "bg-slate-700 border border-slate-600"}`}>
-              {step === "credentials" ? <CheckCircle2 className="w-4 h-4" /> : "1"}
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step !== "secret" ? "bg-emerald-500/20 border border-emerald-500" : "bg-emerald-500/20 border border-emerald-500"}`}>
+              {step !== "secret" ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : "1"}
             </div>
             <span className="text-sm hidden sm:inline">Verify Secret</span>
           </div>
           <div className="w-8 h-px bg-slate-600" />
-          <div className={`flex items-center gap-2 ${step === "credentials" ? "text-emerald-400" : "text-slate-500"}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step === "credentials" ? "bg-emerald-500/20 border border-emerald-500" : "bg-slate-700 border border-slate-600"}`}>
-              2
+          <div className={`flex items-center gap-2 ${step === "credentials" ? "text-emerald-400" : step === "success" ? "text-slate-500" : "text-slate-500"}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step === "credentials" ? "bg-emerald-500/20 border border-emerald-500" : step === "success" ? "bg-emerald-500/20 border border-emerald-500" : "bg-slate-700 border border-slate-600"}`}>
+              {step === "success" ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : "2"}
             </div>
             <span className="text-sm hidden sm:inline">Create Account</span>
+          </div>
+          <div className="w-8 h-px bg-slate-600" />
+          <div className={`flex items-center gap-2 ${step === "success" ? "text-emerald-400" : "text-slate-500"}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step === "success" ? "bg-emerald-500/20 border border-emerald-500" : "bg-slate-700 border border-slate-600"}`}>
+              3
+            </div>
+            <span className="text-sm hidden sm:inline">Confirm Email</span>
           </div>
         </div>
 
@@ -274,7 +282,7 @@ export default function AdminSetup() {
                 )}
               </Button>
             </div>
-          ) : (
+          ) : step === "credentials" ? (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-slate-300">
@@ -345,15 +353,54 @@ export default function AdminSetup() {
                 )}
               </Button>
             </form>
+          ) : (
+            /* Success Step - Email Confirmation */
+            <div className="text-center space-y-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/30 mx-auto">
+                <Mail className="w-8 h-8 text-emerald-400" />
+              </div>
+              
+              <div className="space-y-2">
+                <h2 className="text-xl font-semibold text-white">Check Your Email</h2>
+                <p className="text-slate-400 text-sm">
+                  We've sent a confirmation link to:
+                </p>
+                <p className="text-emerald-400 font-medium">{email}</p>
+              </div>
+
+              <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-4 text-left">
+                <p className="text-slate-300 text-sm">
+                  <strong>Next steps:</strong>
+                </p>
+                <ol className="text-slate-400 text-sm mt-2 space-y-1 list-decimal list-inside">
+                  <li>Open the email from VANI</li>
+                  <li>Click the confirmation link</li>
+                  <li>Return here to sign in</li>
+                </ol>
+              </div>
+
+              <p className="text-xs text-slate-500">
+                Don't see the email? Check your spam folder.
+              </p>
+
+              <Button
+                onClick={() => navigate("/admin/login?pending_confirmation=true")}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium"
+              >
+                Continue to Login
+              </Button>
+            </div>
           )}
 
-          <div className="mt-6 pt-6 border-t border-slate-700">
-            <p className="text-xs text-slate-500 text-center">
-              This is a one-time setup. After creating the first admin,
-              <br />
-              additional admins can be invited through the dashboard.
-            </p>
-          </div>
+          {step !== "success" && (
+            <div className="mt-6 pt-6 border-t border-slate-700">
+              <p className="text-xs text-slate-500 text-center">
+                This is a one-time setup. After creating the first admin,
+                <br />
+                additional admins can be invited through the dashboard.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Back Link */}

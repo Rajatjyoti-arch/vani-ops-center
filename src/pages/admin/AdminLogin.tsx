@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Shield, Loader2, Lock, Mail, Smartphone } from "lucide-react";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { Shield, Loader2, Lock, Mail, Smartphone, AlertCircle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -17,11 +18,15 @@ export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [emailNotConfirmed, setEmailNotConfirmed] = useState(false);
+  const [isResending, setIsResending] = useState(false);
   const { user, isAdmin, signIn } = useAdminAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   const from = location.state?.from?.pathname || "/admin";
+  const pendingConfirmation = searchParams.get("pending_confirmation") === "true";
 
   useEffect(() => {
     if (user && isAdmin) {
@@ -44,14 +49,54 @@ export default function AdminLogin() {
     }
 
     setIsLoading(true);
+    setEmailNotConfirmed(false);
     const { error } = await signIn(email, password);
     setIsLoading(false);
 
     if (error) {
+      // Check if error is about email not being confirmed
+      if (error.message.toLowerCase().includes("email not confirmed")) {
+        setEmailNotConfirmed(true);
+      } else {
+        toast({
+          title: "Authentication Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!email) {
       toast({
-        title: "Authentication Failed",
+        title: "Email Required",
+        description: "Please enter your email address first.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsResending(true);
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/admin/login`,
+      },
+    });
+    setIsResending(false);
+
+    if (error) {
+      toast({
+        title: "Failed to Resend",
         description: error.message,
         variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Confirmation Email Sent",
+        description: "Please check your inbox and click the confirmation link.",
       });
     }
   };
@@ -71,6 +116,54 @@ export default function AdminLogin() {
             Central University of Jammu • Administrative Portal
           </p>
         </div>
+
+        {/* Pending Confirmation Banner */}
+        {pendingConfirmation && !emailNotConfirmed && (
+          <div className="bg-emerald-900/30 border border-emerald-700/50 rounded-xl p-4 mb-4 flex items-start gap-3">
+            <CheckCircle className="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-emerald-400 font-medium text-sm">Account Created Successfully</p>
+              <p className="text-slate-400 text-xs mt-1">
+                Please check your email and click the confirmation link before signing in.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Email Not Confirmed Error */}
+        {emailNotConfirmed && (
+          <div className="bg-amber-900/30 border border-amber-700/50 rounded-xl p-4 mb-4">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="text-amber-400 font-medium text-sm">Email Not Confirmed</p>
+                <p className="text-slate-400 text-xs mt-1">
+                  Please check your email inbox (and spam folder) for a confirmation link. You must confirm your email before signing in.
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleResendConfirmation}
+                  disabled={isResending}
+                  className="mt-3 text-amber-400 border-amber-700 hover:bg-amber-900/30"
+                >
+                  {isResending ? (
+                    <>
+                      <Loader2 className="w-3 h-3 mr-2 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="w-3 h-3 mr-2" />
+                      Resend Confirmation Email
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Login Form */}
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-8">
