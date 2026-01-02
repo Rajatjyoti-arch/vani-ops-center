@@ -13,6 +13,7 @@ import {
   BookOpen,
   Shield,
   ArrowRight,
+  ArrowLeft,
   CheckCircle,
   Clock,
   AlertCircle,
@@ -122,13 +123,23 @@ const StudentDashboard = () => {
       <div className="space-y-6 animate-fade-in">
         {/* Welcome Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">
-              Welcome, {ghostIdentity?.ghost_name}
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Your anonymous credential is active and secure
-            </p>
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => navigate(-1)}
+              className="shrink-0"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">
+                Welcome, {ghostIdentity?.ghost_name}
+              </h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                Your anonymous credential is active and secure
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <Badge

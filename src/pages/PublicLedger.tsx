@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { Radio, AlertTriangle, Eye, Clock, FileWarning } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Radio, AlertTriangle, Eye, Clock, FileWarning, ArrowLeft } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface LeakEntry {
   id: string;
@@ -12,6 +14,7 @@ interface LeakEntry {
 }
 
 export default function PublicLedger() {
+  const navigate = useNavigate();
   const [entries, setEntries] = useState<LeakEntry[]>([]);
 
   useEffect(() => {
@@ -31,14 +34,24 @@ export default function PublicLedger() {
       <div className="space-y-6 animate-fade-in">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-              <Radio className="w-7 h-7 text-status-critical" />
-              Public Transparency Archive
-            </h1>
-            <p className="text-muted-foreground text-sm mt-1">
-              Official record of disclosed evidence pursuant to institutional transparency protocols
-            </p>
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => navigate(-1)}
+              className="shrink-0"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
+                <Radio className="w-7 h-7 text-status-critical" />
+                Public Transparency Archive
+              </h1>
+              <p className="text-muted-foreground text-sm mt-1">
+                Official record of disclosed evidence pursuant to institutional transparency protocols
+              </p>
+            </div>
           </div>
           <Badge variant="destructive" className="font-mono">
             <Eye className="w-3 h-3 mr-1" />
