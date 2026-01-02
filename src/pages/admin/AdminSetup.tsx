@@ -109,7 +109,9 @@ export default function AdminSetup() {
 
     setIsLoading(true);
     try {
-      // Sign up the new admin user
+      let userId: string | undefined;
+
+      // Try to sign up the new admin user
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
@@ -118,17 +120,34 @@ export default function AdminSetup() {
         },
       });
 
-      if (signUpError) throw signUpError;
+      // Check if user already exists (user_repeated_signup case)
+      if (authData?.user?.identities?.length === 0) {
+        // User exists but email not confirmed - try to sign in instead
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        
+        if (signInError) {
+          throw new Error("This email is already registered. Please use the correct password or login directly.");
+        }
+        
+        userId = signInData.user?.id;
+      } else if (signUpError) {
+        throw signUpError;
+      } else {
+        userId = authData?.user?.id;
+      }
 
-      if (!authData.user) {
-        throw new Error("Failed to create user account");
+      if (!userId) {
+        throw new Error("Failed to create or authenticate user account");
       }
 
       // Assign admin role
       const { error: roleError } = await supabase
         .from("user_roles")
         .insert({
-          user_id: authData.user.id,
+          user_id: userId,
           role: "admin",
         });
 
