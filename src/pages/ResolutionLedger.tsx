@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Filter, Clock, CheckCircle, AlertCircle, Search as SearchIcon, Eye } from "lucide-react";
+import { BookOpen, Filter, Clock, CheckCircle, AlertCircle, Search as SearchIcon, Eye, ArrowLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { formatRelativeTime } from "@/lib/crypto";
@@ -38,6 +39,7 @@ const severityConfig = {
 };
 
 const ResolutionLedger = () => {
+  const navigate = useNavigate();
   const { demoMode } = useSettings();
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -92,14 +94,24 @@ const ResolutionLedger = () => {
     <DashboardLayout>
       <div className="space-y-6 animate-fade-in">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-              <BookOpen className="w-7 h-7 text-primary" />
-              Transparency & Compliance Log
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Official record of all submitted cases and their resolution status
-            </p>
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => navigate(-1)}
+              className="shrink-0"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
+                <BookOpen className="w-7 h-7 text-primary" />
+                Transparency & Compliance Log
+              </h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                Official record of all submitted cases and their resolution status
+              </p>
+            </div>
           </div>
         </div>
 

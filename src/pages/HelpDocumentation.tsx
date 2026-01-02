@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -10,12 +11,14 @@ import {
   Lock, 
   AlertTriangle,
   CheckCircle,
-  ExternalLink
+  ExternalLink,
+  ArrowLeft
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const HelpDocumentation = () => {
+  const navigate = useNavigate();
   const sections = [
     {
       title: "Getting Started",
@@ -151,14 +154,24 @@ const HelpDocumentation = () => {
       <div className="space-y-8 animate-fade-in">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-              <HelpCircle className="w-7 h-7 text-primary" />
-              Help & Documentation
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Institutional guidelines and platform documentation
-            </p>
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => navigate(-1)}
+              className="shrink-0"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
+                <HelpCircle className="w-7 h-7 text-primary" />
+                Help & Documentation
+              </h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                Institutional guidelines and platform documentation
+              </p>
+            </div>
           </div>
         </div>
 
