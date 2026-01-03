@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useSettings } from "@/contexts/SettingsContext";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
@@ -18,17 +18,18 @@ import {
   Clock,
   AlertCircle,
   Lock,
-  LogOut
+  LogOut,
+  Mail
 } from "lucide-react";
-import { useGhostSession } from "@/contexts/GhostSessionContext";
+import { useStudentSession } from "@/contexts/StudentSessionContext";
 import { NotificationPreferences } from "@/components/identity/NotificationPreferences";
-import { ZeroKnowledgeLogin } from "@/components/auth/ZeroKnowledgeLogin";
-import { useNavigate } from "react-router-dom";
+import { StudentLogin } from "@/components/auth/StudentLogin";
 import { toast } from "@/hooks/use-toast";
 
 const StudentDashboard = () => {
-  const { isAuthenticated, ghostIdentity, logout } = useGhostSession();
+  const { isAuthenticated, studentProfile, logout } = useStudentSession();
   const navigate = useNavigate();
+  const location = useLocation();
   const { demoMode } = useSettings();
   const [reportCounts, setReportCounts] = useState({
     resolved: 0,
@@ -38,12 +39,12 @@ const StudentDashboard = () => {
 
   useEffect(() => {
     const fetchReportCounts = async () => {
-      if (!ghostIdentity) return;
+      if (!studentProfile) return;
 
       const { data, error } = await supabase
         .from("reports")
         .select("status")
-        .eq("ghost_identity_id", ghostIdentity.id);
+        .eq("ghost_identity_id", studentProfile.id);
 
       if (error) {
         console.error("Error fetching report counts:", error);
@@ -67,18 +68,18 @@ const StudentDashboard = () => {
     };
 
     fetchReportCounts();
-  }, [ghostIdentity, demoMode]);
+  }, [studentProfile, demoMode]);
 
-  // If not authenticated, show the Zero-Knowledge Login
+  // If not authenticated, show the Student Login
   if (!isAuthenticated) {
-    return <ZeroKnowledgeLogin />;
+    return <StudentLogin />;
   }
 
   const handleLogout = () => {
     logout();
     toast({
       title: "Session Ended",
-      description: "Your anonymous session has been securely terminated.",
+      description: "Your session has been securely terminated.",
     });
     navigate("/student-dashboard");
   };
@@ -134,10 +135,10 @@ const StudentDashboard = () => {
             </Button>
             <div>
               <h1 className="text-2xl font-bold text-foreground">
-                Welcome, {ghostIdentity?.ghost_name}
+                Welcome, {studentProfile?.ghost_name}
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
-                Your anonymous credential is active and secure
+                Your session is active and secure
               </p>
             </div>
           </div>
@@ -146,8 +147,8 @@ const StudentDashboard = () => {
               variant="outline"
               className="bg-accent/10 text-accent border-accent/30 px-3 py-1.5"
             >
-              <Lock className="w-3 h-3 mr-1.5" />
-              Zero-Knowledge Protected
+              <Mail className="w-3 h-3 mr-1.5" />
+              Verified Student
             </Badge>
             <Button
               variant="outline"
@@ -171,25 +172,25 @@ const StudentDashboard = () => {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <h3 className="font-semibold text-foreground">
-                    {ghostIdentity?.ghost_name}
+                    {studentProfile?.ghost_name}
                   </h3>
                   <Badge variant="secondary" className="text-xs">
-                    ID: 0x{ghostIdentity?.roll_number_hash.slice(-8).toUpperCase()}
+                    {studentProfile?.enrollment_no}
                   </Badge>
                 </div>
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <span>Trust Score: {ghostIdentity?.reputation}%</span>
+                  <span>Trust Score: {studentProfile?.reputation}%</span>
                   <span>•</span>
-                  <span>{ghostIdentity?.reports_submitted} submissions</span>
+                  <span>{studentProfile?.reports_submitted} submissions</span>
                 </div>
               </div>
               <div className="text-right">
                 <div className="flex items-center gap-1.5 text-xs text-accent mb-1">
                   <Shield className="w-3 h-3" />
-                  <span>Mathematically Private</span>
+                  <span>Email Verified</span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  No server logs of your access phrase
+                  {studentProfile?.email}
                 </p>
               </div>
             </div>
@@ -229,10 +230,10 @@ const StudentDashboard = () => {
         </div>
 
         {/* Notification Preferences */}
-        {ghostIdentity && (
+        {studentProfile && (
           <NotificationPreferences
-            ghostIdentityId={ghostIdentity.id}
-            currentEmail={(ghostIdentity as any).notification_email || null}
+            ghostIdentityId={studentProfile.id}
+            currentEmail={studentProfile.email}
           />
         )}
 

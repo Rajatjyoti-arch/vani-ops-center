@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { OnboardingProvider } from "@/contexts/OnboardingContext";
-import { GhostSessionProvider } from "@/contexts/GhostSessionContext";
+import { StudentSessionProvider } from "@/contexts/StudentSessionContext";
 import { DeadManSwitchProvider } from "@/contexts/DeadManSwitchContext";
 import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { TourOverlay } from "@/components/onboarding/TourOverlay";
@@ -19,7 +19,6 @@ import LandingPage from "./pages/LandingPage";
 import PortalSelection from "./pages/PortalSelection";
 import Dashboard from "./pages/Index";
 import StudentDashboard from "./pages/StudentDashboard";
-import AnonymousCredentialing from "./pages/AnonymousCredentialing";
 import EvidenceRepository from "./pages/EvidenceRepository";
 import GovernanceMatrix from "./pages/GovernanceMatrix";
 import ResolutionLedger from "./pages/ResolutionLedger";
@@ -57,7 +56,6 @@ function AppContent() {
 
         {/* Student Routes */}
         <Route path="/student-dashboard" element={<StudentDashboard />} />
-        <Route path="/identity" element={<AnonymousCredentialing />} />
         <Route path="/vault" element={
           <ProtectedRoute>
             <EvidenceRepository />
@@ -104,7 +102,7 @@ const App = () => (
   <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
     <QueryClientProvider client={queryClient}>
       <SettingsProvider>
-        <GhostSessionProvider>
+        <StudentSessionProvider>
           <DeadManSwitchProvider>
             <AdminAuthProvider>
               <BrowserRouter>
@@ -116,7 +114,7 @@ const App = () => (
               </BrowserRouter>
             </AdminAuthProvider>
           </DeadManSwitchProvider>
-        </GhostSessionProvider>
+        </StudentSessionProvider>
       </SettingsProvider>
     </QueryClientProvider>
   </ThemeProvider>
