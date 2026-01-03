@@ -16,7 +16,7 @@ import {
 import { DeadManSwitch } from "@/components/sidebar/DeadManSwitch";
 import { LegacyThreads } from "@/components/sidebar/LegacyThreads";
 import { SettingsPanel } from "@/components/sidebar/SettingsPanel";
-import { useGhostSession } from "@/contexts/GhostSessionContext";
+import { useStudentSession } from "@/contexts/StudentSessionContext";
 import { useDeadManSwitch } from "@/contexts/DeadManSwitchContext";
 
 const navItems = [
@@ -77,7 +77,7 @@ const navItems = [
 export function AppSidebar() {
   const location = useLocation();
   const { state } = useSidebar();
-  const { ghostIdentity, isAuthenticated } = useGhostSession();
+  const { studentProfile, isAuthenticated } = useStudentSession();
   const { isActive: deadManActive } = useDeadManSwitch();
   const collapsed = state === "collapsed";
 
@@ -184,13 +184,13 @@ export function AppSidebar() {
       {/* System status footer */}
       {!collapsed && (
         <div className="mt-auto p-4 border-t border-sidebar-border">
-          {isAuthenticated && ghostIdentity ? (
+          {isAuthenticated && studentProfile ? (
             <div className="flex items-center gap-2 text-xs">
               <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent">
                 <UserCheck className="w-4 h-4" />
               </div>
               <div className="flex flex-col">
-                <span className="font-medium text-sidebar-foreground">{ghostIdentity.ghost_name}</span>
+                <span className="font-medium text-sidebar-foreground">{studentProfile.ghost_name}</span>
                 <span className="text-sidebar-foreground/50">Authenticated</span>
               </div>
             </div>
