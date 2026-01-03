@@ -333,6 +333,75 @@ export type Database = {
           },
         ]
       }
+      student_otp_codes: {
+        Row: {
+          created_at: string
+          email: string
+          enrollment_no: string
+          expires_at: string
+          id: string
+          is_used: boolean
+          otp_code: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          enrollment_no: string
+          expires_at: string
+          id?: string
+          is_used?: boolean
+          otp_code: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          enrollment_no?: string
+          expires_at?: string
+          id?: string
+          is_used?: boolean
+          otp_code?: string
+        }
+        Relationships: []
+      }
+      student_profiles: {
+        Row: {
+          avatar: string
+          created_at: string
+          email: string
+          enrollment_no: string
+          ghost_name: string
+          id: string
+          is_verified: boolean
+          reports_submitted: number
+          reputation: number
+          updated_at: string
+        }
+        Insert: {
+          avatar?: string
+          created_at?: string
+          email: string
+          enrollment_no: string
+          ghost_name: string
+          id?: string
+          is_verified?: boolean
+          reports_submitted?: number
+          reputation?: number
+          updated_at?: string
+        }
+        Update: {
+          avatar?: string
+          created_at?: string
+          email?: string
+          enrollment_no?: string
+          ghost_name?: string
+          id?: string
+          is_verified?: boolean
+          reports_submitted?: number
+          reputation?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

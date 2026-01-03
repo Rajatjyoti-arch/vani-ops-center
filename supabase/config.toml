@@ -11,3 +11,9 @@ verify_jwt = false
 
 [functions.verify-setup-secret]
 verify_jwt = false
+
+[functions.send-student-otp]
+verify_jwt = false
+
+[functions.verify-student-otp]
+verify_jwt = false
