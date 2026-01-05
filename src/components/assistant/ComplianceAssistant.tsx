@@ -407,9 +407,34 @@ export function ComplianceAssistant() {
               )}
             </Button>
           </div>
-          <p className="text-[10px] text-muted-foreground mt-2 text-center">
-            Powered by Gemini AI • {speechSupported ? "Voice enabled" : "Text only"}
-          </p>
+          <div className="flex items-center justify-center gap-1.5 mt-2">
+            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none">
+              <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="url(#gemini-gradient-1)" />
+              <path d="M2 17L12 22L22 17" stroke="url(#gemini-gradient-2)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M2 12L12 17L22 12" stroke="url(#gemini-gradient-3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <defs>
+                <linearGradient id="gemini-gradient-1" x1="2" y1="7" x2="22" y2="7" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#4285F4" />
+                  <stop offset="0.5" stopColor="#9B72CB" />
+                  <stop offset="1" stopColor="#D96570" />
+                </linearGradient>
+                <linearGradient id="gemini-gradient-2" x1="2" y1="19.5" x2="22" y2="19.5" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#4285F4" />
+                  <stop offset="0.5" stopColor="#9B72CB" />
+                  <stop offset="1" stopColor="#D96570" />
+                </linearGradient>
+                <linearGradient id="gemini-gradient-3" x1="2" y1="14.5" x2="22" y2="14.5" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#4285F4" />
+                  <stop offset="0.5" stopColor="#9B72CB" />
+                  <stop offset="1" stopColor="#D96570" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <span className="text-[10px] text-muted-foreground">
+              Powered by <span className="font-medium bg-gradient-to-r from-[#4285F4] via-[#9B72CB] to-[#D96570] bg-clip-text text-transparent">Google Gemini</span>
+            </span>
+            <span className="text-[10px] text-muted-foreground">• {speechSupported ? "Voice enabled" : "Text only"}</span>
+          </div>
         </div>
       </div>
     </>
