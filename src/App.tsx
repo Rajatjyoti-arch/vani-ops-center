@@ -67,6 +67,7 @@ function AppContent() {
           </ProtectedRoute>
         } />
         <Route path="/ledger" element={<ResolutionLedger />} />
+        <Route path="/resolution-ledger" element={<ResolutionLedger />} />
         <Route path="/public-ledger" element={<PublicLedger />} />
         <Route path="/help" element={<HelpDocumentation />} />
 
