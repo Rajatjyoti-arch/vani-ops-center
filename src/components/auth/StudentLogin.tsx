@@ -48,9 +48,9 @@ export function StudentLogin() {
     return enrollmentRegex.test(value);
   };
 
-  // Validate university email format (e.g., 23bemnc42.cse@cujammu.ac.in)
-  const validateUniversityEmail = (value: string): boolean => {
-    const emailRegex = /^[a-z0-9]+\.[a-z]+@cujammu\.ac\.in$/i;
+  // Validate email format (any valid email)
+  const validateEmail = (value: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(value);
   };
 
@@ -66,9 +66,9 @@ export function StudentLogin() {
       return;
     }
 
-    // Validate university email format
-    if (!validateUniversityEmail(email)) {
-      toast.error('Please use your CU Jammu email (e.g., 23bemnc42.cse@cujammu.ac.in)');
+    // Validate email format
+    if (!validateEmail(email)) {
+      toast.error('Please enter a valid email address');
       return;
     }
 
@@ -211,23 +211,20 @@ export function StudentLogin() {
 
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-sm font-medium">
-                      University Email
+                      Email Address
                     </Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="email"
                         type="email"
-                        placeholder="e.g., 23bemnc42.cse@cujammu.ac.in"
+                        placeholder="Enter your email address"
                         value={email}
                         onChange={(e) => setEmail(e.target.value.toLowerCase())}
                         className="pl-10"
                         disabled={isLoading}
                       />
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      Format: enrollment.department@cujammu.ac.in
-                    </p>
                   </div>
                 </div>
 
