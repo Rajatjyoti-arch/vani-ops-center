@@ -41,13 +41,14 @@ export function StudentLogin() {
     }
   }, [resendCooldown]);
 
-  // Validate enrollment number format (e.g., 25BECCS61)
+  // Validate enrollment number format (e.g., 23BEMNC42, 24BECSE15, 25BECCS61)
   const validateEnrollmentNo = (value: string): boolean => {
-    const enrollmentRegex = /^\d{2}[A-Z]{3,5}\d{1,3}$/i;
+    // Format: 2-digit year (22-25) + BE + branch code (CSE/MNC/CCS etc.) + roll number
+    const enrollmentRegex = /^(22|23|24|25)BE(CSE|MNC|CCS)[A-Z]?\d{1,3}$/i;
     return enrollmentRegex.test(value);
   };
 
-  // Validate university email format (e.g., 25beccs61.cse@cujammu.ac.in)
+  // Validate university email format (e.g., 23bemnc42.cse@cujammu.ac.in)
   const validateUniversityEmail = (value: string): boolean => {
     const emailRegex = /^[a-z0-9]+\.[a-z]+@cujammu\.ac\.in$/i;
     return emailRegex.test(value);
@@ -61,13 +62,13 @@ export function StudentLogin() {
 
     // Validate enrollment number format
     if (!validateEnrollmentNo(enrollmentNo)) {
-      toast.error('Invalid enrollment number format. Example: 25BECCS61');
+      toast.error('Invalid enrollment number format. Example: 23BEMNC42');
       return;
     }
 
     // Validate university email format
     if (!validateUniversityEmail(email)) {
-      toast.error('Please use your CU Jammu email (e.g., 25beccs61.cse@cujammu.ac.in)');
+      toast.error('Please use your CU Jammu email (e.g., 23bemnc42.cse@cujammu.ac.in)');
       return;
     }
 
@@ -196,7 +197,7 @@ export function StudentLogin() {
                       <Input
                         id="enrollment"
                         type="text"
-                        placeholder="e.g., 25BECCS61"
+                        placeholder="e.g., 23BEMNC42"
                         value={enrollmentNo}
                         onChange={(e) => setEnrollmentNo(e.target.value.toUpperCase())}
                         className="pl-10"
@@ -204,7 +205,7 @@ export function StudentLogin() {
                       />
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Format: YearBranchNumber (e.g., 25BECCS61)
+                      Format: YearBEBranchRoll (e.g., 23BEMNC42, 24BECSE15)
                     </p>
                   </div>
 
@@ -217,7 +218,7 @@ export function StudentLogin() {
                       <Input
                         id="email"
                         type="email"
-                        placeholder="e.g., 25beccs61.cse@cujammu.ac.in"
+                        placeholder="e.g., 23bemnc42.cse@cujammu.ac.in"
                         value={email}
                         onChange={(e) => setEmail(e.target.value.toLowerCase())}
                         className="pl-10"
