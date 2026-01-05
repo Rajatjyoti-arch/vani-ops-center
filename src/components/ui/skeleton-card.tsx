@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface SkeletonCardProps {
@@ -38,26 +39,30 @@ interface CyberSpinnerProps {
   className?: string;
 }
 
-export function CyberSpinner({ size = "md", className }: CyberSpinnerProps) {
-  const sizeClasses = {
-    sm: "w-6 h-6",
-    md: "w-10 h-10",
-    lg: "w-16 h-16",
-  };
+export const CyberSpinner = forwardRef<HTMLDivElement, CyberSpinnerProps>(
+  ({ size = "md", className }, ref) => {
+    const sizeClasses = {
+      sm: "w-6 h-6",
+      md: "w-10 h-10",
+      lg: "w-16 h-16",
+    };
 
-  return (
-    <div className={cn("relative", sizeClasses[size], className)}>
-      {/* Outer ring */}
-      <div className="absolute inset-0 rounded-full border-2 border-primary/20" />
-      {/* Spinning ring */}
-      <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-primary animate-spin" />
-      {/* Inner pulse */}
-      <div className="absolute inset-2 rounded-full bg-primary/10 animate-pulse" />
-      {/* Center dot */}
-      <div className="absolute inset-1/3 rounded-full bg-primary/50" />
-    </div>
-  );
-}
+    return (
+      <div ref={ref} className={cn("relative", sizeClasses[size], className)}>
+        {/* Outer ring */}
+        <div className="absolute inset-0 rounded-full border-2 border-primary/20" />
+        {/* Spinning ring */}
+        <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-primary animate-spin" />
+        {/* Inner pulse */}
+        <div className="absolute inset-2 rounded-full bg-primary/10 animate-pulse" />
+        {/* Center dot */}
+        <div className="absolute inset-1/3 rounded-full bg-primary/50" />
+      </div>
+    );
+  }
+);
+
+CyberSpinner.displayName = "CyberSpinner";
 
 export function SkeletonTable({ rows = 5 }: { rows?: number }) {
   return (

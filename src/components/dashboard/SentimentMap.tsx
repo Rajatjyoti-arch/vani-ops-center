@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, AlertTriangle, CheckCircle, Info } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatRelativeTime } from "@/lib/crypto";
-import { mockSentimentLogs } from "@/lib/mockData";
 import { CyberSpinner } from "@/components/ui/skeleton-card";
 
 interface Zone {
@@ -43,22 +42,27 @@ export function SentimentMap() {
 
   const fetchZones = async () => {
     try {
-      const { data, error } = await (supabase as any)
-        .from("campus_sentiment_stats")
+      const { data, error } = await supabase
+        .from("sentiment_logs")
         .select("*")
         .order("zone_name");
 
       if (error) throw error;
 
-      // Use mock data if DB is empty
-      if (!data || data.length === 0) {
-        setZones(mockSentimentLogs as Zone[]);
-      } else {
-        setZones(data as Zone[]);
-      }
+      // Map sentiment_logs data to Zone interface
+      const mappedZones: Zone[] = (data || []).map((log) => ({
+        id: log.id,
+        zone_id: log.zone_id,
+        zone_name: log.zone_name,
+        concern_level: log.concern_level as "safe" | "warning" | "critical",
+        reports_count: log.reports_count,
+        last_report_at: log.last_report_at,
+      }));
+
+      setZones(mappedZones);
     } catch (error) {
       console.error("Error fetching zones:", error);
-      setZones(mockSentimentLogs as Zone[]);
+      setZones([]);
     } finally {
       setIsLoading(false);
     }
@@ -68,9 +72,9 @@ export function SentimentMap() {
     fetchZones();
 
     // Subscribe to real-time updates
-    const channel = (supabase as any)
+    const channel = supabase
       .channel('sentiment-realtime')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'campus_sentiment_stats' }, fetchZones)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'sentiment_logs' }, fetchZones)
       .subscribe();
 
     return () => {
@@ -79,7 +83,7 @@ export function SentimentMap() {
   }, []);
 
   return (
-    <Card className="bg-card/80 backdrop-blur-sm border-border/50 hover:border-primary/30 hover:shadow-primary/5 hover:-translate-y-0.5 transition-all duration-300">
+    <Card className="bg-card/80 backdrop-blur-sm border-border/50">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
