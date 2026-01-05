@@ -441,11 +441,54 @@ export function ComplianceAssistant() {
   );
 }
 
+function GeminiSparkle() {
+  return (
+    <div className="relative w-5 h-5">
+      {/* Outer rotating ring */}
+      <div className="absolute inset-0 animate-gemini-rotate">
+        <svg viewBox="0 0 24 24" className="w-full h-full">
+          <defs>
+            <linearGradient id="sparkle-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#4285F4" />
+              <stop offset="50%" stopColor="#9B72CB" />
+              <stop offset="100%" stopColor="#D96570" />
+            </linearGradient>
+          </defs>
+          <circle cx="12" cy="12" r="10" fill="none" stroke="url(#sparkle-gradient)" strokeWidth="1.5" strokeDasharray="8 4" />
+        </svg>
+      </div>
+      {/* Inner pulsing star */}
+      <div className="absolute inset-0 flex items-center justify-center animate-gemini-pulse">
+        <svg viewBox="0 0 24 24" className="w-3 h-3">
+          <defs>
+            <linearGradient id="star-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#4285F4" />
+              <stop offset="50%" stopColor="#9B72CB" />
+              <stop offset="100%" stopColor="#D96570" />
+            </linearGradient>
+          </defs>
+          <path 
+            d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" 
+            fill="url(#star-gradient)"
+          />
+        </svg>
+      </div>
+      {/* Sparkle dots */}
+      <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#4285F4] animate-gemini-sparkle" style={{ animationDelay: "0s" }} />
+      <div className="absolute top-1/2 -right-0.5 -translate-y-1/2 w-1 h-1 rounded-full bg-[#9B72CB] animate-gemini-sparkle" style={{ animationDelay: "0.5s" }} />
+      <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#D96570] animate-gemini-sparkle" style={{ animationDelay: "1s" }} />
+      <div className="absolute top-1/2 -left-0.5 -translate-y-1/2 w-1 h-1 rounded-full bg-[#4285F4] animate-gemini-sparkle" style={{ animationDelay: "0.75s" }} />
+    </div>
+  );
+}
+
 function ProcessingIndicator() {
   return (
-    <div className="flex items-center gap-2 py-1">
-      <Loader2 className="w-3 h-3 text-primary animate-spin" />
-      <span className="text-xs text-muted-foreground">Processing...</span>
+    <div className="flex items-center gap-2.5 py-1">
+      <GeminiSparkle />
+      <span className="text-xs bg-gradient-to-r from-[#4285F4] via-[#9B72CB] to-[#D96570] bg-clip-text text-transparent font-medium">
+        Thinking...
+      </span>
     </div>
   );
 }

@@ -118,6 +118,30 @@ export default {
           "50%": { transform: "translateY(-2px)" },
           "100%": { transform: "translateY(0)" },
         },
+        "gemini-sparkle": {
+          "0%, 100%": { 
+            opacity: "1",
+            transform: "scale(1)",
+          },
+          "50%": { 
+            opacity: "0.5",
+            transform: "scale(0.8)",
+          },
+        },
+        "gemini-rotate": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        "gemini-pulse": {
+          "0%, 100%": { 
+            opacity: "0.4",
+            transform: "scale(0.95)",
+          },
+          "50%": { 
+            opacity: "1",
+            transform: "scale(1.05)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -127,6 +151,9 @@ export default {
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
         "slide-in-left": "slide-in-left 0.3s ease-out",
         "number-tick": "number-tick 0.2s ease-out",
+        "gemini-sparkle": "gemini-sparkle 1.5s ease-in-out infinite",
+        "gemini-rotate": "gemini-rotate 3s linear infinite",
+        "gemini-pulse": "gemini-pulse 2s ease-in-out infinite",
       },
     },
   },
