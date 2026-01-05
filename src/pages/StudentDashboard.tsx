@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useSettings } from "@/contexts/SettingsContext";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { SentimentMap } from "@/components/dashboard/SentimentMap";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -228,6 +229,9 @@ const StudentDashboard = () => {
             ))}
           </div>
         </div>
+
+        {/* Campus Sentiment Map */}
+        <SentimentMap />
 
         {/* Notification Preferences */}
         {studentProfile && (
