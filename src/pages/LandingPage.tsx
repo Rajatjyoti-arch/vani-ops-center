@@ -15,18 +15,22 @@ import {
   FileCheck,
   Network,
   Building2,
-  ChevronDown
+  BookOpen
 } from "lucide-react";
 import { VaniLogo, VaniBrandingBlock } from "@/components/ui/VaniLogo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useStudentSession } from "@/contexts/StudentSessionContext";
+import { HeroBackgroundSlider } from "@/components/landing/HeroBackgroundSlider";
+import { DocumentationModal } from "@/components/landing/DocumentationModal";
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useStudentSession();
   const [taglineIndex, setTaglineIndex] = useState(0);
+  const [documentationOpen, setDocumentationOpen] = useState(false);
+  
   const taglines = [
     "Anonymous, yet accountable",
     "Truth without fear",
@@ -44,9 +48,8 @@ const LandingPage = () => {
     navigate("/portal");
   };
 
-  const scrollToHowItWorks = () => {
-    const element = document.getElementById("how-it-works");
-    element?.scrollIntoView({ behavior: "smooth" });
+  const handleLearnMore = () => {
+    setDocumentationOpen(true);
   };
 
   return (
@@ -74,11 +77,12 @@ const LandingPage = () => {
           </div>
           <div className="flex items-center gap-4">
             <Button
-              onClick={scrollToHowItWorks}
+              onClick={handleLearnMore}
               variant="default"
               size="sm"
               className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5 hidden sm:flex"
             >
+              <BookOpen className="w-4 h-4 mr-2" />
               How it Works
             </Button>
             <Button
@@ -93,11 +97,13 @@ const LandingPage = () => {
         </div>
       </header>
 
+      {/* Documentation Modal */}
+      <DocumentationModal open={documentationOpen} onOpenChange={setDocumentationOpen} />
+
       {/* 1. Hero Section */}
-      <section className="relative pt-36 pb-24 md:pt-52 md:pb-40 overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background" />
-        <div className="absolute inset-0 -z-20 institutional-grid opacity-[0.03] animate-grid-flow" />
+      <section className="relative pt-36 pb-32 md:pt-52 md:pb-48 overflow-hidden min-h-[90vh] flex items-center">
+        {/* Animated Background Slider */}
+        <HeroBackgroundSlider />
 
         <div className="max-w-5xl mx-auto px-6 text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-8 animate-fade-in-up">
@@ -139,19 +145,16 @@ const LandingPage = () => {
               <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover/btn:translate-x-1" />
             </Button>
             <Button
-              onClick={scrollToHowItWorks}
+              onClick={handleLearnMore}
               variant="outline"
               size="lg"
-              className="w-full sm:w-auto text-lg px-8 py-6 h-auto bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all duration-300 ease-out hover:-translate-y-1"
+              className="w-full sm:w-auto text-lg px-8 py-6 h-auto bg-transparent border-primary/50 text-primary hover:bg-primary/10 hover:border-primary transition-all duration-300 ease-out hover:-translate-y-1"
             >
+              <BookOpen className="mr-2 w-5 h-5" />
               Learn How It Works
             </Button>
           </div>
         </div>
-
-        {/* Floating Elements */}
-        <div className="absolute top-1/4 left-10 w-24 h-24 bg-primary/5 rounded-full blur-2xl animate-float" style={{ animationDelay: "0s" }} />
-        <div className="absolute bottom-1/4 right-10 w-32 h-32 bg-accent/5 rounded-full blur-2xl animate-float" style={{ animationDelay: "2s" }} />
       </section>
 
       {/* 2. The Problem VANI Solves */}
