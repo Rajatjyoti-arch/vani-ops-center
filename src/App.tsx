@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { SettingsProvider } from "@/contexts/SettingsContext";
 import { OnboardingProvider } from "@/contexts/OnboardingContext";
@@ -67,7 +67,7 @@ function AppContent() {
           </ProtectedRoute>
         } />
         <Route path="/ledger" element={<ResolutionLedger />} />
-        <Route path="/resolution-ledger" element={<ResolutionLedger />} />
+        <Route path="/resolution-ledger" element={<Navigate to="/ledger" replace />} />
         <Route path="/public-ledger" element={<PublicLedger />} />
         <Route path="/help" element={<HelpDocumentation />} />
 

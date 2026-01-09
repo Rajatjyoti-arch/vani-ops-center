@@ -48,10 +48,10 @@ export function StudentLogin() {
     return enrollmentRegex.test(value);
   };
 
-  // Validate email format (any valid email)
+  // Validate university email format (must be @cuj.ac.in)
   const validateEmail = (value: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(value);
+    const universityEmailRegex = /^[a-zA-Z0-9._%+-]+@cuj\.ac\.in$/i;
+    return universityEmailRegex.test(value);
   };
 
   const handleSendOTP = async () => {
@@ -66,9 +66,9 @@ export function StudentLogin() {
       return;
     }
 
-    // Validate email format
+    // Validate university email format
     if (!validateEmail(email)) {
-      toast.error('Please enter a valid email address');
+      toast.error('Please use your university email (@cuj.ac.in)');
       return;
     }
 
@@ -211,20 +211,23 @@ export function StudentLogin() {
 
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-sm font-medium">
-                      Email Address
+                      University Email
                     </Label>
                     <div className="relative">
                       <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="email"
                         type="email"
-                        placeholder="Enter your email address"
+                        placeholder="yourname@cuj.ac.in"
                         value={email}
                         onChange={(e) => setEmail(e.target.value.toLowerCase())}
                         className="pl-10"
                         disabled={isLoading}
                       />
                     </div>
+                    <p className="text-xs text-muted-foreground">
+                      Must be your official CUJ email address
+                    </p>
                   </div>
                 </div>
 
