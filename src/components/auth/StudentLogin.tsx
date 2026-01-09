@@ -48,9 +48,9 @@ export function StudentLogin() {
     return enrollmentRegex.test(value);
   };
 
-  // Validate university email format (must be @cuj.ac.in)
+  // Validate university email format (enrollmentno.branch@cuj.ac.in)
   const validateEmail = (value: string): boolean => {
-    const universityEmailRegex = /^[a-zA-Z0-9._%+-]+@cuj\.ac\.in$/i;
+    const universityEmailRegex = /^(22|23|24|25)BE(CSE|MNC|CCS)[A-Z]?\d{1,3}\.(cse|mnc|ccs)@cuj\.ac\.in$/i;
     return universityEmailRegex.test(value);
   };
 
@@ -68,7 +68,7 @@ export function StudentLogin() {
 
     // Validate university email format
     if (!validateEmail(email)) {
-      toast.error('Please use your university email (@cuj.ac.in)');
+      toast.error('Invalid email format. Use: enrollmentno.branch@cuj.ac.in');
       return;
     }
 
@@ -218,7 +218,7 @@ export function StudentLogin() {
                       <Input
                         id="email"
                         type="email"
-                        placeholder="yourname@cuj.ac.in"
+                        placeholder="23BEMNC42.mnc@cuj.ac.in"
                         value={email}
                         onChange={(e) => setEmail(e.target.value.toLowerCase())}
                         className="pl-10"
@@ -226,7 +226,7 @@ export function StudentLogin() {
                       />
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      Must be your official CUJ email address
+                      Format: enrollmentno.branch@cuj.ac.in (e.g., 23BEMNC42.mnc@cuj.ac.in)
                     </p>
                   </div>
                 </div>
